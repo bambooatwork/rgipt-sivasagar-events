@@ -181,6 +181,29 @@ there is no server:
 `.github/workflows/pages.yml` is included. Set **Settings → Pages → Source:
 GitHub Actions**, and every push to `main` will rebuild `docs/` and deploy it.
 
+### The admin panel needs a Python host (important)
+The **admin panel, registration database and contact form cannot run on GitHub
+Pages** — Pages only serves static files, so those pages are intentionally absent
+from the `docs/` build. This is not a bug.
+
+To get the **full app online with a working admin panel**, deploy it to a host that
+runs Python. A Render blueprint is included (`render.yaml`):
+
+1. Push this repo to GitHub (done).
+2. Go to **render.com → New → Blueprint**, pick this repository, and apply.
+3. When prompted, set **`ADMIN_PASSWORD`** to a strong password (it is used for the
+   `admin` account).
+4. Render builds it, runs `python seed.py`, and gives you a live URL — the admin
+   panel is at `/admin/login` on that URL.
+
+Any equivalent host works too (Railway, Fly.io, PythonAnywhere). For a generic host:
+- start command: `gunicorn --bind 0.0.0.0:$PORT app:app` (see `Procfile`)
+- set `SECRET_KEY` and `ADMIN_PASSWORD` environment variables
+
+> Note: on free tiers the disk is ephemeral, so the SQLite file resets on each
+deploy. For data that persists, point `DATABASE_URL` at a managed PostgreSQL
+instance.
+
 ### Pushing to GitHub
 ```bash
 cd rgipt-events
@@ -224,6 +247,7 @@ domain and set it in Settings → Pages.
 |---|---|---|
 | `SECRET_KEY` | random per process | Set this in production so sessions survive restarts. |
 | `DATABASE_URL` | `sqlite:///rgipt_events.db` | Point at Postgres/MySQL if you prefer. |
+| `ADMIN_PASSWORD` | `rgipt@2026` | Initial password for the `admin` account. **Set this before deploying publicly.** |
 
 ---
 
@@ -259,9 +283,10 @@ Campus details used:
 Three verification suites ship with the project:
 
 ```bash
-python test_all.py      # 58 functional checks — every route, form and feature
-python audit.py         # 71 browser checks — console errors, overflow, interactions
-python verify_static.py # 46 checks on the GitHub Pages build — links, assets, filters
+python test_all.py       # 58 functional checks — every route, form and feature
+python test_bootstrap.py # boots from an empty DB and signs into the admin panel
+python audit.py          # 71 browser checks — console errors, overflow, interactions
+python verify_static.py  # 46 checks on the GitHub Pages build — links, assets, filters
 ```
 
 `audit.py` and `verify_static.py` need `websocket-client` and a local Chrome/Chromium.

@@ -3,6 +3,7 @@
 Run:  python seed.py           # create tables + seed if empty
       python seed.py --reset   # drop everything and reseed
 """
+import os
 import sys
 from datetime import date, datetime
 
@@ -11,10 +12,14 @@ from models import db, Admin, Event, Registration, Announcement, ContactMessage
 
 # --------------------------------------------------------------------------- #
 #  Admin accounts
+#  Override the initial password with the ADMIN_PASSWORD environment variable
+#  before deploying publicly — the default is only for local use.
 # --------------------------------------------------------------------------- #
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "rgipt@2026")
+
 ADMINS = [
     # username, password, full name, role
-    ("admin", "rgipt@2026", "Campus Events Administrator", "admin"),
+    ("admin", ADMIN_PASSWORD, "Campus Events Administrator", "admin"),
 ]
 
 # --------------------------------------------------------------------------- #
