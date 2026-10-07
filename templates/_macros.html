@@ -1,6 +1,6 @@
 {# ---------- reusable icon ---------- #}
 {% macro icon(name, cls="") %}
-<svg class="{{ cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<svg class="{{ cls }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 {%- if name == "calendar" -%}<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
 {%- elif name == "pin" -%}<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
 {%- elif name == "clock" -%}<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>
@@ -25,49 +25,49 @@
 {%- elif name == "megaphone" -%}<path d="m3 11 18-6v14L3 13Z"/><path d="M7 12v6a2 2 0 0 0 4 0"/>
 {%- elif name == "inbox" -%}<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.4 5.1 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.9A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.1Z"/>
 {%- elif name == "star" -%}<path d="m12 2 3 6.3 6.9 1-5 4.9 1.2 6.9L12 18l-6.1 3.1L7 14.2l-5-4.9 6.9-1Z"/>
-{%- elif name == "fire" -%}<path d="M12 2s5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 1-3s-1 5 4 5"/>
 {%- else -%}<circle cx="12" cy="12" r="9"/>
 {%- endif -%}
 </svg>
 {% endmacro %}
 
-{# ---------- date badge ---------- #}
-{% macro date_badge(d) %}
-<div class="date-badge"><b>{{ d.strftime('%d') }}</b><span>{{ d.strftime('%b') }}</span></div>
+{# ---------- event row (the primary listing unit) ---------- #}
+{% macro event_row(event, n=0) %}
+<a class="row reveal" href="{{ url_for('event_detail', slug=event.slug) }}"
+   data-category="{{ event.category }}"
+   data-status="{{ 'past' if event.is_past else 'upcoming' }}"
+   data-text="{{ (event.title ~ ' ' ~ (event.short_description or '') ~ ' ' ~ (event.organizer or '') ~ ' ' ~ (event.venue or '') ~ ' ' ~ event.category)|lower }}">
+  <div class="row-date">
+    <b>{{ event.event_date.strftime('%d') }}</b>
+    <span>{{ event.event_date.strftime('%b') }}</span>
+  </div>
+  <div class="row-main">
+    <h3>{{ event.title }}</h3>
+    <p>{{ event.short_description }}</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot {% if event.is_past %}past{% elif event.is_full %}full{% endif %}"></span>{{ event.category }}
+    </span>
+    <span>{{ event.venue.split(',')[0] }}</span>
+    {% if not event.is_past %}<span class="seats-mini">{{ event.seats_left }} of {{ event.capacity }} seats left</span>{% endif %}
+  </div>
+  <div class="row-end">
+    <span class="price {% if event.fee == 0 %}free{% endif %}">{{ event.fee | inr }}</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
 {% endmacro %}
 
-{# ---------- event card ---------- #}
-{% macro event_card(event) %}
-<article class="card event-card accent-{{ event.accent }} reveal"
-         data-category="{{ event.category }}"
-         data-status="{{ 'past' if event.is_past else 'upcoming' }}"
-         data-text="{{ (event.title ~ ' ' ~ (event.short_description or '') ~ ' ' ~ (event.organizer or '') ~ ' ' ~ (event.venue or '') ~ ' ' ~ event.category)|lower }}">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">{{ event.category }}</span>
-      {% if event.is_past %}<span class="badge past">Completed</span>
-      {% elif event.is_full %}<span class="badge full">Full</span>
-      {% else %}<span class="badge live">Open</span>{% endif %}
-    </div>
-    <h3 class="mt-2"><a href="{{ url_for('event_detail', slug=event.slug) }}">{{ event.title }}</a></h3>
+{# ---------- announcement row ---------- #}
+{% macro ann_row(item) %}
+<a class="ann-row reveal" href="{{ url_for('announcement_detail', aid=item.id) }}">
+  <div class="when">
+    {{ item.published_at.strftime('%d %b %Y') }}
+    {% if item.is_pinned %}<span class="flag">Pinned</span>{% endif %}
   </div>
-  <div class="body">
-    <p class="desc">{{ event.short_description }}</p>
-    <div class="meta-list">
-      <div class="row">{{ icon('calendar') }}<span>{{ event.event_date | datefmt }}{% if event.end_date and event.end_date != event.event_date %} &ndash; {{ event.end_date | datefmt('%d %b') }}{% endif %}</span></div>
-      <div class="row">{{ icon('pin') }}<span>{{ event.venue }}</span></div>
-      <div class="row">{{ icon('users') }}<span>{{ event.team_size }}</span></div>
-    </div>
-    {% if not event.is_past %}
-    <div>
-      <div class="seats"><span>{{ event.seats_taken }} registered</span><span>{{ event.seats_left }} of {{ event.capacity }} seats left</span></div>
-      <div class="progress {% if event.seats_left <= (event.capacity * 0.2) %}warn{% endif %}"><i style="width: {{ (100 * event.seats_taken / event.capacity) if event.capacity else 0 }}%"></i></div>
-    </div>
-    {% endif %}
-    <div class="card-foot">
-      <span class="price {% if event.fee == 0 %}free{% endif %}">{{ event.fee | inr }}</span>
-      <a class="btn btn-sm btn-primary" href="{{ url_for('event_detail', slug=event.slug) }}">Details {{ icon('arrow') }}</a>
-    </div>
+  <div>
+    <h3>{{ item.title }}</h3>
+    <p>{{ item.body }}</p>
   </div>
-</article>
+</a>
 {% endmacro %}

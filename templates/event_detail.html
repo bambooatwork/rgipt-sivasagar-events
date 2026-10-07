@@ -1,46 +1,45 @@
 {% extends "base.html" %}
-{% from "_macros.html" import icon, event_card %}
+{% from "_macros.html" import icon, event_row %}
 {% block title %}{{ event.title }} &ndash; RGIPT Sivasagar Campus{% endblock %}
 
 {% block content %}
-<section class="section" style="padding-top:34px">
+<section class="section">
   <div class="container">
-    <p class="muted" style="font-size:.9rem"><a href="{{ url_for('events') }}">Events</a> / <span>{{ event.category }}</span></p>
+    <p class="muted" style="font-size:.85rem"><a href="{{ url_for('events') }}">Events</a> / {{ event.category }}</p>
 
     <div class="detail-grid">
       <div>
-        <div class="detail-hero accent-{{ event.accent }} reveal">
+        <div class="detail-head reveal">
           <div class="flex items-center gap wrap">
             <span class="chip">{{ event.category }}</span>
-            {% if event.is_featured %}<span class="badge pinned">{{ icon('star') }} Featured</span>{% endif %}
+            {% if event.is_featured %}<span class="badge pinned">Featured</span>{% endif %}
             {% if event.is_past %}<span class="badge past">Completed</span>
             {% elif event.is_full %}<span class="badge full">Registration full</span>
             {% elif not event.registration_open %}<span class="badge draft">Registration closed</span>
             {% else %}<span class="badge live">Registration open</span>{% endif %}
           </div>
           <h1>{{ event.title }}</h1>
-          <p style="font-size:1.05rem;max-width:65ch">{{ event.short_description }}</p>
-          <div class="flex gap wrap" style="margin-top:10px">
-            <span class="meta-list"><span class="row">{{ icon('calendar') }} {{ event.event_date | datefmt }}{% if event.end_date and event.end_date != event.event_date %} &ndash; {{ event.end_date | datefmt }}{% endif %}</span></span>
-            <span class="meta-list"><span class="row">{{ icon('clock') }} {{ event.start_time }} &ndash; {{ event.end_time }}</span></span>
-            <span class="meta-list"><span class="row">{{ icon('pin') }} {{ event.venue }}</span></span>
-          </div>
+          <p class="detail-lede">{{ event.short_description }}</p>
         </div>
 
         {% if not event.is_past %}
-        <div class="glass-card reveal mb-2" data-countdown="{{ event.event_date.isoformat() }}" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:space-between">
-          <div><strong style="font-family:var(--font-display);font-size:1.1rem">Starts in</strong><p class="muted mb-0" style="font-size:.86rem">Event day: {{ event.event_date | datefmt('%A, %d %B %Y') }}</p></div>
-          <div class="countdown" style="min-width:260px"></div>
+        <div class="reveal" data-countdown="{{ event.event_date.isoformat() }}"
+             style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:space-between;margin-bottom:26px">
+          <div>
+            <strong style="font-family:var(--font-display);font-size:1.05rem">Starts in</strong>
+            <p class="muted mb-0" style="font-size:.84rem">{{ event.event_date | datefmt('%A, %d %B %Y') }}</p>
+          </div>
+          <div class="countdown" style="min-width:280px"></div>
         </div>
         {% endif %}
 
-        <div class="panel reveal">
+        <div class="rule-block reveal">
           <h3>About this event</h3>
           <div class="prose">{{ event.description }}</div>
         </div>
 
-        <div class="panel reveal">
-          <h3>Key dates &amp; details</h3>
+        <div class="rule-block reveal mt-3">
+          <h3>Key dates</h3>
           <div class="timeline">
             {% if event.registration_deadline %}
             <div class="item"><div class="dotcol"><span class="dot"></span><span class="line"></span></div><div class="txt"><strong>Registration closes</strong><p class="muted mb-0">{{ event.registration_deadline | datefmt('%A, %d %B %Y') }}</p></div></div>
@@ -54,7 +53,7 @@
       </div>
 
       <aside>
-        <div class="card info-card reveal" style="padding:26px">
+        <div class="info-card reveal">
           <div class="flex between items-center">
             <span class="price-tag">{{ event.fee | inr }}</span>
             <span class="chip">{{ event.team_size }}</span>
@@ -72,11 +71,11 @@
             <button class="btn btn-block" disabled>Event concluded</button>
           {% elif event.is_full %}
             <a class="btn btn-warm btn-block" href="{{ url_for('register_event', slug=event.slug) }}">Join waitlist</a>
-            <p class="hint mt-2" style="text-align:center">All seats are taken &mdash; you may be added to the waitlist.</p>
+            <p class="hint mt-2" style="text-align:center">All seats taken &mdash; you may be added to the waitlist.</p>
           {% elif not event.registration_open %}
             <button class="btn btn-block" disabled>Registration closed</button>
           {% else %}
-            <a class="btn btn-primary btn-block" href="{{ url_for('register_event', slug=event.slug) }}">{{ icon('ticket') }} Register now</a>
+            <a class="btn btn-primary btn-block" href="{{ url_for('register_event', slug=event.slug) }}">Register</a>
             {% if event.registration_deadline %}<p class="hint mt-2" style="text-align:center">Closes {{ event.registration_deadline | datefmt }}</p>{% endif %}
           {% endif %}
         </div>
@@ -85,8 +84,8 @@
 
     {% if related %}
     <div class="section-tight">
-      <div class="section-head"><div><span class="kicker">More like this</span><h2>Related events</h2></div></div>
-      <div class="grid grid-3">{% for e in related %}{{ event_card(e) }}{% endfor %}</div>
+      <header class="sec-head"><div class="sec-title"><span class="sec-num">/</span><h2 style="font-size:1.2rem;margin:0">More like this</h2></div></header>
+      <div class="listing">{% for e in related %}{{ event_row(e) }}{% endfor %}</div>
     </div>
     {% endif %}
   </div>

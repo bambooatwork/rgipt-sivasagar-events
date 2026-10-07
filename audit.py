@@ -94,14 +94,14 @@ cmd("Runtime.enable")
 cmd("Log.enable")
 
 PAGES = [
-    ("/", "home", [".hero", ".grid-3 .event-card", ".stat-row", ".footer"]),
-    ("/events", "events", [".filter-bar", ".grid-3 .event-card"]),
-    (f"/events/{slug}", "event detail", [".detail-hero", ".info-card", ".timeline", ".countdown"]),
-    ("/announcements", "announcements", [".announce"]),
+    ("/", "home", [".hero", ".listing .row", ".stat-row", ".footer"]),
+    ("/events", "events", [".filter-bar", ".listing .row"]),
+    (f"/events/{slug}", "event detail", [".detail-head", ".info-card", ".timeline", ".countdown"]),
+    ("/announcements", "announcements", [".ann-row"]),
     ("/announcements/1", "announcement detail", [".prose"]),
     ("/my-registrations", "my registrations", ["form"]),
-    ("/faculty", "faculty", [".grid-3", "[data-filter-input]", "[data-filter-item]"]),
-    ("/about", "about", [".hero", ".panel"]),
+    ("/faculty", "faculty", ["[data-filter-input]", "[data-filter-item]", ".dir-row"]),
+    ("/about", "about", [".hero", ".info-card"]),
     ("/contact", "contact", ["form textarea", ".meta-list"]),
     ("/admin/login", "admin login", ["form input[name=username]"]),
     ("/nope-404", "404 page", ["body"]),

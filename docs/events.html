@@ -65,18 +65,15 @@
   <main>
 <section class="section">
   <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <span class="kicker">Campus calendar</span>
-        <h1 style="font-size:clamp(1.9rem,4vw,2.8rem)">Events</h1>
-        <p class="muted" data-result-count>11 events found.</p>
-      </div>
-    </div>
+    <header class="sec-head reveal">
+      <div class="sec-title"><span class="sec-num">/</span><h1 style="font-size:clamp(1.9rem,4vw,2.8rem);margin:0">Events</h1></div>
+      <p class="muted mb-0" data-result-count style="font-size:.88rem">11 events found.</p>
+    </header>
 
     <form class="filter-bar reveal" method="get" action="events.html" data-filter-form>
       <div class="field">
         <label>Search</label>
-        <input type="text" name="q" value="" placeholder="Search events, organisers, venues&hellip;">
+        <input type="text" name="q" value="" placeholder="Title, organiser or venue">
       </div>
       <div class="field">
         <label>Category</label>
@@ -100,430 +97,287 @@
           <option value="Petroleum Engineering" >Petroleum Engineering</option><option value="Chemical Engineering" >Chemical Engineering</option><option value="Mechanical Engineering" >Mechanical Engineering</option><option value="Electrical Engineering" >Electrical Engineering</option><option value="Electronics &amp; Instrumentation Engineering" >Electronics &amp; Instrumentation Engineering</option><option value="Fire &amp; Safety Engineering" >Fire &amp; Safety Engineering</option><option value="Computer Science &amp; Engineering" >Computer Science &amp; Engineering</option><option value="Other" >Other</option>
         </select>
       </div>
-      <div class="field"><button class="btn btn-primary" type="submit">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
- Filter</button></div>
+      <div class="field"><button class="btn" type="submit">Filter</button></div>
     </form>
 
-    
-    <div class="grid grid-3" data-static-events>
-<article class="card event-card accent-rose reveal"
-         data-category="Cultural"
-         data-status="upcoming"
-         data-text="sivasagar cultural night – bihu &amp; borgeet evening an evening celebrating assam&#39;s heritage — bihu dance, borgeet, folk music and student performances. cultural council, rgipt sivasagar campus campus open air theatre, rgipt sivasagar campus cultural">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Cultural</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-sivasagar-cultural-night-bihu-borgeet-evening.html">Sivasagar Cultural Night – Bihu &amp; Borgeet Evening</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">An evening celebrating Assam&#39;s heritage — Bihu dance, Borgeet, folk music and student performances.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>18 Dec 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Campus Open Air Theatre, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>0 registered</span><span>600 of 600 seats left</span></div>
-      <div class="progress "><i style="width: 0.0%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-sivasagar-cultural-night-bihu-borgeet-evening.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-indigo reveal"
-         data-category="Hackathon"
-         data-status="upcoming"
-         data-text="techsprint 2026 – campus edition gdg on campus rgipt sivasagar&#39;s flagship open innovation hackathon. solve. create. impact. gdg on campus, rgipt sivasagar campus online + computer lab, rgipt sivasagar campus hackathon">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Hackathon</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-techsprint-2026-campus-edition.html">TechSprint 2026 – Campus Edition</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">GDG on Campus RGIPT Sivasagar&#39;s flagship open innovation hackathon. Solve. Create. Impact.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>04 Dec 2026 &ndash; 22 Jan</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Online + Computer Lab, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Team (2–4)</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>2 registered</span><span>298 of 300 seats left</span></div>
-      <div class="progress "><i style="width: 0.6666666666666666%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-techsprint-2026-campus-edition.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-emerald reveal"
-         data-category="Sports"
-         data-status="upcoming"
-         data-text="krida oorja &#39;26 the annual sports fest of rgipt sivasagar campus — three weeks of cricket, football, athletics, volleyball and more. sports council, rgipt sivasagar campus campus sports ground, rgipt sivasagar campus sports">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Sports</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-krida-oorja-26.html">Krida Oorja &#39;26</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">The annual sports fest of RGIPT Sivasagar Campus — three weeks of cricket, football, athletics, volleyball and more.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>01 Dec 2026 &ndash; 19 Dec</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Campus Sports Ground, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Team</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>1 registered</span><span>399 of 400 seats left</span></div>
-      <div class="progress "><i style="width: 0.25%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-krida-oorja-26.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-violet reveal"
-         data-category="Entrepreneurship"
-         data-status="upcoming"
-         data-text="innovation pitch: startup bootcamp a one-day entrepreneurship bootcamp and pitch competition for aspiring founders, hosted by the campus e-cell. entrepreneurship cell, rgipt sivasagar campus seminar hall, rgipt sivasagar campus entrepreneurship">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Entrepreneurship</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-innovation-pitch-startup-bootcamp.html">Innovation Pitch: Startup Bootcamp</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">A one-day entrepreneurship bootcamp and pitch competition for aspiring founders, hosted by the campus E-Cell.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>22 Nov 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Seminar Hall, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Team (1–3)</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>0 registered</span><span>100 of 100 seats left</span></div>
-      <div class="progress "><i style="width: 0.0%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-innovation-pitch-startup-bootcamp.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-amber reveal"
-         data-category="Technical"
-         data-status="upcoming"
-         data-text="urjotsav 2026 the annual national-level inter-collegiate technical &amp; entrepreneurial festival of rgipt, organised by the science &amp; technology council. science &amp; technology council, rgipt sivasagar campus rgipt sivasagar campus, gohain gaon, akhoiphutia technical">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Technical</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-urjotsav-2026.html">Urjotsav 2026</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">The annual national-level inter-collegiate technical &amp; entrepreneurial festival of RGIPT, organised by the Science &amp; Technology Council.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>14 Nov 2026 &ndash; 15 Nov</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual or Team (up to 4)</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>2 registered</span><span>498 of 500 seats left</span></div>
-      <div class="progress "><i style="width: 0.4%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-urjotsav-2026.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-amber reveal"
-         data-category="Workshop"
-         data-status="upcoming"
-         data-text="fire &amp; safety drill workshop practical fire-safety training for the fire &amp; safety engineering department — extinguishers, rescue and evacuation drills. department of fire &amp; safety engineering, rgipt sivasagar campus open ground, rgipt sivasagar campus workshop">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Workshop</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-fire-safety-drill-workshop.html">Fire &amp; Safety Drill Workshop</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">Practical fire-safety training for the Fire &amp; Safety Engineering department — extinguishers, rescue and evacuation drills.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>05 Nov 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Open Ground, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>0 registered</span><span>120 of 120 seats left</span></div>
-      <div class="progress "><i style="width: 0.0%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-fire-safety-drill-workshop.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-rose reveal"
-         data-category="Seminar"
-         data-status="upcoming"
-         data-text="industry connect: oil field visit &amp; expert seminar a guided field visit and seminar with oil india limited (oil) engineers on upstream operations in the assam oil belt. department of petroleum engineering, rgipt sivasagar campus duliajan / naharkatia field + campus auditorium seminar">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Seminar</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-industry-connect-oil-field-visit-expert-seminar.html">Industry Connect: OIL Field Visit &amp; Expert Seminar</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">A guided field visit and seminar with Oil India Limited (OIL) engineers on upstream operations in the Assam oil belt.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>28 Oct 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Duliajan / Naharkatia Field + Campus Auditorium</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>0 registered</span><span>60 of 60 seats left</span></div>
-      <div class="progress "><i style="width: 0.0%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-industry-connect-oil-field-visit-expert-seminar.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-teal reveal"
-         data-category="Workshop"
-         data-status="upcoming"
-         data-text="google cloud study jams kickstart your cloud computing journey — hands-on labs, badges and certifications via google cloud skills boost. gdg on campus, rgipt sivasagar campus computer lab, rgipt sivasagar campus workshop">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Workshop</span>
-      <span class="badge live">Open</span>
-    </div>
-    <h3 class="mt-2"><a href="event-google-cloud-study-jams.html">Google Cloud Study Jams</a></h3>
-  </div>
-  <div class="body">
-    <p class="desc">Kickstart your cloud computing journey — hands-on labs, badges and certifications via Google Cloud Skills Boost.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>20 Oct 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Computer Lab, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual</span></div>
-    </div>
-    
-    <div>
-      <div class="seats"><span>1 registered</span><span>79 of 80 seats left</span></div>
-      <div class="progress "><i style="width: 1.25%"></i></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-google-cloud-study-jams.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-</a>
-    </div>
-  </div>
-</article>
-
-<article class="card event-card accent-indigo reveal"
-         data-category="Hackathon"
-         data-status="past"
-         data-text="internal hackathon for sih 2026 campus-level smart india hackathon — selection of rgipt&#39;s best teams for nomination to sih 2026. innovation cell, rgipt computer lab, rgipt sivasagar campus hackathon">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Hackathon</span>
-      <span class="badge past">Completed</span>
+    <div class="listing" data-static-events>
       
-    </div>
-    <h3 class="mt-2"><a href="event-internal-hackathon-for-sih-2026.html">Internal Hackathon for SIH 2026</a></h3>
+<a class="row reveal" href="event-sivasagar-cultural-night-bihu-borgeet-evening.html"
+   data-category="Cultural"
+   data-status="upcoming"
+   data-text="sivasagar cultural night – bihu &amp; borgeet evening an evening celebrating assam&#39;s heritage — bihu dance, borgeet, folk music and student performances. cultural council, rgipt sivasagar campus campus open air theatre, rgipt sivasagar campus cultural">
+  <div class="row-date">
+    <b>18</b>
+    <span>Dec</span>
   </div>
-  <div class="body">
-    <p class="desc">Campus-level Smart India Hackathon — selection of RGIPT&#39;s best teams for nomination to SIH 2026.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>18 Sep 2026 &ndash; 20 Sep</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Computer Lab, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Team (6)</span></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-internal-hackathon-for-sih-2026.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  <div class="row-main">
+    <h3>Sivasagar Cultural Night – Bihu &amp; Borgeet Evening</h3>
+    <p>An evening celebrating Assam&#39;s heritage — Bihu dance, Borgeet, folk music and student performances.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Cultural
+    </span>
+    <span>Campus Open Air Theatre</span>
+    <span class="seats-mini">600 of 600 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
 </a>
-    </div>
-  </div>
-</article>
 
-<article class="card event-card accent-teal reveal"
-         data-category="Technical"
-         data-status="past"
-         data-text="techwave 2026 – ideas in motion engineers&#39; day celebration — model making and poster presentation competition organised by the science &amp; technology council. science &amp; technology council, rgipt sivasagar campus rgipt sivasagar campus, gohain gaon technical">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Technical</span>
-      <span class="badge past">Completed</span>
-      
-    </div>
-    <h3 class="mt-2"><a href="event-techwave-2026-ideas-in-motion.html">TechWave 2026 – Ideas in Motion</a></h3>
+<a class="row reveal" href="event-techsprint-2026-campus-edition.html"
+   data-category="Hackathon"
+   data-status="upcoming"
+   data-text="techsprint 2026 – campus edition gdg on campus rgipt sivasagar&#39;s flagship open innovation hackathon. solve. create. impact. gdg on campus, rgipt sivasagar campus online + computer lab, rgipt sivasagar campus hackathon">
+  <div class="row-date">
+    <b>04</b>
+    <span>Dec</span>
   </div>
-  <div class="body">
-    <p class="desc">Engineers&#39; Day celebration — model making and poster presentation competition organised by the Science &amp; Technology Council.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>15 Sep 2026</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>RGIPT Sivasagar Campus, Gohain Gaon</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Team (1–3)</span></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-techwave-2026-ideas-in-motion.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  <div class="row-main">
+    <h3>TechSprint 2026 – Campus Edition</h3>
+    <p>GDG on Campus RGIPT Sivasagar&#39;s flagship open innovation hackathon. Solve. Create. Impact.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Hackathon
+    </span>
+    <span>Online + Computer Lab</span>
+    <span class="seats-mini">298 of 300 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
 </a>
-    </div>
-  </div>
-</article>
 
-<article class="card event-card accent-emerald reveal"
-         data-category="Seminar"
-         data-status="past"
-         data-text="schemcon 2026 – students&#39; chemical engineering congress a national-level congress with technical paper presentations, poster sessions, workshops and panel discussions. iiche student chapter, rgipt sivasagar campus seminar hall, rgipt sivasagar campus seminar">
-  <div class="top">
-    <div class="flex between items-center wrap gap">
-      <span class="chip">Seminar</span>
-      <span class="badge past">Completed</span>
-      
-    </div>
-    <h3 class="mt-2"><a href="event-schemcon-2026-students-chemical-engineering-congress.html">SCHEMCON 2026 – Students&#39; Chemical Engineering Congress</a></h3>
+<a class="row reveal" href="event-krida-oorja-26.html"
+   data-category="Sports"
+   data-status="upcoming"
+   data-text="krida oorja &#39;26 the annual sports fest of rgipt sivasagar campus — three weeks of cricket, football, athletics, volleyball and more. sports council, rgipt sivasagar campus campus sports ground, rgipt sivasagar campus sports">
+  <div class="row-date">
+    <b>01</b>
+    <span>Dec</span>
   </div>
-  <div class="body">
-    <p class="desc">A national-level congress with technical paper presentations, poster sessions, workshops and panel discussions.</p>
-    <div class="meta-list">
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-<span>08 Aug 2026 &ndash; 09 Aug</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-<span>Seminar Hall, RGIPT Sivasagar Campus</span></div>
-      <div class="row">
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-<span>Individual or Team</span></div>
-    </div>
-    
-    <div class="card-foot">
-      <span class="price free">Free</span>
-      <a class="btn btn-sm btn-primary" href="event-schemcon-2026-students-chemical-engineering-congress.html">Details 
-<svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  <div class="row-main">
+    <h3>Krida Oorja &#39;26</h3>
+    <p>The annual sports fest of RGIPT Sivasagar Campus — three weeks of cricket, football, athletics, volleyball and more.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Sports
+    </span>
+    <span>Campus Sports Ground</span>
+    <span class="seats-mini">399 of 400 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
 </a>
-    </div>
+
+<a class="row reveal" href="event-innovation-pitch-startup-bootcamp.html"
+   data-category="Entrepreneurship"
+   data-status="upcoming"
+   data-text="innovation pitch: startup bootcamp a one-day entrepreneurship bootcamp and pitch competition for aspiring founders, hosted by the campus e-cell. entrepreneurship cell, rgipt sivasagar campus seminar hall, rgipt sivasagar campus entrepreneurship">
+  <div class="row-date">
+    <b>22</b>
+    <span>Nov</span>
   </div>
-</article>
-</div>
+  <div class="row-main">
+    <h3>Innovation Pitch: Startup Bootcamp</h3>
+    <p>A one-day entrepreneurship bootcamp and pitch competition for aspiring founders, hosted by the campus E-Cell.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Entrepreneurship
+    </span>
+    <span>Seminar Hall</span>
+    <span class="seats-mini">100 of 100 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-urjotsav-2026.html"
+   data-category="Technical"
+   data-status="upcoming"
+   data-text="urjotsav 2026 the annual national-level inter-collegiate technical &amp; entrepreneurial festival of rgipt, organised by the science &amp; technology council. science &amp; technology council, rgipt sivasagar campus rgipt sivasagar campus, gohain gaon, akhoiphutia technical">
+  <div class="row-date">
+    <b>14</b>
+    <span>Nov</span>
+  </div>
+  <div class="row-main">
+    <h3>Urjotsav 2026</h3>
+    <p>The annual national-level inter-collegiate technical &amp; entrepreneurial festival of RGIPT, organised by the Science &amp; Technology Council.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Technical
+    </span>
+    <span>RGIPT Sivasagar Campus</span>
+    <span class="seats-mini">498 of 500 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-fire-safety-drill-workshop.html"
+   data-category="Workshop"
+   data-status="upcoming"
+   data-text="fire &amp; safety drill workshop practical fire-safety training for the fire &amp; safety engineering department — extinguishers, rescue and evacuation drills. department of fire &amp; safety engineering, rgipt sivasagar campus open ground, rgipt sivasagar campus workshop">
+  <div class="row-date">
+    <b>05</b>
+    <span>Nov</span>
+  </div>
+  <div class="row-main">
+    <h3>Fire &amp; Safety Drill Workshop</h3>
+    <p>Practical fire-safety training for the Fire &amp; Safety Engineering department — extinguishers, rescue and evacuation drills.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Workshop
+    </span>
+    <span>Open Ground</span>
+    <span class="seats-mini">120 of 120 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-industry-connect-oil-field-visit-expert-seminar.html"
+   data-category="Seminar"
+   data-status="upcoming"
+   data-text="industry connect: oil field visit &amp; expert seminar a guided field visit and seminar with oil india limited (oil) engineers on upstream operations in the assam oil belt. department of petroleum engineering, rgipt sivasagar campus duliajan / naharkatia field + campus auditorium seminar">
+  <div class="row-date">
+    <b>28</b>
+    <span>Oct</span>
+  </div>
+  <div class="row-main">
+    <h3>Industry Connect: OIL Field Visit &amp; Expert Seminar</h3>
+    <p>A guided field visit and seminar with Oil India Limited (OIL) engineers on upstream operations in the Assam oil belt.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Seminar
+    </span>
+    <span>Duliajan / Naharkatia Field + Campus Auditorium</span>
+    <span class="seats-mini">60 of 60 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-google-cloud-study-jams.html"
+   data-category="Workshop"
+   data-status="upcoming"
+   data-text="google cloud study jams kickstart your cloud computing journey — hands-on labs, badges and certifications via google cloud skills boost. gdg on campus, rgipt sivasagar campus computer lab, rgipt sivasagar campus workshop">
+  <div class="row-date">
+    <b>20</b>
+    <span>Oct</span>
+  </div>
+  <div class="row-main">
+    <h3>Google Cloud Study Jams</h3>
+    <p>Kickstart your cloud computing journey — hands-on labs, badges and certifications via Google Cloud Skills Boost.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot "></span>Workshop
+    </span>
+    <span>Computer Lab</span>
+    <span class="seats-mini">79 of 80 seats left</span>
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-internal-hackathon-for-sih-2026.html"
+   data-category="Hackathon"
+   data-status="past"
+   data-text="internal hackathon for sih 2026 campus-level smart india hackathon — selection of rgipt&#39;s best teams for nomination to sih 2026. innovation cell, rgipt computer lab, rgipt sivasagar campus hackathon">
+  <div class="row-date">
+    <b>18</b>
+    <span>Sep</span>
+  </div>
+  <div class="row-main">
+    <h3>Internal Hackathon for SIH 2026</h3>
+    <p>Campus-level Smart India Hackathon — selection of RGIPT&#39;s best teams for nomination to SIH 2026.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot past"></span>Hackathon
+    </span>
+    <span>Computer Lab</span>
+    
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-techwave-2026-ideas-in-motion.html"
+   data-category="Technical"
+   data-status="past"
+   data-text="techwave 2026 – ideas in motion engineers&#39; day celebration — model making and poster presentation competition organised by the science &amp; technology council. science &amp; technology council, rgipt sivasagar campus rgipt sivasagar campus, gohain gaon technical">
+  <div class="row-date">
+    <b>15</b>
+    <span>Sep</span>
+  </div>
+  <div class="row-main">
+    <h3>TechWave 2026 – Ideas in Motion</h3>
+    <p>Engineers&#39; Day celebration — model making and poster presentation competition organised by the Science &amp; Technology Council.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot past"></span>Technical
+    </span>
+    <span>RGIPT Sivasagar Campus</span>
+    
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+<a class="row reveal" href="event-schemcon-2026-students-chemical-engineering-congress.html"
+   data-category="Seminar"
+   data-status="past"
+   data-text="schemcon 2026 – students&#39; chemical engineering congress a national-level congress with technical paper presentations, poster sessions, workshops and panel discussions. iiche student chapter, rgipt sivasagar campus seminar hall, rgipt sivasagar campus seminar">
+  <div class="row-date">
+    <b>08</b>
+    <span>Aug</span>
+  </div>
+  <div class="row-main">
+    <h3>SCHEMCON 2026 – Students&#39; Chemical Engineering Congress</h3>
+    <p>A national-level congress with technical paper presentations, poster sessions, workshops and panel discussions.</p>
+  </div>
+  <div class="row-meta">
+    <span class="cat">
+      <span class="dot past"></span>Seminar
+    </span>
+    <span>Seminar Hall</span>
+    
+  </div>
+  <div class="row-end">
+    <span class="price free">Free</span>
+    <span class="ar" aria-hidden="true">&#8594;</span>
+  </div>
+</a>
+
+    </div>
     
   </div>
 </section>

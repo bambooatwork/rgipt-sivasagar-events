@@ -8,7 +8,7 @@
   if (!grid) return;
 
   var form = document.querySelector("[data-filter-form]");
-  var cards = [].slice.call(grid.querySelectorAll(".event-card"));
+  var cards = [].slice.call(grid.querySelectorAll(".row"));
   var countEl = document.querySelector("[data-result-count]");
 
   var emptyEl = document.createElement("div");

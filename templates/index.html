@@ -1,65 +1,36 @@
 {% extends "base.html" %}
-{% from "_macros.html" import icon, event_card, date_badge %}
+{% from "_macros.html" import icon, event_row, ann_row %}
 {% block title %}RGIPT Sivasagar Campus \u2013 Events, Registrations & Announcements{% endblock %}
 
 {% block content %}
 <section class="hero">
   <div class="container">
-    <div class="hero-grid">
-      <div class="hero-copy reveal">
-        <span class="eyebrow">Sivasagar Campus &middot; Assam</span>
-        <h1>Where campus <em>events</em> come to life.</h1>
-        <p class="lead">Discover, register and never miss a moment at RGIPT Sivasagar Campus &mdash; from the national-level <strong>Urjotsav</strong> tech fest and <strong>Krida Oorja</strong> sports meet to hackathons, workshops and cultural evenings.</p>
-        <div class="hero-cta">
-          <a class="btn btn-primary" href="{{ url_for('events') }}">{{ icon('calendar') }} Browse events</a>
-          <a class="btn" href="{{ url_for('my_registrations') }}">{{ icon('ticket') }} My registrations</a>
-        </div>
-        <div class="stat-row">
-          <div class="stat reveal"><b data-count="{{ stats.events }}">0</b><span>Events</span></div>
-          <div class="stat reveal"><b data-count="{{ stats.upcoming }}">0</b><span>Upcoming</span></div>
-          <div class="stat reveal"><b data-count="{{ stats.registrations }}">0</b><span>Registrations</span></div>
-          <div class="stat reveal"><b data-count="{{ stats.departments }}">0</b><span>Departments</span></div>
-        </div>
-      </div>
+    <p class="kicker reveal">Sivasagar Campus &middot; Assam</p>
+    <h1 class="reveal">Where campus <em>events</em> come to life.</h1>
+    <p class="lead reveal">Discover, register and never miss a moment at RGIPT Sivasagar Campus &mdash; from the national-level Urjotsav tech fest and Krida Oorja sports meet to hackathons, workshops and cultural evenings.</p>
+    <div class="hero-actions reveal">
+      <a class="btn btn-primary" href="{{ url_for('events') }}">Browse events</a>
+      <a class="btn" href="{{ url_for('my_registrations') }}">My registrations</a>
+    </div>
 
-      <div class="hero-visual reveal">
-        <div class="glass-card">
-          <div class="flex between items-center" style="margin-bottom:8px">
-            <strong style="font-family:var(--font-display)">Happening soon</strong>
-            <span class="chip">Upcoming</span>
-          </div>
-          <div class="hero-stack">
-            {% for e in featured[:3] %}
-            <a class="mini-event" href="{{ url_for('event_detail', slug=e.slug) }}">
-              {{ date_badge(e.event_date) }}
-              <div>
-                <h4>{{ e.title }}</h4>
-                <small>{{ e.category }} &middot; {{ e.venue.split(',')[0] }}</small>
-              </div>
-            </a>
-            {% else %}
-            <p class="muted" style="padding:12px 0">No upcoming events scheduled yet.</p>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
+    <div class="stat-row reveal">
+      <div class="stat"><b data-count="{{ stats.events }}">0</b><span>Events</span></div>
+      <div class="stat"><b data-count="{{ stats.upcoming }}">0</b><span>Upcoming</span></div>
+      <div class="stat"><b data-count="{{ stats.registrations }}">0</b><span>Registrations</span></div>
+      <div class="stat"><b data-count="{{ stats.departments }}">0</b><span>Departments</span></div>
     </div>
   </div>
 </section>
 
 <section class="section-tight">
   <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <span class="kicker">Featured</span>
-        <h2>Flagship events</h2>
-        <p class="muted">The biggest dates on the campus calendar this season.</p>
-      </div>
-      <a class="btn btn-sm" href="{{ url_for('events') }}">View all {{ icon('arrow') }}</a>
-    </div>
-    <div class="grid grid-3">
-      {% for e in featured %}{{ event_card(e) }}{% else %}
-      <div class="empty"><p>No featured events yet.</p></div>
+    <header class="sec-head reveal">
+      <div class="sec-title"><span class="sec-num">01</span><h2>Next up</h2></div>
+      <a class="sec-link" href="{{ url_for('events', status='upcoming') }}">All upcoming events <span class="ar">&#8594;</span></a>
+    </header>
+    <div class="listing">
+      {% for e in upcoming[:6] %}{{ event_row(e) }}{% else %}
+      <p class="listing-note">No upcoming events scheduled right now.</p>
       {% endfor %}
     </div>
   </div>
@@ -67,46 +38,13 @@
 
 <section class="section-tight">
   <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <span class="kicker">What's next</span>
-        <h2>Upcoming events</h2>
-      </div>
-      <a class="btn btn-sm" href="{{ url_for('events', status='upcoming') }}">See all upcoming {{ icon('arrow') }}</a>
-    </div>
-    <div class="grid grid-3">
-      {% for e in upcoming[:6] %}{{ event_card(e) }}{% else %}
-      <div class="empty"><p>No upcoming events right now. Check back soon.</p></div>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<section class="section-tight">
-  <div class="container">
-    <div class="section-head reveal">
-      <div>
-        <span class="kicker">Notice board</span>
-        <h2>Latest announcements</h2>
-      </div>
-      <a class="btn btn-sm" href="{{ url_for('announcements') }}">All announcements {{ icon('arrow') }}</a>
-    </div>
-    <div class="grid" style="gap:14px">
-      {% for a in announcements %}
-      <a class="announce reveal {{ 'pinned' if a.is_pinned }}" href="{{ url_for('announcement_detail', aid=a.id) }}">
-        <span class="stripe"></span>
-        <div>
-          <div class="flex items-center gap wrap">
-            <span class="chip plain">{{ a.category }}</span>
-            {% if a.is_pinned %}<span class="badge pinned">Pinned</span>{% endif %}
-            <span class="date">{{ a.published_at | datefmt('%d %b %Y') }}</span>
-          </div>
-          <h3 class="mt-2" style="margin-bottom:4px">{{ a.title }}</h3>
-          <p class="muted mb-0" style="font-size:.92rem">{{ a.body[:160] }}{% if a.body|length > 160 %}&hellip;{% endif %}</p>
-        </div>
-      </a>
-      {% else %}
-      <div class="empty"><p>No announcements published yet.</p></div>
+    <header class="sec-head reveal">
+      <div class="sec-title"><span class="sec-num">02</span><h2>Notice board</h2></div>
+      <a class="sec-link" href="{{ url_for('announcements') }}">All announcements <span class="ar">&#8594;</span></a>
+    </header>
+    <div class="listing">
+      {% for a in announcements %}{{ ann_row(a) }}{% else %}
+      <p class="listing-note">No announcements published yet.</p>
       {% endfor %}
     </div>
   </div>
@@ -115,24 +53,29 @@
 {% if past %}
 <section class="section-tight">
   <div class="container">
-    <div class="section-head reveal">
-      <div><span class="kicker">Archive</span><h2>Recently concluded</h2></div>
-      <a class="btn btn-sm" href="{{ url_for('events', status='past') }}">Past events {{ icon('arrow') }}</a>
+    <header class="sec-head reveal">
+      <div class="sec-title"><span class="sec-num">03</span><h2>Recently concluded</h2></div>
+      <a class="sec-link" href="{{ url_for('events', status='past') }}">Past events <span class="ar">&#8594;</span></a>
+    </header>
+    <div class="listing">
+      {% for e in past %}{{ event_row(e) }}{% endfor %}
     </div>
-    <div class="grid grid-3">{% for e in past %}{{ event_card(e) }}{% endfor %}</div>
   </div>
 </section>
 {% endif %}
 
 <section class="section-tight">
   <div class="container">
-    <div class="panel reveal" style="padding:36px;text-align:center">
-      <span class="kicker" style="justify-content:center">Departments &amp; councils</span>
-      <h2 style="margin:8px 0 10px">Hosting an event on campus?</h2>
-      <p class="muted" style="max-width:60ch;margin:0 auto 20px">Departments, councils and student chapters can list events, open registrations and broadcast announcements to the whole campus.</p>
-      <div class="flex gap items-center" style="justify-content:center;flex-wrap:wrap">
-        <a class="btn btn-primary" href="{{ url_for('admin_login') }}">{{ icon('plus') }} List an event</a>
-        <a class="btn" href="{{ url_for('contact') }}">{{ icon('mail') }} Contact the team</a>
+    <div class="rule-block reveal">
+      <div class="flex between items-center wrap gap">
+        <div>
+          <h3 style="margin:0 0 4px">Hosting an event on campus?</h3>
+          <p class="muted mb-0" style="font-size:.9rem">Departments, councils and student chapters can list events and open registrations.</p>
+        </div>
+        <div class="flex gap wrap">
+          <a class="btn btn-primary" href="{{ url_for('admin_login') }}">List an event</a>
+          <a class="btn" href="{{ url_for('contact') }}">Contact the team</a>
+        </div>
       </div>
     </div>
   </div>

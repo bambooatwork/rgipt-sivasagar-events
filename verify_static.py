@@ -55,15 +55,15 @@ for p in ["index.html","events.html","faculty.html","contact.html","about.html",
 
 # events filtering
 goto("events.html")
-up = ev("document.querySelectorAll('[data-static-events] .event-card:not([style*=\"display: none\"])').length")
-ok("events: default shows upcoming only", up and up>0 and up< ev("document.querySelectorAll('[data-static-events] .event-card').length"), f"upcoming={up}")
+up = ev("document.querySelectorAll('[data-static-events] .row:not([style*=\"display: none\"])').length")
+ok("events: default shows upcoming only", up and up>0 and up< ev("document.querySelectorAll('[data-static-events] .row').length"), f"upcoming={up}")
 ev("(()=>{const s=document.querySelector('[data-filter-form] [name=status]');s.value='all';s.dispatchEvent(new Event('change',{bubbles:true}));})()")
 time.sleep(0.4)
-allc = ev("document.querySelectorAll('[data-static-events] .event-card:not([style*=\"display: none\"])').length")
-ok("events: 'all' shows every card", allc == ev("document.querySelectorAll('[data-static-events] .event-card').length"), f"all={allc}")
+allc = ev("document.querySelectorAll('[data-static-events] .row:not([style*=\"display: none\"])').length")
+ok("events: 'all' shows every card", allc == ev("document.querySelectorAll('[data-static-events] .row').length"), f"all={allc}")
 ev("(()=>{const i=document.querySelector('[data-filter-form] [name=q]');i.value='urjotsav';i.dispatchEvent(new Event('input',{bubbles:true}));})()")
 time.sleep(0.4)
-ok("events: search 'urjotsav' filters", ev("document.querySelectorAll('[data-static-events] .event-card:not([style*=\"display: none\"])').length")==1)
+ok("events: search 'urjotsav' filters", ev("document.querySelectorAll('[data-static-events] .row:not([style*=\"display: none\"])').length")==1)
 
 # faculty search
 goto("faculty.html")
