@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Admin sign in &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-card reveal">
+    <div class="center" style="margin-bottom:20px">
+      <img class="round" src="{{ url_for('static', filename='img/logo.png') }}" alt="RGIPT logo" style="width:78px;margin:0 auto 12px">
+      <h1 style="font-size:1.6rem;margin-bottom:2px">Admin sign in</h1>
+      <p class="muted mb-0" style="font-size:.9rem">RGIPT Sivasagar Campus &middot; Event Portal</p>
+    </div>
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <div class="field"><label>Username</label><input type="text" name="username" required autofocus autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" name="password" required autocomplete="current-password"></div>
+      <button class="btn btn-primary btn-block" type="submit">{{ icon('settings') }} Sign in</button>
+    </form>
+    <p class="hint center mt-2">Authorised personnel only. Sessions are protected with CSRF tokens and hashed passwords.</p>
+  </div>
+</div>
+{% endblock %}

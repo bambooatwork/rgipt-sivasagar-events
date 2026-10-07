@@ -1,0 +1,48 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Events &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>Events</h1><p class="muted mb-0">{{ events|length }} event{{ 's' if events|length != 1 }} on the platform.</p></div>
+  <a class="btn btn-primary" href="{{ url_for('admin_event_new') }}">{{ icon('plus') }} New event</a>
+</div>
+
+{% if events %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Seats</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for e in events %}
+      <tr>
+        <td><span class="row-title">{{ e.title }}</span>{% if e.is_featured %}<br><span class="badge pinned">{{ icon('star') }} Featured</span>{% endif %}</td>
+        <td>{{ e.event_date | datefmt }}<br><span class="hint">{{ e.start_time }}</span></td>
+        <td><span class="chip">{{ e.category }}</span></td>
+        <td>{{ e.seats_taken }}/{{ e.capacity }}</td>
+        <td>
+          {% if e.is_published %}<span class="badge live">Published</span>{% else %}<span class="badge draft">Hidden</span>{% endif %}
+          {% if e.is_past %}<br><span class="badge past">Past</span>{% endif %}
+        </td>
+        <td>
+          <div class="actions">
+            <a class="btn btn-sm" href="{{ url_for('admin_registrations', event_id=e.id) }}">{{ icon('ticket') }} {{ e.seats_taken }}</a>
+            <a class="btn btn-sm" href="{{ url_for('admin_event_edit', eid=e.id) }}">{{ icon('edit') }}</a>
+            <form method="post" action="{{ url_for('admin_event_toggle', eid=e.id) }}">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="btn btn-sm" type="submit" title="{{ 'Hide' if e.is_published else 'Publish' }}">{{ icon('eye') }}</button>
+            </form>
+            <form method="post" action="{{ url_for('admin_event_delete', eid=e.id) }}" data-confirm="Delete &quot;{{ e.title }}&quot; and all its registrations? This cannot be undone.">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-danger" type="submit">{{ icon('trash') }}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty"><div class="big">&#128197;</div><p>No events yet.</p><a class="btn btn-primary mt-2" href="{{ url_for('admin_event_new') }}">Create your first event</a></div>
+{% endif %}
+{% endblock %}

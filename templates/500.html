@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Server error &ndash; RGIPT Sivasagar Campus{% endblock %}
+{% block content %}
+<section class="section"><div class="container center">
+  <div class="empty" style="padding-top:40px">
+    <div style="font-family:var(--font-display);font-size:5rem;line-height:1;color:var(--rose)">500</div>
+    <h1 style="font-size:2rem">Something went wrong</h1>
+    <p class="muted">Our team has been notified. Please try again in a moment.</p>
+    <a class="btn btn-primary mt-2" href="{{ url_for('home') }}">Back to home</a>
+  </div>
+</div></section>
+{% endblock %}

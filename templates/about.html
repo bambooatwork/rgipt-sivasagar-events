@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}About &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding-bottom:0">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="reveal">
+        <span class="eyebrow">An Institution of National Importance</span>
+        <h1>About <em>RGIPT Sivasagar</em> Campus</h1>
+        <p class="lead">The Rajiv Gandhi Institute of Petroleum Technology (RGIPT) was established by an Act of Parliament (RGIPT Act 2007) under the Ministry of Petroleum &amp; Natural Gas, Government of India. Its Sivasagar Campus in Assam carries that mission into India's oil-rich North-East.</p>
+        <div class="stat-row">
+          <div class="stat"><b data-count="{{ stats.events }}">0</b><span>Events hosted</span></div>
+          <div class="stat"><b data-count="{{ stats.registrations }}">0</b><span>Registrations</span></div>
+          <div class="stat"><b>2016</b><span>Established</span></div>
+          <div class="stat"><b data-count="{{ departments|length - 1 }}">0</b><span>Departments</span></div>
+        </div>
+      </div>
+      <div class="hero-visual reveal">
+        <div class="glass-card">
+          <img class="round" src="{{ url_for('static', filename='img/logo.png') }}" alt="RGIPT logo" style="width:130px;margin:0 auto 14px">
+          <h3 class="center" style="margin-bottom:4px">{{ campus.full_name }}</h3>
+          <p class="center muted" style="font-size:.9rem">{{ campus.address }}</p>
+          <div class="divider"></div>
+          <dl class="dl">
+            <dt>Phone</dt><dd>{{ campus.phone }}</dd>
+            <dt>Email</dt><dd style="word-break:break-all">{{ campus.email }}</dd>
+            <dt>Campus In-Charge</dt><dd>{{ campus.incharge }}</dd>
+            <dt>Director, RGIPT</dt><dd>Prof. Harish Hirani</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2">
+      <div class="panel reveal">
+        <span class="kicker">Our story</span>
+        <h2 style="margin-top:6px">A hub for petroleum &amp; energy education</h2>
+        <p>RGIPT is a domain-specific institution co-promoted by six leading oil Public Sector Units &mdash; ONGC, IOCL, OIL, GAIL, BPCL and HPCL &mdash; in association with the Oil Industry Development Board (OIDB). The Sivasagar centre was established in 2016 to supplement academic activities and offer diploma and training programmes in the petroleum and natural gas domain. It was historically known as the Assam Energy Institute (AEI), Sivasagar.</p>
+        <p>Situated in the upper reaches of the Brahmaputra Valley, the campus sits amid extensive oilfield activity and gives students direct exposure to the industry, supported by Oil India Limited (OIL), ONGC and leading research and training institutes.</p>
+      </div>
+      <div class="panel reveal">
+        <span class="kicker">Academics</span>
+        <h2 style="margin-top:6px">Departments</h2>
+        <p class="muted">The campus offers specialised, industry-oriented diploma programmes across these disciplines:</p>
+        <div class="grid" style="gap:10px">
+          {% for d in departments if d != 'Other' %}
+          <div class="flex items-center gap" style="padding:12px 14px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border)">
+            <span style="color:var(--brand)">{{ icon('check') }}</span><span>{{ d }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel reveal mt-3">
+      <span class="kicker">Programmes &amp; admissions</span>
+      <h2 style="margin-top:6px">Diploma programmes</h2>
+      <p class="muted">The campus runs six industry-oriented diploma programmes with 80 seats each &mdash; 480 seats in total.</p>
+      <div class="grid grid-2">
+        <div class="stack-sm">
+          <p><strong>Fee waiver:</strong> 100% tuition waiver for students securing 95% and above in the Class 10 board examination.</p>
+          <p class="mb-0"><strong>Lateral entry:</strong> Diploma graduates with a CPI of 7.5 or above and no active backlog are eligible for direct admission to the B.Tech programme at RGIPT Jais Campus.</p>
+        </div>
+        <div class="stack-sm">
+          <p><strong>Seat reservation:</strong> 50% of seats are reserved for Assam and 50% for the rest of India. The campus also works towards 20% girl students; PwD reservation is as per rules.</p>
+          <p class="mb-0"><strong>History:</strong> Established in 2016 as a centre of RGIPT; the Petroleum Engineering branch was set up in 2017 &mdash; the first of its kind in Assam to offer a Diploma in Petroleum Engineering.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel reveal mt-3">
+      <span class="kicker">Campus life</span>
+      <h2 style="margin-top:6px">Events &amp; communities</h2>
+      <p class="muted">The campus pulses with activity throughout the year, driven by student councils and chapters.</p>
+      <div class="grid grid-3 mt-2">
+        <div class="card" style="padding:20px"><h3>Urjotsav</h3><p class="muted mb-0">The annual national-level technical and entrepreneurial festival by the Science &amp; Technology Council.</p></div>
+        <div class="card" style="padding:20px"><h3>Krida Oorja</h3><p class="muted mb-0">The annual sports festival &mdash; three weeks of cricket, football, athletics and team spirit.</p></div>
+        <div class="card" style="padding:20px"><h3>GDG on Campus</h3><p class="muted mb-0">A Google Developer community hosting TechSprint hackathons, Cloud Study Jams and workshops.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

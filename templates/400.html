@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Bad request &ndash; RGIPT Sivasagar Campus{% endblock %}
+{% block content %}
+<section class="section"><div class="container center">
+  <div class="empty" style="padding-top:40px">
+    <div style="font-family:var(--font-display);font-size:5rem;line-height:1;color:var(--amber)">400</div>
+    <h1 style="font-size:2rem">Something looked off</h1>
+    <p class="muted">{{ message }}</p>
+    <a class="btn btn-primary mt-2" href="{{ url_for('home') }}">Back to home</a>
+  </div>
+</div></section>
+{% endblock %}

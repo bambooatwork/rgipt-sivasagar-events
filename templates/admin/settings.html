@@ -1,0 +1,31 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Settings &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head"><div><h1>Account settings</h1><p class="muted mb-0">Signed in as <strong>{{ current_admin.username }}</strong> ({{ current_admin.full_name }}).</p></div></div>
+
+<div class="grid grid-2">
+  <form method="post" class="panel">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <h3>Change password</h3>
+    <p class="muted" style="font-size:.9rem">Passwords are stored as salted hashes, never in plain text.</p>
+    <div class="field"><label>Current password</label><input type="password" name="current_password" required autocomplete="current-password"></div>
+    <div class="field"><label>New password</label><input type="password" name="new_password" required minlength="6" autocomplete="new-password"></div>
+    <div class="field"><label>Confirm new password</label><input type="password" name="confirm_password" required minlength="6" autocomplete="new-password"></div>
+    <button class="btn btn-primary" type="submit">{{ icon('check') }} Update password</button>
+  </form>
+
+  <div class="panel">
+    <h3>Security &amp; session</h3>
+    <div class="meta-list">
+      <div class="row">{{ icon('check') }}<span>CSRF protection on every form</span></div>
+      <div class="row">{{ icon('check') }}<span>Salted password hashing (Werkzeug PBKDF2)</span></div>
+      <div class="row">{{ icon('check') }}<span>HTTP-only, SameSite session cookies</span></div>
+      <div class="row">{{ icon('check') }}<span>Login-required guard on all admin routes</span></div>
+    </div>
+    <div class="divider"></div>
+    <a class="btn btn-block" href="{{ url_for('admin_logout') }}">{{ icon('logout') }} Sign out</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Contact &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="detail-grid">
+      <div class="panel reveal">
+        <span class="kicker">Get in touch</span>
+        <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);margin-top:6px">Contact the campus team</h1>
+        <p class="muted">Questions about an event, registration or the campus? Send us a message and we'll get back to you.</p>
+        <form method="post">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <div class="form-grid">
+            <div class="field"><label>Your name <span class="req">*</span></label><input type="text" name="name" required></div>
+            <div class="field"><label>Email <span class="req">*</span></label><input type="email" name="email" required></div>
+            <div class="field full"><label>Subject</label><input type="text" name="subject" placeholder="e.g. Query about Urjotsav registration"></div>
+            <div class="field full"><label>Message <span class="req">*</span></label><textarea name="message" required placeholder="How can we help?"></textarea></div>
+          </div>
+          <button class="btn btn-primary" type="submit">{{ icon('mail') }} Send message</button>
+        </form>
+      </div>
+
+      <aside>
+        <div class="panel reveal">
+          <h3>Reach us</h3>
+          <div class="meta-list">
+            <div class="row">{{ icon('pin') }}<span>{{ campus.address }}</span></div>
+            <div class="row">{{ icon('phone') }}<span>{{ campus.phone }}</span></div>
+            <div class="row">{{ icon('mail') }}<span style="word-break:break-all">{{ campus.email }}</span></div>
+          </div>
+          <div class="divider"></div>
+          <h3>Getting here</h3>
+          <div class="stack-sm muted" style="font-size:.92rem">
+            <p class="mb-0">Guwahati ISBT &rarr; Campus: <strong>362 km</strong></p>
+            <p class="mb-0">Jorhat ISBT &rarr; Campus: <strong>64 km</strong></p>
+            <p class="mb-0">Dibrugarh ASTC Bus Stand &rarr; Campus: <strong>80 km</strong></p>
+          </div>
+          <div class="divider"></div>
+          <a class="btn btn-block" href="{{ campus.linkedin }}" target="_blank" rel="noopener">Follow on LinkedIn</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

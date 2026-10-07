@@ -1,0 +1,90 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Dashboard &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div>
+    <h1>Dashboard</h1>
+    <p class="muted mb-0">Welcome back, {{ current_admin.full_name }}. Here's what's happening across campus.</p>
+  </div>
+  <div class="flex gap wrap">
+    <a class="btn btn-sm" href="{{ url_for('admin_announcement_new') }}">{{ icon('megaphone') }} New announcement</a>
+    <a class="btn btn-sm btn-primary" href="{{ url_for('admin_event_new') }}">{{ icon('plus') }} New event</a>
+  </div>
+</div>
+
+{% if using_default_password %}
+<div class="flash warning" style="position:static;margin-bottom:18px">
+  <p><strong>Security notice:</strong> this account still uses the default password. Change it now in <a href="{{ url_for('admin_settings') }}">Settings</a>.</p>
+</div>
+{% endif %}
+
+<div class="kpi-grid">
+  <div class="kpi"><div class="ico">{{ icon('calendar') }}</div><span class="label">Total events</span><b>{{ stats.total_events }}</b><span class="hint">{{ stats.published_events }} published &middot; {{ stats.upcoming }} upcoming</span></div>
+  <div class="kpi"><div class="ico">{{ icon('ticket') }}</div><span class="label">Registrations</span><b>{{ stats.total_regs }}</b><span class="hint">{{ stats.waitlist }} on waitlist</span></div>
+  <div class="kpi"><div class="ico">{{ icon('megaphone') }}</div><span class="label">Announcements</span><b>{{ stats.drafts }}</b><span class="hint">drafts pending</span></div>
+  <div class="kpi"><div class="ico">{{ icon('inbox') }}</div><span class="label">Messages</span><b>{{ stats.unread }}</b><span class="hint">unread enquiries</span></div>
+</div>
+
+<div class="grid grid-2">
+  <div class="panel">
+    <div class="panel-head"><h3>Registrations by category</h3><span class="chip">{{ icon('chart') }} Live</span></div>
+    {% set maxc = (per_cat | map(attribute=1) | max) if per_cat else 1 %}
+    <div class="bar-chart">
+      {% for cat, cnt in per_cat %}
+      <div class="bar-row">
+        <span class="muted">{{ cat }}</span>
+        <span class="track"><i data-width="{{ (100 * cnt / maxc) if maxc else 0 }}"></i></span>
+        <strong style="text-align:right">{{ cnt }}</strong>
+      </div>
+      {% else %}
+      <p class="muted mb-0">No registrations yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3>Top events</h3><a class="btn btn-sm" href="{{ url_for('admin_events') }}">Manage</a></div>
+    <div class="stack-sm">
+      {% for event, cnt in top_events %}
+      <div class="flex between items-center gap" style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div><strong>{{ event.title }}</strong><br><span class="hint">{{ event.event_date | datefmt }} &middot; {{ event.category }}</span></div>
+        <span class="chip">{{ cnt }} regs</span>
+      </div>
+      {% else %}<p class="muted mb-0">No events yet.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2">
+  <div class="panel">
+    <div class="panel-head"><h3>Recent registrations</h3><a class="btn btn-sm" href="{{ url_for('admin_registrations') }}">All</a></div>
+    <div class="table-wrap" style="border:none;background:transparent">
+      <table style="min-width:0">
+        <tbody>
+          {% for r in recent_regs %}
+          <tr>
+            <td><span class="row-title">{{ r.name }}</span><br><span class="hint">{{ r.event.title[:34] }}</span></td>
+            <td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+            <td class="hint mono">{{ r.registered_at | datefmt('%d %b, %H:%M') }}</td>
+          </tr>
+          {% else %}<tr><td class="muted">No registrations yet.</td></tr>{% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><h3>Recent messages</h3><a class="btn btn-sm" href="{{ url_for('admin_messages') }}">Inbox</a></div>
+    <div class="stack-sm">
+      {% for m in recent_msgs %}
+      <div style="padding:12px 0;border-bottom:1px solid var(--border)">
+        <div class="flex between items-center gap"><strong>{{ m.name }}</strong>{% if not m.is_read %}<span class="badge draft">New</span>{% endif %}</div>
+        <span class="hint">{{ m.subject }} &middot; {{ m.created_at | datefmt('%d %b') }}</span>
+      </div>
+      {% else %}<p class="muted mb-0">No messages yet.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

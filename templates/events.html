@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon, event_card %}
+{% block title %}Events &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="kicker">Campus calendar</span>
+        <h1 style="font-size:clamp(1.9rem,4vw,2.8rem)">Events</h1>
+        <p class="muted" data-result-count>{{ events|length }} event{{ 's' if events|length != 1 }} found{% if q %} for &ldquo;{{ q }}&rdquo;{% endif %}.</p>
+      </div>
+    </div>
+
+    <form class="filter-bar reveal" method="get" action="{{ url_for('events') }}" data-filter-form>
+      <div class="field">
+        <label>Search</label>
+        <input type="text" name="q" value="{{ q }}" placeholder="Search events, organisers, venues&hellip;">
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select name="category" data-autosubmit>
+          <option value="">All</option>
+          {% for c in categories %}<option value="{{ c }}" {{ 'selected' if category == c }}>{{ c }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>When</label>
+        <select name="status" data-autosubmit>
+          <option value="upcoming" {{ 'selected' if status == 'upcoming' }}>Upcoming</option>
+          <option value="past" {{ 'selected' if status == 'past' }}>Past</option>
+          <option value="all" {{ 'selected' if status == 'all' }}>All</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Department</label>
+        <select name="department" data-autosubmit>
+          <option value="">All</option>
+          {% for d in departments %}<option value="{{ d }}" {{ 'selected' if department == d }}>{{ d }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><button class="btn btn-primary" type="submit">{{ icon('search') }} Filter</button></div>
+    </form>
+
+    {% if events %}
+    <div class="grid grid-3" data-static-events>{% for e in events %}{{ event_card(e) }}{% endfor %}</div>
+    {% else %}
+    <div class="empty"><div class="big">&#128269;</div><p>No events match your filters.</p><a class="btn btn-sm mt-2" href="{{ url_for('events') }}">Reset filters</a></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

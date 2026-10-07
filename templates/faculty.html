@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Faculty &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="kicker">People</span>
+        <h1 style="font-size:clamp(1.9rem,4vw,2.8rem)">Faculty &amp; leadership</h1>
+        <p class="muted">The academic team at RGIPT Sivasagar Campus. Details compiled from the institute's official faculty listings.</p>
+      </div>
+    </div>
+
+    <h2 class="reveal" style="font-size:1.3rem">Campus leadership</h2>
+    <div class="grid grid-3 mb-2">
+      {% for f in leadership %}
+      <div class="card reveal" style="padding:22px;border-top:3px solid var(--navy)">
+        <h3 style="margin:0 0 4px;font-size:1.08rem">{{ f.name }}</h3>
+        <p class="muted" style="margin:0 0 10px;font-size:.9rem">{{ f.role }}</p>
+        {% if f.focus %}<p style="font-size:.88rem;margin:0 0 12px"><strong>Focus:</strong> <span class="muted">{{ f.focus }}</span></p>{% endif %}
+        <a class="hint" href="mailto:{{ f.email }}" style="word-break:break-all">{{ f.email }}</a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="section-head reveal" style="margin-top:26px">
+      <div>
+        <h2 style="font-size:1.3rem;margin:0">Faculty</h2>
+        <p class="muted mb-0">{{ members|length }} members</p>
+      </div>
+      <div class="field" style="margin:0;min-width:260px">
+        <input type="text" data-filter-input placeholder="Search by name or research area&hellip;">
+      </div>
+    </div>
+
+    <div class="grid grid-3" data-filter-list>
+      {% for f in members %}
+      <div class="card reveal" style="padding:20px" data-filter-item data-text="{{ (f.name ~ ' ' ~ f.role ~ ' ' ~ f.dept ~ ' ' ~ f.focus)|lower }}">
+        <h3 style="margin:0 0 4px;font-size:1.02rem">{{ f.name }}</h3>
+        <p class="muted" style="margin:0 0 8px;font-size:.86rem">{{ f.role }}{% if f.dept %} &middot; {{ f.dept }}{% endif %}</p>
+        {% if f.focus %}<p style="font-size:.86rem;margin:0 0 12px" class="muted">{{ f.focus }}</p>{% endif %}
+        <a class="hint" href="mailto:{{ f.email }}" style="word-break:break-all">{{ f.email }}</a>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="muted mt-2 reveal" data-filter-empty style="display:none">No faculty match your search.</p>
+
+    <div class="panel reveal mt-3">
+      <p class="mb-0 muted" style="font-size:.88rem">Source: official RGIPT Sivasagar Campus faculty listings (rgipt.ac.in). Institutional email addresses are shown; personal phone numbers published on the institute site are not reproduced here. For corrections, write to <a href="mailto:{{ campus.email }}">{{ campus.email }}</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Registration confirmed &ndash; {{ reg.event.title }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="center reveal" style="margin-bottom:26px">
+      <div style="font-size:3rem;color:var(--emerald)">{{ icon('check') }}</div>
+      <h1 style="font-size:clamp(1.8rem,4vw,2.6rem)">You're registered!</h1>
+      <p class="muted">Your spot is {% if reg.status == 'waitlist' %}on the waitlist for{% else %}confirmed for{% endif %} {{ reg.event.title }}.</p>
+    </div>
+
+    <div class="ticket reveal">
+      <div class="ticket-top">
+        <span class="chip" style="background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.35);color:#fff">{{ reg.status | upper }}</span>
+        <h2 style="margin-top:12px">{{ reg.event.title }}</h2>
+        <p style="color:#fff;opacity:.85;margin:0">{{ reg.event.event_date | datefmt('%A, %d %B %Y') }} &middot; {{ reg.event.start_time }}</p>
+      </div>
+      <div class="ticket-body">
+        <p class="muted" style="font-size:.84rem;margin-bottom:4px">Ticket code</p>
+        <div class="code">{{ reg.ticket_code }}</div>
+        <div class="divider"></div>
+        <dl class="dl">
+          <dt>Name</dt><dd>{{ reg.name }}</dd>
+          <dt>Email</dt><dd>{{ reg.email }}</dd>
+          {% if reg.phone %}<dt>Phone</dt><dd>{{ reg.phone }}</dd>{% endif %}
+          <dt>College</dt><dd>{{ reg.college }}</dd>
+          {% if reg.department %}<dt>Department</dt><dd>{{ reg.department }}</dd>{% endif %}
+          {% if reg.team_name %}<dt>Team</dt><dd>{{ reg.team_name }}</dd>{% endif %}
+          <dt>Venue</dt><dd>{{ reg.event.venue }}</dd>
+        </dl>
+        <div class="divider"></div>
+        <div class="flex gap wrap">
+          <a class="btn btn-primary" href="{{ url_for('event_detail', slug=reg.event.slug) }}">View event</a>
+          <button class="btn" onclick="window.print()">Print ticket</button>
+          <a class="btn btn-ghost" href="{{ url_for('my_registrations') }}">My registrations</a>
+        </div>
+        <p class="hint mt-2">Keep this ticket code handy. Please carry a valid ID to the venue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

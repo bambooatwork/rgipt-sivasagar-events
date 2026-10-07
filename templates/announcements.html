@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Announcements &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="section-head reveal">
+      <div>
+        <span class="kicker">Notice board</span>
+        <h1 style="font-size:clamp(1.9rem,4vw,2.8rem)">Announcements</h1>
+        <p class="muted">Official updates from RGIPT Sivasagar Campus.</p>
+      </div>
+    </div>
+
+    <div class="grid" style="gap:16px">
+      {% for a in announcements %}
+      <a class="announce reveal {{ 'pinned' if a.is_pinned }}" href="{{ url_for('announcement_detail', aid=a.id) }}">
+        <span class="stripe"></span>
+        <div style="flex:1">
+          <div class="flex items-center gap wrap">
+            <span class="chip plain">{{ a.category }}</span>
+            {% if a.is_pinned %}<span class="badge pinned">{{ icon('star') }} Pinned</span>{% endif %}
+            <span class="date">{{ a.published_at | datefmt('%d %b %Y') }}</span>
+          </div>
+          <h3 class="mt-2" style="margin-bottom:6px">{{ a.title }}</h3>
+          <p class="muted mb-0" style="font-size:.94rem">{{ a.body[:200] }}{% if a.body|length > 200 %}&hellip;{% endif %}</p>
+        </div>
+      </a>
+      {% else %}
+      <div class="empty"><div class="big">&#128227;</div><p>No announcements published yet.</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

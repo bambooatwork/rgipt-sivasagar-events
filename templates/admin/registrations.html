@@ -1,0 +1,66 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Registrations &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>Registrations</h1><p class="muted mb-0">{{ regs|length }} record{{ 's' if regs|length != 1 }}.</p></div>
+  <a class="btn btn-primary" href="{{ url_for('admin_registrations_export', event_id=eid, status=status, q=q) }}">{{ icon('download') }} Export CSV</a>
+</div>
+
+<form class="filter-bar" method="get" action="{{ url_for('admin_registrations') }}" style="grid-template-columns:2fr 1.4fr 1fr auto">
+  <div class="field"><label>Search</label><input type="text" name="q" value="{{ q }}" placeholder="Name, email, ticket, college&hellip;"></div>
+  <div class="field"><label>Event</label>
+    <select name="event_id" data-autosubmit>
+      <option value="">All events</option>
+      {% for ev in all_events %}<option value="{{ ev.id }}" {{ 'selected' if eid == ev.id }}>{{ ev.title }}</option>{% endfor %}
+    </select>
+  </div>
+  <div class="field"><label>Status</label>
+    <select name="status" data-autosubmit>
+      <option value="">All</option>
+      <option value="confirmed" {{ 'selected' if status == 'confirmed' }}>Confirmed</option>
+      <option value="waitlist" {{ 'selected' if status == 'waitlist' }}>Waitlist</option>
+      <option value="cancelled" {{ 'selected' if status == 'cancelled' }}>Cancelled</option>
+    </select>
+  </div>
+  <div class="field"><button class="btn btn-primary" type="submit">{{ icon('search') }} Filter</button></div>
+</form>
+
+{% if regs %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Ticket</th><th>Participant</th><th>Event</th><th>Dept / Year</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for r in regs %}
+      <tr>
+        <td class="mono">{{ r.ticket_code }}</td>
+        <td><span class="row-title">{{ r.name }}</span><br><span class="hint">{{ r.email }}{% if r.phone %} &middot; {{ r.phone }}{% endif %}</span>{% if r.team_name %}<br><span class="hint">Team: {{ r.team_name }}</span>{% endif %}</td>
+        <td>{{ r.event.title }}<br><span class="hint">{{ r.event.event_date | datefmt }}</span></td>
+        <td>{{ r.department or '&mdash;'|safe }}<br><span class="hint">{{ r.year or '' }}</span></td>
+        <td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+        <td>
+          <div class="actions">
+            <form method="post" action="{{ url_for('admin_registration_status', rid=r.id) }}">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <select name="status" data-autosubmit style="padding:7px 10px;font-size:.82rem">
+                <option value="confirmed" {{ 'selected' if r.status=='confirmed' }}>Confirmed</option>
+                <option value="waitlist" {{ 'selected' if r.status=='waitlist' }}>Waitlist</option>
+                <option value="cancelled" {{ 'selected' if r.status=='cancelled' }}>Cancelled</option>
+              </select>
+            </form>
+            <form method="post" action="{{ url_for('admin_registration_delete', rid=r.id) }}" data-confirm="Delete this registration permanently?">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-danger" type="submit">{{ icon('trash') }}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty"><div class="big">&#127915;</div><p>No registrations match your filters.</p></div>
+{% endif %}
+{% endblock %}

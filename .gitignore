@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+venv/
+.venv/
+rgipt_events.db
+*.log

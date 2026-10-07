@@ -1,0 +1,36 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% set f = form or {} %}
+{% set is_edit = item is not none %}
+{% block title %}{{ 'Edit' if is_edit else 'New' }} announcement &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>{{ 'Edit announcement' if is_edit else 'New announcement' }}</h1><p class="muted mb-0">Draft it now, publish when ready.</p></div>
+  <a class="btn btn-sm" href="{{ url_for('admin_announcements') }}">Back</a>
+</div>
+
+<form method="post" class="panel">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="form-grid">
+    <div class="field full"><label>Title <span class="req">*</span></label><input type="text" name="title" required value="{{ f.get('title', item.title if item else '') }}"></div>
+    <div class="field"><label>Category</label>
+      {% set cat_val = f.get('category', item.category if item else 'General') %}
+      <select name="category">{% for c in ['General','Events','Academic','Hackathon','Sports','Examination','Notice'] %}<option value="{{ c }}" {{ 'selected' if cat_val == c }}>{{ c }}</option>{% endfor %}</select>
+    </div>
+    <div class="field"><label>&nbsp;</label>
+      {% set pin_checked = ('is_pinned' in f) if f else (item.is_pinned if item else False) %}
+      {% set pub_checked = ('is_published' in f) if f else (item.is_published if item else True) %}
+      <div class="flex gap wrap" style="gap:22px;padding-top:6px">
+        <label class="check"><input type="checkbox" name="is_pinned" {{ 'checked' if pin_checked }}> Pin to top</label>
+        <label class="check"><input type="checkbox" name="is_published" {{ 'checked' if pub_checked }}> Published</label>
+      </div>
+    </div>
+    <div class="field full"><label>Body <span class="req">*</span></label><textarea name="body" required style="min-height:200px" placeholder="Write the announcement&hellip;">{{ f.get('body', item.body if item else '') }}</textarea></div>
+  </div>
+  <div class="flex gap items-center wrap mt-2">
+    <button class="btn btn-primary" type="submit">{{ icon('check') }} {{ 'Save changes' if is_edit else 'Create announcement' }}</button>
+    <a class="btn btn-ghost" href="{{ url_for('admin_announcements') }}">Cancel</a>
+  </div>
+</form>
+{% endblock %}

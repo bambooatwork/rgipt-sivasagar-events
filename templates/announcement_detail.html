@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}{{ item.title }} &ndash; Announcement{% endblock %}
+
+{% block content %}
+<section class="section" style="padding-top:34px">
+  <div class="container">
+    <p class="muted" style="font-size:.9rem"><a href="{{ url_for('announcements') }}">Announcements</a> / <span>{{ item.category }}</span></p>
+
+    <div class="detail-grid">
+      <article class="panel reveal">
+        <div class="flex items-center gap wrap">
+          <span class="chip plain">{{ item.category }}</span>
+          {% if item.is_pinned %}<span class="badge pinned">{{ icon('star') }} Pinned</span>{% endif %}
+          <span class="date muted" style="font-size:.84rem">{{ item.published_at | datefmt('%A, %d %B %Y') }}</span>
+        </div>
+        <h1 style="font-size:clamp(1.6rem,3.6vw,2.4rem);margin-top:14px">{{ item.title }}</h1>
+        <div class="prose">{{ item.body }}</div>
+      </article>
+
+      <aside>
+        <div class="panel reveal">
+          <h3>More announcements</h3>
+          <div class="stack-sm">
+            {% for o in others %}
+            <a class="announce" style="padding:14px" href="{{ url_for('announcement_detail', aid=o.id) }}">
+              <span class="stripe"></span>
+              <div><strong style="font-size:.95rem">{{ o.title }}</strong><br><span class="date">{{ o.published_at | datefmt('%d %b %Y') }}</span></div>
+            </a>
+            {% else %}<p class="muted mb-0">No other announcements.</p>{% endfor %}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% set f = form or {} %}
+{% set is_edit = event is not none %}
+{% block title %}{{ 'Edit' if is_edit else 'New' }} event &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>{{ 'Edit event' if is_edit else 'Create event' }}</h1><p class="muted mb-0">{{ 'Update the details below.' if is_edit else 'Fill in the details to publish a new campus event.' }}</p></div>
+  <a class="btn btn-sm" href="{{ url_for('admin_events') }}">Back to events</a>
+</div>
+
+<form method="post" class="panel">
+  <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+  <div class="form-grid">
+    <div class="field full"><label>Event title <span class="req">*</span></label><input type="text" name="title" required value="{{ f.get('title', event.title if event else '') }}" placeholder="e.g. Urjotsav 2026"></div>
+    <div class="field"><label>Category</label>
+      {% set cat_val = f.get('category', event.category if event else 'Technical') %}
+      <select name="category">{% for c in categories %}<option value="{{ c }}" {{ 'selected' if cat_val == c }}>{{ c }}</option>{% endfor %}</select>
+    </div>
+    <div class="field"><label>Accent colour</label>
+      {% set acc_val = f.get('accent', event.accent if event else 'teal') %}
+      <select name="accent">{% for a in accents %}<option value="{{ a }}" {{ 'selected' if acc_val == a }}>{{ a|capitalize }}</option>{% endfor %}</select>
+    </div>
+    <div class="field full"><label>Short description <span class="hint">(shown on cards, max 300 chars)</span></label><input type="text" name="short_description" maxlength="300" value="{{ f.get('short_description', event.short_description if event else '') }}"></div>
+    <div class="field full"><label>Full description</label><textarea name="description" placeholder="Describe the event, its format, schedule and highlights&hellip;">{{ f.get('description', event.description if event else '') }}</textarea></div>
+
+    <div class="field"><label>Organiser</label><input type="text" name="organizer" value="{{ f.get('organizer', event.organizer if event else campus.name) }}"></div>
+    <div class="field"><label>Venue</label><input type="text" name="venue" value="{{ f.get('venue', event.venue if event else 'RGIPT Sivasagar Campus, Gohain Gaon') }}"></div>
+
+    <div class="field"><label>Start date <span class="req">*</span></label><input type="date" name="event_date" required value="{{ f.get('event_date', event.event_date.isoformat() if event and event.event_date else '') }}"></div>
+    <div class="field"><label>End date <span class="hint">(optional)</span></label><input type="date" name="end_date" value="{{ f.get('end_date', event.end_date.isoformat() if event and event.end_date else '') }}"></div>
+    <div class="field"><label>Start time</label><input type="text" name="start_time" value="{{ f.get('start_time', event.start_time if event else '10:00 AM') }}"></div>
+    <div class="field"><label>End time</label><input type="text" name="end_time" value="{{ f.get('end_time', event.end_time if event else '05:00 PM') }}"></div>
+
+    <div class="field"><label>Registration deadline</label><input type="date" name="registration_deadline" value="{{ f.get('registration_deadline', event.registration_deadline.isoformat() if event and event.registration_deadline else '') }}"></div>
+    <div class="field"><label>Capacity (seats)</label><input type="number" name="capacity" min="0" value="{{ f.get('capacity', event.capacity if event else 100) }}"></div>
+    <div class="field"><label>Fee in &#8377; <span class="hint">(0 = free)</span></label><input type="number" name="fee" min="0" value="{{ f.get('fee', event.fee if event else 0) }}"></div>
+    <div class="field"><label>Team size</label><input type="text" name="team_size" value="{{ f.get('team_size', event.team_size if event else 'Individual') }}" placeholder="Individual or Team (2-4)"></div>
+    <div class="field"><label>Contact email</label><input type="email" name="contact_email" value="{{ f.get('contact_email', event.contact_email if event else campus.email) }}"></div>
+  </div>
+
+  <div class="divider"></div>
+  {% set feat_checked = ('is_featured' in f) if f else (event.is_featured if event else False) %}
+  {% set pub_checked = ('is_published' in f) if f else (event.is_published if event else True) %}
+  <div class="flex gap wrap" style="gap:26px">
+    <label class="check"><input type="checkbox" name="is_featured" {{ 'checked' if feat_checked }}> Feature on the home page</label>
+    <label class="check"><input type="checkbox" name="is_published" {{ 'checked' if pub_checked }}> Publish (visible to students)</label>
+  </div>
+
+  <div class="flex gap items-center wrap mt-3">
+    <button class="btn btn-primary" type="submit">{{ icon('check') }} {{ 'Save changes' if is_edit else 'Create event' }}</button>
+    <a class="btn btn-ghost" href="{{ url_for('admin_events') }}">Cancel</a>
+    {% if is_edit %}<a class="btn btn-ghost" href="{{ url_for('event_detail', slug=event.slug) }}" target="_blank">Preview public page</a>{% endif %}
+  </div>
+</form>
+{% endblock %}

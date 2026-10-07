@@ -1,0 +1,39 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Messages &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>Messages</h1><p class="muted mb-0">{{ messages|length }} enquir{{ 'y' if messages|length == 1 else 'ies' }} from the contact form.</p></div>
+</div>
+
+{% if messages %}
+<div class="grid" style="gap:14px">
+  {% for m in messages %}
+  <div class="panel" style="margin-bottom:0;{{ 'border-left:4px solid var(--brand)' if not m.is_read }}">
+    <div class="panel-head" style="margin-bottom:10px">
+      <div>
+        <strong>{{ m.subject }}</strong>
+        {% if not m.is_read %}<span class="badge draft">New</span>{% endif %}
+        <div class="hint">{{ m.name }} &middot; <a href="mailto:{{ m.email }}">{{ m.email }}</a> &middot; {{ m.created_at | datefmt('%d %b %Y, %H:%M') }}</div>
+      </div>
+      <div class="actions">
+        <form method="post" action="{{ url_for('admin_message_read', mid=m.id) }}">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button class="btn btn-sm" type="submit">{{ icon('eye') }} {{ 'Mark unread' if m.is_read else 'Mark read' }}</button>
+        </form>
+        <a class="btn btn-sm" href="mailto:{{ m.email }}?subject=Re: {{ m.subject }}">{{ icon('mail') }} Reply</a>
+        <form method="post" action="{{ url_for('admin_message_delete', mid=m.id) }}" data-confirm="Delete this message?">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button class="btn btn-sm btn-danger" type="submit">{{ icon('trash') }}</button>
+        </form>
+      </div>
+    </div>
+    <p class="mb-0" style="white-space:pre-line">{{ m.message }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty"><div class="big">&#128235;</div><p>No messages yet.</p></div>
+{% endif %}
+{% endblock %}

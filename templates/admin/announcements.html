@@ -1,0 +1,43 @@
+{% extends "admin/_base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}Announcements &ndash; Admin{% endblock %}
+
+{% block admin %}
+<div class="admin-head">
+  <div><h1>Announcements</h1><p class="muted mb-0">{{ announcements|length }} total. Publish drafts to show them on the site.</p></div>
+  <a class="btn btn-primary" href="{{ url_for('admin_announcement_new') }}">{{ icon('plus') }} New announcement</a>
+</div>
+
+{% if announcements %}
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Title</th><th>Category</th><th>Published</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for a in announcements %}
+      <tr>
+        <td><span class="row-title">{{ a.title }}</span>{% if a.is_pinned %}<br><span class="badge pinned">{{ icon('star') }} Pinned</span>{% endif %}</td>
+        <td><span class="chip plain">{{ a.category }}</span></td>
+        <td>{{ a.published_at | datefmt('%d %b %Y') if a.is_published else '&mdash;'|safe }}</td>
+        <td>{% if a.is_published %}<span class="badge live">Published</span>{% else %}<span class="badge draft">Draft</span>{% endif %}</td>
+        <td>
+          <div class="actions">
+            <a class="btn btn-sm" href="{{ url_for('admin_announcement_edit', aid=a.id) }}">{{ icon('edit') }}</a>
+            <form method="post" action="{{ url_for('admin_announcement_toggle', aid=a.id) }}">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="btn btn-sm" type="submit" title="{{ 'Unpublish' if a.is_published else 'Publish' }}">{{ icon('eye') }}</button>
+            </form>
+            <form method="post" action="{{ url_for('admin_announcement_delete', aid=a.id) }}" data-confirm="Delete this announcement?">
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="btn btn-sm btn-danger" type="submit">{{ icon('trash') }}</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty"><div class="big">&#128227;</div><p>No announcements yet.</p></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block content %}
+<div class="admin-shell">
+  <aside class="admin-side">
+    <div class="side-title">Overview</div>
+    <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint == 'admin_dashboard' }}">{{ icon('grid') }} Dashboard</a>
+    <div class="side-title">Manage</div>
+    <a href="{{ url_for('admin_events') }}" class="{{ 'active' if request.endpoint in ['admin_events','admin_event_new','admin_event_edit'] }}">{{ icon('calendar') }} Events</a>
+    <a href="{{ url_for('admin_registrations') }}" class="{{ 'active' if request.endpoint == 'admin_registrations' }}">{{ icon('ticket') }} Registrations</a>
+    <a href="{{ url_for('admin_announcements') }}" class="{{ 'active' if request.endpoint in ['admin_announcements','admin_announcement_new','admin_announcement_edit'] }}">{{ icon('megaphone') }} Announcements</a>
+    <a href="{{ url_for('admin_messages') }}" class="{{ 'active' if request.endpoint == 'admin_messages' }}">{{ icon('inbox') }} Messages</a>
+    <div class="side-title">Account</div>
+    <a href="{{ url_for('admin_settings') }}" class="{{ 'active' if request.endpoint == 'admin_settings' }}">{{ icon('settings') }} Settings</a>
+    <a href="{{ url_for('home') }}">{{ icon('eye') }} View site</a>
+    <a href="{{ url_for('admin_logout') }}">{{ icon('logout') }} Sign out</a>
+  </aside>
+  <div class="admin-main">
+    {% block admin %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

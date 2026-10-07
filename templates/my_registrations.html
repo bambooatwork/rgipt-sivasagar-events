@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}My Registrations &ndash; RGIPT Sivasagar Campus{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:920px">
+    <div class="section-head reveal">
+      <div>
+        <span class="kicker">Self-service</span>
+        <h1 style="font-size:clamp(1.9rem,4vw,2.8rem)">My registrations</h1>
+        <p class="muted">Enter the email you registered with to look up your event tickets.</p>
+      </div>
+    </div>
+
+    <form class="filter-bar reveal" method="post" style="grid-template-columns:1fr auto">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <div class="field"><label>Email address</label><input type="email" name="email" value="{{ searched_email }}" required placeholder="you@example.com"></div>
+      <div class="field"><button class="btn btn-primary" type="submit">{{ icon('search') }} Find</button></div>
+    </form>
+
+    {% if searched_email %}
+      {% if regs %}
+      <div class="table-wrap reveal">
+        <table>
+          <thead><tr><th>Ticket</th><th>Event</th><th>Date</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            {% for r in regs %}
+            <tr>
+              <td class="mono">{{ r.ticket_code }}</td>
+              <td class="row-title">{{ r.event.title }}</td>
+              <td>{{ r.event.event_date | datefmt }}</td>
+              <td><span class="badge {{ r.status }}">{{ r.status }}</span></td>
+              <td><a class="btn btn-sm" href="{{ url_for('registration_success', ticket_code=r.ticket_code) }}">View ticket</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty reveal"><div class="big">&#128237;</div><p>No registrations found for <strong>{{ searched_email }}</strong>.</p><a class="btn btn-sm mt-2" href="{{ url_for('events') }}">Browse events</a></div>
+      {% endif %}
+    {% else %}
+      <div class="empty reveal"><div class="big">&#127915;</div><p>Your tickets will appear here once you search your email.</p></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
