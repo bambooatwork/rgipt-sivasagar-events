@@ -3,30 +3,63 @@
 {% block title %}RGIPT Sivasagar Campus \u2013 Events, Registrations & Announcements{% endblock %}
 
 {% block content %}
+{% if upcoming %}
+<div class="ticker" aria-hidden="true">
+  <div class="track">
+    {% for _ in range(2) %}
+      {% for e in upcoming[:5] %}
+      <span class="item">{{ e.title }} &mdash; {{ e.event_date.strftime('%d %b') }}</span>
+      {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
 <section class="hero">
   <div class="container">
-    <p class="kicker reveal">Sivasagar Campus &middot; Assam</p>
-    <h1 class="reveal">Where campus <em>events</em> come to life.</h1>
-    <p class="lead reveal">Discover, register and never miss a moment at RGIPT Sivasagar Campus &mdash; from the national-level Urjotsav tech fest and Krida Oorja sports meet to hackathons, workshops and cultural evenings.</p>
-    <div class="hero-actions reveal">
-      <a class="btn btn-primary" href="{{ url_for('events') }}">Browse events</a>
-      <a class="btn" href="{{ url_for('my_registrations') }}">My registrations</a>
-    </div>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="kicker reveal">Sivasagar Campus &middot; Assam</p>
+        <h1 class="reveal">Where campus <mark>events</mark> come to life.</h1>
+        <p class="lead reveal">Discover, register and never miss a moment at RGIPT Sivasagar Campus &mdash; from the national-level Urjotsav tech fest and Krida Oorja sports meet to hackathons, workshops and cultural evenings.</p>
+        <div class="hero-actions reveal">
+          <a class="btn btn-primary" href="{{ url_for('events') }}">Browse events</a>
+          <a class="btn" href="{{ url_for('my_registrations') }}">My registrations</a>
+        </div>
+      </div>
 
-    <div class="stat-row reveal">
+      {% if upcoming %}
+      <aside class="poster reveal" data-countdown="{{ upcoming[0].event_date.isoformat() }}">
+        <div>
+          <p class="p-kicker">Next up</p>
+          <div class="p-date">{{ upcoming[0].event_date.strftime('%d %b') }}</div>
+          <h3>{{ upcoming[0].title }}</h3>
+          <p class="p-meta">{{ upcoming[0].venue.split(',')[0] }} &middot; {{ upcoming[0].category }}</p>
+        </div>
+        <div class="countdown"></div>
+        <a class="btn btn-poster" href="{{ url_for('event_detail', slug=upcoming[0].slug) }}">View event &#8594;</a>
+      </aside>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="band">
+  <div class="container">
+    <div class="stat-row">
       <div class="stat"><b data-count="{{ stats.events }}">0</b><span>Events</span></div>
       <div class="stat"><b data-count="{{ stats.upcoming }}">0</b><span>Upcoming</span></div>
       <div class="stat"><b data-count="{{ stats.registrations }}">0</b><span>Registrations</span></div>
       <div class="stat"><b data-count="{{ stats.departments }}">0</b><span>Departments</span></div>
     </div>
   </div>
-</section>
+</div>
 
 <section class="section-tight">
   <div class="container">
     <header class="sec-head reveal">
       <div class="sec-title"><span class="sec-num">01</span><h2>Next up</h2></div>
-      <a class="sec-link" href="{{ url_for('events', status='upcoming') }}">All upcoming events <span class="ar">&#8594;</span></a>
+      <a class="sec-link" href="{{ url_for('events', status='upcoming') }}">All upcoming <span class="ar">&#8594;</span></a>
     </header>
     <div class="listing">
       {% for e in upcoming[:6] %}{{ event_row(e) }}{% else %}
