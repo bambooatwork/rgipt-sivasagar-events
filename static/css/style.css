@@ -33,24 +33,6 @@
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-html[data-theme="dark"] {
-  --bg: #0b0d11;
-  --bg-2: #12151b;
-  --surface: #12151b;
-  --surface-2: #1a1e26;
-  --rule: #262b34;
-  --rule-strong: #39404c;
-  --text: #f2f4f8;
-  --text-dim: #a7b0be;
-  --text-mute: #79828f;
-  --green: #2ed598;
-  --orange: #ff8a3d;
-  --navy: #8fb0ea;
-  --violet: #a58bff;
-  --shadow: none;
-  --ring: 0 0 0 3px rgba(46, 213, 152, .3);
-}
-
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
@@ -234,10 +216,6 @@ mark { background: var(--green); color: #fff; padding: 0 .1em; border-radius: 2p
 .badge.full, .badge.cancelled { background: #fdeeee; color: #a51f1f; }
 .badge.draft, .badge.waitlist { background: #fdf1e6; color: #96570a; }
 .badge.pinned { background: #eef1f8; color: #33459a; }
-html[data-theme="dark"] .badge.live, html[data-theme="dark"] .badge.confirmed { background: #0f3325; color: #6ee7b7; }
-html[data-theme="dark"] .badge.full, html[data-theme="dark"] .badge.cancelled { background: #3a1d1d; color: #f0a9a9; }
-html[data-theme="dark"] .badge.draft, html[data-theme="dark"] .badge.waitlist { background: #3a2c14; color: #e8b872; }
-html[data-theme="dark"] .badge.pinned { background: #202844; color: #a8b6f0; }
 
 /* -------------------------------------------------------------- Forms */
 .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
@@ -291,7 +269,6 @@ td .actions { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
 .admin-side a { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: var(--radius); color: var(--text-dim); font-size: .89rem; font-weight: 500; transition: .15s; }
 .admin-side a:hover { background: var(--surface-2); color: var(--text); }
 .admin-side a.active { background: var(--text); color: var(--bg); }
-html[data-theme="dark"] .admin-side a.active { color: #0b0d11; }
 .admin-side a .count { margin-left: auto; font-family: var(--font-mono); font-size: .7rem; opacity: .7; }
 .admin-side a svg { width: 16px; height: 16px; }
 .admin-main { padding: 26px 30px 60px; min-width: 0; }

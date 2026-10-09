@@ -78,9 +78,9 @@ If the URL opens to a blank or white page, work through these in order:
 ## What's inside
 
 ### Public site (students & visitors)
-- **Design** — a light, white-canvas institutional theme (navy ink with green and
+- **Design** — a light, white-canvas institutional theme (ink with green and
   saffron accents taken from the RGIPT emblem), set in Fraunces + IBM Plex Sans.
-  A dark theme is available from the toggle in the header, but light is the default.
+  Light only — there is no dark mode.
 - **Home** — hero, live stats, featured/upcoming/past events, latest notices.
 - **Events** — search + filter by category, timing (upcoming/past) and department.
 - **Event detail** — full description, key-dates timeline, live countdown, seat
@@ -92,7 +92,7 @@ If the URL opens to a blank or white page, work through these in order:
 - **Faculty** — the real Sivasagar Campus faculty and leadership, with a
   client-side search over names and research areas.
 - **About & Contact** — campus information and a working enquiry form.
-- **Dark / light theme**, fully responsive down to mobile, reduced-motion aware.
+- **Fully responsive** down to mobile, reduced-motion aware.
 
 ### Admin panel (secure)
 - **Login** — hashed passwords (Werkzeug PBKDF2), session auth, CSRF on every form.

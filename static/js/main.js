@@ -1,31 +1,9 @@
-/* RGIPT Sivasagar Campus — front-end behaviour */
+/* RGIPT Sivasagar Campus — front-end behaviour (light theme only) */
 (function () {
   "use strict";
 
   // Signals that JS is alive so the page keeps its reveal animations.
   window.__rgiptReady = true;
-
-  /* ----------------------------------------------------------- Theme */
-  const THEME_KEY = "rgipt-theme";
-  const root = document.documentElement;
-
-  function applyTheme(theme) {
-    root.setAttribute("data-theme", theme);
-    document.querySelectorAll("[data-theme-icon]").forEach((el) => {
-      el.textContent = theme === "light" ? "\u263e" : "\u2600";
-    });
-  }
-  const saved = localStorage.getItem(THEME_KEY);
-  applyTheme(saved || "light");
-
-  document.addEventListener("click", function (e) {
-    const t = e.target.closest("[data-theme-toggle]");
-    if (t) {
-      const next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
-      localStorage.setItem(THEME_KEY, next);
-      applyTheme(next);
-    }
-  });
 
   /* --------------------------------------------------------- Navbar */
   const nav = document.querySelector(".nav");

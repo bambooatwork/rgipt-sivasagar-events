@@ -1,8 +1,8 @@
 """Browser-level audit via Chrome DevTools Protocol.
 
 Checks every page for JS/console errors, horizontal overflow and missing
-elements, and drives real interactions (theme toggle, mobile nav, event
-filter, admin login) to prove the UI works end to end.
+elements, and drives real interactions (mobile nav, event filtering, admin
+CRUD) to prove the UI works end to end.
 """
 import json
 import subprocess
@@ -120,13 +120,10 @@ for path, name, sels in PAGES:
     bigicons = ev("[...document.querySelectorAll('svg')].filter(s=>s.getBoundingClientRect().width>64).length")
     ok(f"{name}: no oversized icons", (bigicons or 0) == 0, f"{bigicons} oversized")
 
-# ---------------- interaction: theme toggle ---------------- #
+# ---------------- light theme only ---------------- #
 goto("/")
-before = ev("document.documentElement.getAttribute('data-theme')")
-ev("document.querySelector('[data-theme-toggle]').click()")
-after = ev("document.documentElement.getAttribute('data-theme')")
-ok("theme toggle switches theme", before != after, f"{before}->{after}")
-ev("document.querySelector('[data-theme-toggle]').click()")
+ok("no theme toggle (light only)", not ev("!!document.querySelector('[data-theme-toggle]')"))
+ok("renders on a white background", ev("getComputedStyle(document.body).backgroundColor") == "rgb(255, 255, 255)")
 
 # ---------------- interaction: event filter ---------------- #
 goto("/events")
