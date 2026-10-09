@@ -10,7 +10,7 @@
 {% if messages %}
 <div class="grid" style="gap:14px">
   {% for m in messages %}
-  <div class="panel" style="margin-bottom:0;{{ 'border-left:4px solid var(--brand)' if not m.is_read }}">
+  <div class="panel" style="margin-bottom:0;{{ 'border-left:4px solid var(--green)' if not m.is_read }}">
     <div class="panel-head" style="margin-bottom:10px">
       <div>
         <strong>{{ m.subject }}</strong>

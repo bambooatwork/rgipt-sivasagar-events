@@ -2,6 +2,11 @@
 
 Run:  python seed.py           # create tables + seed if empty
       python seed.py --reset   # drop everything and reseed
+
+Content policy: only real, publicly documented campus events and programmes are
+seeded, and NO sample registrations are created — registration counts must
+reflect real students only. Event dates are the campus's recurring slots; confirm
+the exact dates for the current session in the admin panel before publishing.
 """
 import os
 import sys
@@ -23,8 +28,8 @@ ADMINS = [
 ]
 
 # --------------------------------------------------------------------------- #
-#  Events  (real RGIPT Sivasagar flagship events + campus activities)
-#  today == 2026-10-07
+#  Events — the campus's real, documented events and programmes.
+#  (No invented one-off events; dates are the recurring slots for the session.)
 # --------------------------------------------------------------------------- #
 EVENTS = [
     dict(
@@ -33,12 +38,12 @@ EVENTS = [
         short_description="The annual national-level inter-collegiate technical & entrepreneurial festival of RGIPT, organised by the Science & Technology Council.",
         description=(
             "Urjotsav is RGIPT's flagship annual technical and entrepreneurial festival, "
-            "orchestrated by the Science & Technology Council. Over two action-packed days it "
-            "brings together students from across the country to compete, collaborate and "
-            "innovate. The 2026 edition features robotics, coding sprints, model making, "
-            "poster presentations, an entrepreneurship pitch arena, and expert talks from the "
-            "oil & gas and energy sectors. It is the definitive platform for tomorrow's "
-            "industry leaders to unveil their talent."
+            "orchestrated by the Science & Technology Council. Over two days it brings "
+            "together students from across the country to compete, collaborate and "
+            "innovate \u2014 technical paper presentations, poster sessions, model making, "
+            "guest lectures, workshops and panel discussions, plus an entrepreneurship "
+            "pitch arena. It is the campus's platform for tomorrow's industry leaders to "
+            "unveil their talent."
         ),
         organizer="Science & Technology Council, RGIPT Sivasagar Campus",
         venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
@@ -57,14 +62,14 @@ EVENTS = [
     dict(
         title="Krida Oorja '26",
         category="Sports",
-        short_description="The annual sports fest of RGIPT Sivasagar Campus \u2014 three weeks of cricket, football, athletics, volleyball and more.",
+        short_description="The annual sports festival of RGIPT Sivasagar Campus \u2014 weeks of cricket, football, volleyball, badminton, athletics and team spirit.",
         description=(
-            "Krida Oorja is the much-loved annual sports festival of RGIPT Sivasagar Campus, "
-            "celebrating teamwork, sportsmanship and healthy competition. The 2026 edition "
-            "spans three weeks of cricketing rivalries, football, volleyball, badminton, "
-            "athletics and indoor games, opening with the traditional torch-lighting ceremony "
-            "and March Past. Departments battle it out for the overall championship trophy, "
-            "culminating in a grand closing ceremony with guest dignitaries."
+            "Krida Oorja is the annual sports festival of RGIPT Sivasagar Campus, "
+            "celebrating teamwork, sportsmanship and healthy competition. The programme "
+            "opens with the traditional torch-lighting ceremony and March Past, and spans "
+            "cricket, football, volleyball, badminton and athletics, closing with a "
+            "ceremony attended by invited dignitaries. Departments compete for the overall "
+            "championship."
         ),
         organizer="Sports Council, RGIPT Sivasagar Campus",
         venue="Campus Sports Ground, RGIPT Sivasagar Campus",
@@ -83,15 +88,15 @@ EVENTS = [
     dict(
         title="TechSprint 2026 \u2013 Campus Edition",
         category="Hackathon",
-        short_description="GDG on Campus RGIPT Sivasagar's flagship open innovation hackathon. Solve. Create. Impact.",
+        short_description="The GDG on Campus open-innovation hackathon \u2014 build practical solutions with Google technologies. Solve. Create. Impact.",
         description=(
-            "TechSprint is the flagship open-innovation hackathon hosted by Google Developer "
-            "Group on Campus, RGIPT Sivasagar Campus. Student developers identify real "
-            "challenges in their campus or local communities and build practical solutions "
-            "using Google technologies \u2014 Android, Flutter, Firebase and Google Cloud. "
-            "Beginners and experienced builders alike are welcome. Teams progress through "
-            "multiple evaluation rounds, with mentorship sessions, codelabs and a final "
-            "demo day before industry judges."
+            "TechSprint is the flagship open-innovation hackathon hosted by Google "
+            "Developer Group on Campus, RGIPT Sivasagar Campus. Student developers identify "
+            "real challenges in their campus or local communities and build practical "
+            "solutions using Google technologies \u2014 Android, Flutter, Firebase and Google "
+            "Cloud. Beginners and experienced builders are both welcome. Teams progress "
+            "through evaluation rounds with mentorship and codelabs, ending in a demo day "
+            "before judges."
         ),
         organizer="GDG on Campus, RGIPT Sivasagar Campus",
         venue="Online + Computer Lab, RGIPT Sivasagar Campus",
@@ -111,12 +116,12 @@ EVENTS = [
     dict(
         title="Google Cloud Study Jams",
         category="Workshop",
-        short_description="Kickstart your cloud computing journey \u2014 hands-on labs, badges and certifications via Google Cloud Skills Boost.",
+        short_description="A hands-on cloud computing workshop series with guided labs, badges and certifications via Google Cloud Skills Boost.",
         description=(
-            "An intensive, hands-on workshop series to kickstart your cloud computing journey "
-            "with Google Cloud Study Jams. Participants get guided labs on compute, storage, "
-            "networking and AI on the Google Cloud Skills Boost platform, earning badges and "
-            "certifications along the way. Bring a laptop \u2014 everything else is provided."
+            "An intensive, hands-on workshop series to kickstart your cloud computing "
+            "journey with Google Cloud Study Jams. Participants work through guided labs on "
+            "compute, storage, networking and AI on the Google Cloud Skills Boost platform, "
+            "earning badges and certifications along the way. Bring a laptop."
         ),
         organizer="GDG on Campus, RGIPT Sivasagar Campus",
         venue="Computer Lab, RGIPT Sivasagar Campus",
@@ -130,107 +135,17 @@ EVENTS = [
         accent="teal",
         is_published=True,
     ),
-    dict(
-        title="Industry Connect: OIL Field Visit & Expert Seminar",
-        category="Seminar",
-        short_description="A guided field visit and seminar with Oil India Limited (OIL) engineers on upstream operations in the Assam oil belt.",
-        description=(
-            "RGIPT Sivasagar Campus sits in the heart of Assam's oil-rich belt, giving students "
-            "unparalleled exposure to the petroleum industry. This Industry Connect session "
-            "combines a guided field visit with a technical seminar led by engineers from Oil "
-            "India Limited (OIL) and the Department of Petroleum Engineering. Topics include "
-            "upstream exploration & production, well logging, enhanced oil recovery and HSE "
-            "practices in the North-East fields."
-        ),
-        organizer="Department of Petroleum Engineering, RGIPT Sivasagar Campus",
-        venue="Duliajan / Naharkatia Field + Campus Auditorium",
-        event_date=date(2026, 10, 28),
-        start_time="08:30 AM",
-        end_time="05:30 PM",
-        registration_deadline=date(2026, 10, 24),
-        capacity=60,
-        fee=0,
-        team_size="Individual",
-        accent="rose",
-        is_published=True,
-    ),
-    dict(
-        title="Fire & Safety Drill Workshop",
-        category="Workshop",
-        short_description="Practical fire-safety training for the Fire & Safety Engineering department \u2014 extinguishers, rescue and evacuation drills.",
-        description=(
-            "A hands-on fire and industrial safety workshop for students of Fire & Safety "
-            "Engineering and allied branches. Sessions cover fire chemistry, types and use of "
-            "extinguishers, breathing apparatus, rescue techniques and mock evacuation drills, "
-            "delivered by certified safety instructors in partnership with industry."
-        ),
-        organizer="Department of Fire & Safety Engineering, RGIPT Sivasagar Campus",
-        venue="Open Ground, RGIPT Sivasagar Campus",
-        event_date=date(2026, 11, 5),
-        start_time="09:30 AM",
-        end_time="03:30 PM",
-        registration_deadline=date(2026, 11, 3),
-        capacity=120,
-        fee=0,
-        team_size="Individual",
-        accent="amber",
-        is_published=True,
-    ),
-    dict(
-        title="Innovation Pitch: Startup Bootcamp",
-        category="Entrepreneurship",
-        short_description="A one-day entrepreneurship bootcamp and pitch competition for aspiring founders, hosted by the campus E-Cell.",
-        description=(
-            "Turn an idea into a venture. This bootcamp walks participants through "
-            "problem discovery, business models, unit economics and pitching, followed by a "
-            "live pitch competition before a panel of mentors and investors. Winning teams "
-            "receive incubation support and certificates. Open to all departments."
-        ),
-        organizer="Entrepreneurship Cell, RGIPT Sivasagar Campus",
-        venue="Seminar Hall, RGIPT Sivasagar Campus",
-        event_date=date(2026, 11, 22),
-        start_time="09:00 AM",
-        end_time="05:00 PM",
-        registration_deadline=date(2026, 11, 19),
-        capacity=100,
-        fee=0,
-        team_size="Team (1\u20133)",
-        accent="violet",
-        is_published=True,
-    ),
-    dict(
-        title="Sivasagar Cultural Night \u2013 Bihu & Borgeet Evening",
-        category="Cultural",
-        short_description="An evening celebrating Assam's heritage \u2014 Bihu dance, Borgeet, folk music and student performances.",
-        description=(
-            "A vibrant cultural evening celebrating the rich heritage of Assam and the "
-            "North-East. The programme features Bihu dance performances, Borgeet and folk "
-            "music, a student talent showcase, and a community dinner. Family and friends of "
-            "the campus community are warmly invited."
-        ),
-        organizer="Cultural Council, RGIPT Sivasagar Campus",
-        venue="Campus Open Air Theatre, RGIPT Sivasagar Campus",
-        event_date=date(2026, 12, 18),
-        start_time="05:00 PM",
-        end_time="09:30 PM",
-        registration_deadline=date(2026, 12, 16),
-        capacity=600,
-        fee=0,
-        team_size="Individual",
-        accent="rose",
-        is_published=True,
-    ),
     # ------------------------------ Past ------------------------------- #
     dict(
         title="TechWave 2026 \u2013 Ideas in Motion",
         category="Technical",
-        short_description="Engineers' Day celebration \u2014 model making and poster presentation competition organised by the Science & Technology Council.",
+        short_description="The campus Engineers' Day celebration \u2014 model making and poster presentation, organised by the Science & Technology Council.",
         description=(
             "TechWave 2026, themed \u201cIdeas in Motion\u201d, was organised by the Science & "
-            "Technology Council on the occasion of Engineers' Day. It gave students a platform "
-            "to showcase creativity, technical knowledge and problem-solving through Model "
-            "Making and Poster Presentation. Beyond the competitions, the event celebrated "
-            "collaboration, learning and transforming concepts into meaningful outcomes."
+            "Technology Council on the occasion of Engineers' Day. It gave students a "
+            "platform to showcase creativity, technical knowledge and problem-solving "
+            "through Model Making and Poster Presentation, and celebrated collaboration and "
+            "transforming concepts into meaningful outcomes."
         ),
         organizer="Science & Technology Council, RGIPT Sivasagar Campus",
         venue="RGIPT Sivasagar Campus, Gohain Gaon",
@@ -246,13 +161,13 @@ EVENTS = [
     dict(
         title="Internal Hackathon for SIH 2026",
         category="Hackathon",
-        short_description="Campus-level Smart India Hackathon \u2014 selection of RGIPT's best teams for nomination to SIH 2026.",
+        short_description="The campus-level Smart India Hackathon \u2014 selection of RGIPT's best teams for nomination to SIH 2026.",
         description=(
-            "RGIPT organised an Internal Hackathon to select the best teams from the institute "
-            "for nomination to the prestigious Smart India Hackathon 2026 (SIH 2026), hosted by "
+            "RGIPT organised an Internal Hackathon to select the best teams from the "
+            "institute for nomination to Smart India Hackathon 2026 (SIH 2026), hosted by "
             "the Ministry of Education's Innovation Cell, Government of India. Teams worked "
-            "intensely over three days on real problem statements, with shortlisted teams "
-            "advancing to the national stage."
+            "on real problem statements, with shortlisted teams advancing to the national "
+            "stage."
         ),
         organizer="Innovation Cell, RGIPT",
         venue="Computer Lab, RGIPT Sivasagar Campus",
@@ -269,14 +184,13 @@ EVENTS = [
     dict(
         title="SCHEMCON 2026 \u2013 Students' Chemical Engineering Congress",
         category="Seminar",
-        short_description="A national-level congress with technical paper presentations, poster sessions, workshops and panel discussions.",
+        short_description="The national Students' Chemical Engineering Congress \u2014 technical papers, poster sessions, workshops and panel discussions.",
         description=(
             "SCHEMCON (Students' Chemical Engineering Congress) is an annual national-level "
-            "event organised by the Indian Institute of Chemical Engineers (IIChE) through its "
-            "student chapters. This edition featured technical paper presentations, poster "
-            "sessions, guest lectures, workshops and panel discussions around a contemporary "
-            "theme of sustainability and energy innovation, fostering knowledge exchange and "
-            "professional development."
+            "congress organised by the Indian Institute of Chemical Engineers (IIChE) "
+            "through its student chapters. Editions feature technical paper presentations, "
+            "poster sessions, guest lectures, workshops and panel discussions around a "
+            "contemporary theme in chemical engineering."
         ),
         organizer="IIChE Student Chapter, RGIPT Sivasagar Campus",
         venue="Seminar Hall, RGIPT Sivasagar Campus",
@@ -293,7 +207,8 @@ EVENTS = [
 ]
 
 # --------------------------------------------------------------------------- #
-#  Announcements
+#  Announcements — starter notices based on documented campus activity.
+#  Edit or replace these from the admin panel before publishing.
 # --------------------------------------------------------------------------- #
 ANNOUNCEMENTS = [
     dict(
@@ -301,79 +216,45 @@ ANNOUNCEMENTS = [
         body=(
             "Registration for Urjotsav 2026, the annual national-level technical and "
             "entrepreneurial festival, is now open. Students from RGIPT and other institutes "
-            "can register for individual and team events. Early registration closes on "
-            "8 November 2026. Visit the Events page to register."
+            "can register for individual and team events. Visit the Events page to register."
         ),
         category="Events",
         is_pinned=True,
         is_published=True,
     ),
     dict(
-        title="TechSprint 2026 \u2013 last date to register extended",
+        title="TechSprint 2026 \u2013 registration open",
         body=(
-            "The last date to register for TechSprint 2026, the GDG on Campus open-innovation "
-            "hackathon, has been extended. Teams of 2 to 4 members may register via the Events "
-            "page. For queries, write to gdgocrgiptsc@rgipt.ac.in."
+            "Teams of 2 to 4 members may register for TechSprint 2026, the GDG on Campus "
+            "open-innovation hackathon, via the Events page. For queries, write to "
+            "gdgocrgiptsc@rgipt.ac.in."
         ),
         category="Hackathon",
         is_pinned=False,
         is_published=True,
     ),
     dict(
-        title="Krida Oorja '26 \u2013 department trials schedule",
+        title="Krida Oorja '26 \u2013 department trials",
         body=(
-            "Trials for Krida Oorja '26 begin soon. Captains of each department should submit "
-            "their squad lists to the Sports Council. Cricket, football, volleyball, badminton "
-            "and athletics events are planned across three weeks. Watch this space for fixtures."
+            "Trials for Krida Oorja '26 begin soon. Captains of each department should "
+            "submit their squad lists to the Sports Council. Cricket, football, volleyball, "
+            "badminton and athletics events are planned across the coming weeks."
         ),
         category="Sports",
         is_pinned=False,
         is_published=True,
     ),
     dict(
-        title="Results: Internal Hackathon for SIH 2026",
+        title="Internal Hackathon for SIH 2026 \u2013 results",
         body=(
             "Congratulations to the teams shortlisted from the Internal Hackathon for "
-            "nomination to Smart India Hackathon 2026. Shortlisted teams should complete their "
-            "SIH portal formalities before the national deadline. Details have been shared with "
-            "team leaders."
+            "nomination to Smart India Hackathon 2026. Shortlisted teams should complete "
+            "their SIH portal formalities before the national deadline."
         ),
         category="Hackathon",
         is_pinned=False,
         is_published=True,
     ),
-    dict(
-        title="Notice: Academic calendar and winter vacation",
-        body=(
-            "The academic office has published the revised academic calendar. End-semester "
-            "examinations and the winter vacation schedule are available on the notice board. "
-            "Students should clear dues and complete lab records before the examination period."
-        ),
-        category="Academic",
-        is_pinned=False,
-        is_published=True,
-    ),
-]
-
-SAMPLE_REGISTRATIONS = [
-    dict(event_index=0, name="Ananya Baruah", email="ananya.baruah@example.com", phone="9864012345",
-         college="RGIPT Sivasagar Campus", department="Petroleum Engineering", year="3rd Year",
-         team_name="Team Hydro", status="confirmed"),
-    dict(event_index=0, name="Rahul Das", email="rahul.das@example.com", phone="9864012346",
-         college="RGIPT Sivasagar Campus", department="Chemical Engineering", year="2nd Year",
-         team_name="Team Hydro", status="confirmed"),
-    dict(event_index=2, name="Priya Gogoi", email="priya.gogoi@example.com", phone="9864012347",
-         college="RGIPT Sivasagar Campus", department="Computer Science & Engineering", year="3rd Year",
-         team_name="CodeBrew", status="confirmed"),
-    dict(event_index=2, name="Imran Ahmed", email="imran.ahmed@example.com", phone="9864012348",
-         college="RGIPT Sivasagar Campus", department="Electronics & Instrumentation Engineering", year="2nd Year",
-         team_name="CodeBrew", status="confirmed"),
-    dict(event_index=1, name="Sanjib Saikia", email="sanjib.saikia@example.com", phone="9864012349",
-         college="RGIPT Sivasagar Campus", department="Mechanical Engineering", year="1st Year",
-         team_name="Team Mech", status="confirmed"),
-    dict(event_index=3, name="Nabanita Bora", email="nabanita.bora@example.com", phone="9864012350",
-         college="RGIPT Sivasagar Campus", department="Electrical Engineering", year="2nd Year",
-         team_name="", status="confirmed"),
 ]
 
 
@@ -393,11 +274,10 @@ def seed(reset=False):
 
         # Events
         if Event.query.count() == 0:
+            from app import slugify
             created = []
             for data in EVENTS:
                 ev = Event(**data)
-                # slug from title
-                from app import slugify
                 base = slugify(ev.title)
                 slug, i = base, 2
                 while Event.query.filter_by(slug=slug).first():
@@ -409,8 +289,7 @@ def seed(reset=False):
             db.session.commit()
             print(f"Seeded {len(created)} events.")
         else:
-            created = Event.query.order_by(Event.id).all()
-            print(f"Events already present ({len(created)}).")
+            print(f"Events already present ({Event.query.count()}).")
 
         # Announcements
         if Announcement.query.count() == 0:
@@ -419,18 +298,12 @@ def seed(reset=False):
             db.session.commit()
             print(f"Seeded {len(ANNOUNCEMENTS)} announcements.")
 
-        # Sample registrations
-        if Registration.query.count() == 0:
-            from app import make_ticket_code
-            for data in SAMPLE_REGISTRATIONS:
-                idx = data.pop("event_index")
-                if idx < len(created):
-                    reg = Registration(event_id=created[idx].id, ticket_code=make_ticket_code(), **data)
-                    db.session.add(reg)
-            db.session.commit()
-            print(f"Seeded {len(SAMPLE_REGISTRATIONS)} sample registrations.")
+        # No sample registrations are created — the registration table starts
+        # empty so every figure shown on the site is a real student's entry.
+        print(f"Registrations: {Registration.query.count()} (none are seeded).")
 
-        print("\nDone. Admin login -> username: admin | password: rgipt@2026")
+        print("\nDone. Admin login -> username: admin | password: "
+              + ("(set via ADMIN_PASSWORD)" if os.environ.get("ADMIN_PASSWORD") else "rgipt@2026"))
 
 
 if __name__ == "__main__":

@@ -36,7 +36,6 @@ def run():
         slug = Event.query.filter(Event.event_date >= __import__("datetime").date.today()).first().slug
         eid = Event.query.first().id
         aid = Announcement.query.first().id
-        rid = Registration.query.first().id
 
     c = app.test_client()
 
@@ -95,6 +94,7 @@ def run():
     with app.app_context():
         reg = Registration.query.filter_by(email="test.student@example.com").first()
         code = reg.ticket_code
+        rid = reg.id
     check("ticket page loads", c.get(f"/registration/{code}").status_code == 200)
 
     # my registrations lookup

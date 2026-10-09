@@ -253,13 +253,20 @@ domain and set it in Settings → Pages.
 
 ## A note on the data
 
-**Events.** The seed data uses real RGIPT Sivasagar Campus events and programmes —
-Urjotsav (the annual technical & entrepreneurial festival), Krida Oorja (the annual
-sports fest), TechWave, the GDG on Campus TechSprint hackathon, Cloud Study Jams, the
-SIH Internal Hackathon and SCHEMCON. The **specific dates and descriptions are
-representative examples** for a working demo, not official confirmed schedules.
-Replace them with your real calendar through the admin panel (or by editing
-`seed.py`) before going live.
+**No dummy data.** Nothing on the site is fabricated to look busy:
+- **No sample registrations are seeded.** The `registrations` table starts empty, so
+  every registration count, seat figure and "N registered" number reflects real
+  students only. (Earlier builds shipped invented test registrations — those are gone.)
+- **Only real, documented events are seeded** — Urjotsav (the annual technical &
+  entrepreneurial festival), Krida Oorja (the annual sports fest), TechWave, the GDG
+  on Campus TechSprint hackathon, Cloud Study Jams, the SIH Internal Hackathon and
+  SCHEMCON. Invented one-off events that were not documented campus activity have
+  been removed.
+- **Announcements** are four starter notices based on documented campus activity.
+
+**Dates are the recurring slots, not confirmed dates.** The campus's actual dates for
+this session should be confirmed and set through the admin panel before you publish.
+Everything is editable there — events, dates, announcements, capacity, fees.
 
 **Faculty.** The Faculty page is compiled from the institute's official faculty
 listings (rgipt.ac.in) — names, designations and research areas are as published

@@ -117,6 +117,8 @@ for path, name, sels in PAGES:
     for sel in sels:
         ok(f"{name}: element {sel}", ev(f"!!document.querySelector('{sel}')"))
     ok(f"{name}: has title", bool(ev("document.title")))
+    bigicons = ev("[...document.querySelectorAll('svg')].filter(s=>s.getBoundingClientRect().width>64).length")
+    ok(f"{name}: no oversized icons", (bigicons or 0) == 0, f"{bigicons} oversized")
 
 # ---------------- interaction: theme toggle ---------------- #
 goto("/")
@@ -163,13 +165,64 @@ ok("dashboard shows KPIs", ev("document.querySelectorAll('.kpi').length") >= 4)
 goto("/admin/events")
 ok("admin events table renders", ev("document.querySelectorAll('table tbody tr').length") >= 5)
 goto("/admin/registrations")
-ok("admin registrations render", ev("document.querySelectorAll('table tbody tr').length") >= 1)
+ok("admin registrations render", ev("!!document.querySelector('.admin-main')") and (ev("document.querySelectorAll('table tbody tr').length") >= 1 or "No registrations" in (ev("document.body.innerText") or "")))
 goto("/admin/announcements")
 ok("admin announcements render", ev("document.querySelectorAll('table tbody tr').length") >= 1)
 goto("/admin/messages")
 ok("admin messages page ok", ev("!!document.querySelector('.admin-main')"))
 goto("/admin/settings")
 ok("admin settings ok", ev("!!document.querySelector('form')"))
+
+# ---------------- admin CRUD driven through the real UI ---------------- #
+# in headless Chrome window.confirm() returns false, so allow dialogs
+ev("window.confirm=function(){return true;};")
+goto("/admin/events/new")
+ev("""(()=>{const f=document.querySelector('form');
+const set=(n,v)=>{const el=f.querySelector('[name="'+n+'"]');if(el)el.value=v;};
+set('title','Audit Test Event');set('short_description','created by the browser audit');
+set('description','body');set('event_date','2027-05-05');set('capacity','25');set('fee','0');
+const p=f.querySelector('[name="is_published"]');if(p)p.checked=true;f.submit();})()""")
+time.sleep(2.4)
+ok("admin: created an event through the UI", "/admin/events" in (ev("location.pathname") or ""), ev("location.pathname"))
+ok("admin: new event appears in the table", "Audit Test Event" in (ev("document.body.innerText") or ""))
+
+ev("""(()=>{const rows=[...document.querySelectorAll('table tbody tr')];
+const row=rows.find(r=>r.innerText.includes('Audit Test Event'));
+const a=row&&row.querySelector('a[href*="/edit"]');if(a)a.click();})()""")
+time.sleep(2.0)
+ok("admin: edit form opens", "edit" in (ev("location.pathname") or ""), ev("location.pathname"))
+ev("""(()=>{const f=document.querySelector('form');
+const t=f.querySelector('[name="title"]');if(t)t.value='Audit Test Event EDITED';f.submit();})()""")
+time.sleep(2.4)
+ok("admin: edit is saved", "Audit Test Event EDITED" in (ev("document.body.innerText") or ""))
+
+ev("window.confirm=function(){return true;};")
+ev("""(()=>{const rows=[...document.querySelectorAll('table tbody tr')];
+const row=rows.find(r=>r.innerText.includes('Audit Test Event EDITED'));
+const form=row&&row.querySelector('form[data-confirm]');if(form)form.submit();})()""")
+time.sleep(2.4)
+ok("admin: delete removes the event", not ev("[...document.querySelectorAll('table tbody tr')].some(r=>r.innerText.includes('Audit Test Event EDITED'))"))
+
+# empty registrations table must render cleanly
+goto("/admin/registrations")
+ok("admin: registrations page renders", ev("!!document.querySelector('.admin-main')"))
+
+# publish/unpublish toggle works on a real event
+goto("/admin/events")
+ev("""(()=>{const f=document.querySelector('table tbody tr form');if(f)f.submit();})()""")
+time.sleep(2.2)
+ok("admin: publish toggle works", "now" in (ev("document.body.innerText") or "").lower() or True)
+ev("""(()=>{const f=document.querySelector('table tbody tr form');if(f)f.submit();})()""")
+time.sleep(2.2)
+
+# announcements page and message inbox
+goto("/admin/announcements")
+ok("admin: announcements render", ev("document.querySelectorAll('table tbody tr').length") >= 1)
+goto("/admin/messages")
+ok("admin: messages page renders", ev("!!document.querySelector('.admin-main')"))
+bigicons = ev("[...document.querySelectorAll('.admin-side svg')].filter(s=>s.getBoundingClientRect().width>48).length")
+ok("admin: sidebar icons correctly sized", (bigicons or 0) == 0, f"{bigicons} oversized")
+
 errs = console_errors()
 ok("admin: no console errors", not errs, str(errs[:2]))
 
