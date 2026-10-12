@@ -1,315 +1,141 @@
-# RGIPT Sivasagar Campus — College Event Management Website
+# RGIPT Sivasagar Campus — Event Management Website
 
-A complete, working event-management portal for **Rajiv Gandhi Institute of Petroleum
-Technology (RGIPT), Sivasagar Campus, Assam** — a public-facing site for events,
-registrations and announcements, backed by a secure admin panel and a real SQLite
-database.
-
-Built with **Python + Flask + SQLAlchemy**. No build step, no cloud account — one
-command and it runs.
+A complete event portal for **Rajiv Gandhi Institute of Petroleum Technology,
+Sivasagar Campus, Assam** — public events, announcements, a faculty directory and a
+full **admin panel**, hosted entirely on **GitHub Pages** with a **Firebase**
+database. No server to run, nothing to install.
 
 ---
 
-## Quick start
+## How it's built
 
-```bash
-# 1. (optional but recommended) create a virtual environment
-python3 -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+GitHub Pages can only serve static files, so the site keeps its files on GitHub and
+uses Firebase (Google's free backend) for the database and the admin login:
 
-# 2. install dependencies
-pip install -r requirements.txt
-
-# 3. seed the database (creates tables + loads events & announcements)
-python seed.py
-
-# 4. run it
-python run.py
-```
-
-Then open **http://127.0.0.1:5000**
-
-### Admin panel
-
-| | |
+| Piece | Where it lives |
 |---|---|
-| URL | http://127.0.0.1:5000/admin/login |
-| Username | `admin` |
-| Password | `rgipt@2026` |
+| The website | GitHub Pages, from the `docs/` folder |
+| Events, announcements, registrations, messages | Firebase **Firestore** |
+| Admin login | Firebase **Authentication** (email + password) |
+| Security | Firestore rules — public can read events, only you can write |
 
-> Change the password immediately from **Admin → Settings** after your first login.
+**→ To make it live, follow [SETUP.md](SETUP.md) — about 10 minutes, free.**
 
-### Running on macOS
-
-The steps above work unchanged on a MacBook (Intel or Apple Silicon) — Flask and
-SQLite are all you need, and Python 3 comes with the Xcode command-line tools.
-
-One macOS gotcha: **port 5000 is used by AirPlay Receiver** on macOS Monterey and
-later, so the server may start but not respond in the browser, or macOS may prompt
-you about incoming connections. Either turn off *System Settings → General → AirDrop
-& Handoff → AirPlay Receiver*, or simply run on another port:
-
-```bash
-PORT=5001 python run.py        # then open http://127.0.0.1:5001
-```
-
-If `python3` or `pip` aren't found, install the command-line tools with
-`xcode-select --install`. When macOS asks whether to allow incoming network
-connections, click **Allow**.
-
-### Troubleshooting a blank page
-
-If the URL opens to a blank or white page, work through these in order:
-
-1. **Check the terminal.** The launcher now prints the exact URL it is serving. If
-   port 5000 was busy it will say so and pick another port (e.g. 5001) — open the
-   URL it prints, not the one in older notes.
-2. **Use the exact URL printed**, e.g. `http://127.0.0.1:5001` — not `https://`, and
-   not `localhost` if that resolves oddly.
-3. **Hard-refresh** the browser (`Cmd+Shift+R`) to clear a cached blank response.
-4. **Make sure you're running `run.py` or `app.py`** — opening the `.html` files in
-   `templates/` directly in a browser will not work; they are Jinja templates that
-   must be served by Flask.
-5. The page no longer depends on JavaScript to show its content, so a blocked or
-   failed `main.js` will not blank the page.
+Until Firebase is connected the site shows a clear "Backend not configured yet"
+notice instead of content. **Nothing fake is ever displayed.**
 
 ---
 
-## What's inside
+## The site
 
-### Public site (students & visitors)
-- **Design** — a light, white-canvas institutional theme (ink with green and
-  saffron accents taken from the RGIPT emblem), set in Fraunces + IBM Plex Sans.
-  Light only — there is no dark mode.
-- **Home** — hero, live stats, featured/upcoming/past events, latest notices.
-- **Events** — search + filter by category, timing (upcoming/past) and department.
-- **Event detail** — full description, key-dates timeline, live countdown, seat
-  availability, related events.
-- **Registration** — validated sign-up form with duplicate protection, automatic
-  waitlist when an event is full, and an instant ticket with a unique code.
-- **My Registrations** — look up all your tickets by email.
-- **Announcements** — notice board with pinned items and detail pages.
-- **Faculty** — the real Sivasagar Campus faculty and leadership, with a
-  client-side search over names and research areas.
-- **About & Contact** — campus information and a working enquiry form.
-- **Fully responsive** down to mobile, reduced-motion aware.
+| Page | File |
+|---|---|
+| Home | `docs/index.html` |
+| Events (search + filters) | `docs/events.html` |
+| Event detail + countdown | `docs/event.html?id=…` |
+| Announcements | `docs/announcements.html` |
+| Faculty directory (searchable) | `docs/faculty.html` |
+| About / Contact | `docs/about.html`, `docs/contact.html` |
+| **Admin panel** | `docs/admin.html` |
 
-### Admin panel (secure)
-- **Login** — hashed passwords (Werkzeug PBKDF2), session auth, CSRF on every form.
-- **Dashboard** — KPI cards, registrations-by-category chart, top events, recent
-  activity.
-- **Events** — create, edit, publish/hide, feature, delete (cascades registrations).
-- **Registrations** — filter by event/status, search, change status
-  (confirmed/waitlist/cancelled), delete, and **export to CSV**.
-- **Announcements** — create, edit, pin, publish/unpublish (draft control), delete.
-- **Messages** — read/unread inbox from the contact form, reply and delete.
+Registration writes a real record to Firestore and issues a ticket code. The contact
+form writes to the messages inbox in the admin panel.
+
+## The admin panel
+
+Open **`/admin.html`** on your site (there's an **Admin** link in the header) and sign
+in with the account you created in Firebase Authentication.
+
+- **Dashboard** — event, registration, announcement and message counts, plus a
+  registrations-by-category chart.
+- **Events** — create, edit, publish/hide, delete.
+- **Registrations** — view everyone who signed up, change status
+  (confirmed / waitlist / cancelled), delete, and **export to CSV**.
+- **Announcements** — create, edit, pin, publish/unpublish, delete.
+- **Messages** — read/unread inbox from the contact form.
 - **Settings** — change your password.
+- **Load starter data** — one click to import the 7 real campus events and 4 notices.
 
 ---
 
-## Project structure
+## Repository layout
 
 ```
 rgipt-events/
-├── app.py              # application factory + every route
-├── models.py           # SQLAlchemy models (Admin, Event, Registration,
-│                       #   Announcement, ContactMessage)
-├── config.py           # configuration (secret key, database, cookie hardening)
-├── seed.py             # creates the schema and loads events + announcements
-├── run.py              # convenience launcher
-├── build_static.py     # exports the public site to ./docs for GitHub Pages
-├── requirements.txt
-├── templates/          # Jinja2 templates
-│   ├── base.html, _macros.html, index.html, events.html, event_detail.html,
-│   ├── register_event.html, registration_success.html, announcements.html,
-│   ├── announcement_detail.html, my_registrations.html, faculty.html,
-│   ├── about.html, contact.html, 400/404/500.html
-│   └── admin/          # login, dashboard, events, event_form, registrations,
-│                       #   announcements, announcement_form, messages, settings
-├── static/
-│   ├── css/style.css   # the full design system
-│   ├── js/main.js      # theme, nav, reveal, countdown, filters, toasts
-│   ├── js/static-site.js  # client-side filtering for the static build
-│   └── img/logo.png    # RGIPT emblem (circular)
-├── docs/               # generated static site — commit this for GitHub Pages
-└── .github/workflows/pages.yml   # optional auto-deploy workflow
+├── SETUP.md              ← start here: connect Firebase (10 minutes)
+├── README.md
+├── docs/                 ← THE WEBSITE (GitHub Pages serves this folder)
+│   ├── index.html, events.html, event.html, announcements.html,
+│   │   announcement.html, register.html, faculty.html, about.html,
+│   │   contact.html, admin.html, 404.html
+│   ├── starter-data.json  the 7 real events + 4 notices, imported from the admin
+│   ├── css/style.css      the full design system
+│   ├── img/logo.png       RGIPT emblem (circular)
+│   └── js/
+│       ├── firebase-config.js  ← paste your Firebase values here
+│       ├── store.js            data layer (Firestore + Auth)
+│       ├── site.js             public pages
+│       └── admin.js            admin panel
+└── (optional) app.py, models.py, seed.py, run.py — a Flask version for local use
 ```
 
----
-
-## Data model
-
-| Table | Purpose |
-|---|---|
-| `admins` | Admin accounts (username, hashed password, role). |
-| `events` | Title, slug, category, description, dates, venue, capacity, fee, publish/feature flags. |
-| `registrations` | Participant details per event, status, unique ticket code. |
-| `announcements` | Notice-board posts with pin + publish (draft) flags. |
-| `contact_messages` | Enquiries submitted through the contact form. |
-
-Seat counts, "full" state and registration-open state are all computed live from the
-registrations table.
+The Flask app in the root is **optional** — it's an offline/local copy of the same
+site that talks to a SQLite file instead of Firebase. You do not need it for the
+hosted site.
 
 ---
 
-## Hosting on GitHub Pages
+## Publish it
 
-GitHub Pages serves **static files only** — it cannot run Python, so it can't host
-the Flask app, its database, the registration system or the admin panel. To satisfy
-both needs this repo carries two things:
+Repo → **Settings → Pages → Build and deployment**:
+- **Source:** Deploy from a branch
+- **Branch:** `main` · **Folder:** `/docs`
+- **Save**
 
-- the **full Flask app** (events + registration + secure admin), for running locally
-  or on a Python host; and
-- a **static build in `docs/`** — the whole public site, ready for GitHub Pages.
-
-### What works on the static site
-Browsing events, event details, announcements, the faculty directory, about and
-contact all work, including event filtering/search (done in the browser). Because
-there is no server:
-- **Register** opens a pre-filled email to the event's contact address.
-- **Contact** shows the campus email instead of a form.
-- The **admin panel** and **My Registrations** lookup are not part of the static
-  build (they need the database).
-
-### Option A — publish from the `docs` folder (simplest)
-1. Push this folder to GitHub (see below).
-2. On GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a
-   branch**, then choose **Branch: `main`** and **Folder: `/docs`**. Save.
-3. Your site appears at `https://<username>.github.io/<repo>/` within a minute.
-
-### Option B — automatic build with GitHub Actions
-`.github/workflows/pages.yml` is included. Set **Settings → Pages → Source:
-GitHub Actions**, and every push to `main` will rebuild `docs/` and deploy it.
-
-### The admin panel needs a Python host (important)
-The **admin panel, registration database and contact form cannot run on GitHub
-Pages** — Pages only serves static files, so those pages are intentionally absent
-from the `docs/` build. This is not a bug.
-
-To get the **full app online with a working admin panel**, deploy it to a host that
-runs Python. A Render blueprint is included (`render.yaml`):
-
-1. Push this repo to GitHub (done).
-2. Go to **render.com → New → Blueprint**, pick this repository, and apply.
-3. When prompted, set **`ADMIN_PASSWORD`** to a strong password (it is used for the
-   `admin` account).
-4. Render builds it, runs `python seed.py`, and gives you a live URL — the admin
-   panel is at `/admin/login` on that URL.
-
-Any equivalent host works too (Railway, Fly.io, PythonAnywhere). For a generic host:
-- start command: `gunicorn --bind 0.0.0.0:$PORT app:app` (see `Procfile`)
-- set `SECRET_KEY` and `ADMIN_PASSWORD` environment variables
-
-> Note: on free tiers the disk is ephemeral, so the SQLite file resets on each
-deploy. For data that persists, point `DATABASE_URL` at a managed PostgreSQL
-instance.
-
-### Pushing to GitHub
-```bash
-cd rgipt-events
-git init
-git add .
-git commit -m "RGIPT Sivasagar Campus event portal"
-git branch -M main
-git remote add origin https://github.com/<username>/<repo>.git
-git push -u origin main
-```
-
-### Rebuilding the static site after edits
-Any time you change events, announcements or pages in the app, regenerate `docs/`:
-```bash
-python seed.py            # or edit data via the admin panel
-python build_static.py
-git add docs && git commit -m "Rebuild static site" && git push
-```
-
-> Tip: to publish on a **custom domain**, add a file `docs/CNAME` containing your
-domain and set it in Settings → Pages.
+Live at `https://<username>.github.io/<repo>/`.
 
 ---
 
-## Security notes
+## No dummy data
 
-- Passwords are stored as salted hashes — never plain text.
-- Every state-changing form carries a CSRF token validated server-side.
-- Session cookies are `HttpOnly` and `SameSite=Lax`.
-- All admin routes are behind a `login_required` guard.
-- User input is validated (email format, required fields, numeric ranges) and SQL
-  access goes through SQLAlchemy's parameterised queries.
-- **Before deploying publicly:** set a strong `SECRET_KEY` environment variable and
-  run behind a production WSGI server (e.g. `gunicorn -w 4 'app:app'`) with HTTPS.
+- **No sample registrations are ever created.** Every registration count and seat
+  figure comes from real students.
+- **Only real, documented events are seeded** — Urjotsav, Krida Oorja, TechWave, the
+  GDG TechSprint hackathon, Cloud Study Jams, the SIH Internal Hackathon and SCHEMCON.
+- **Faculty** is compiled from the institute's official listings (rgipt.ac.in).
+  Institutional emails are shown; personal mobile numbers published on the institute
+  site are deliberately not reproduced.
+- **Event dates are the campus's recurring slots, not confirmed dates** — set the real
+  ones in the admin panel.
 
----
-
-## Configuration
-
-| Environment variable | Default | Notes |
-|---|---|---|
-| `SECRET_KEY` | random per process | Set this in production so sessions survive restarts. |
-| `DATABASE_URL` | `sqlite:///rgipt_events.db` | Point at Postgres/MySQL if you prefer. |
-| `ADMIN_PASSWORD` | `rgipt@2026` | Initial password for the `admin` account. **Set this before deploying publicly.** |
+Campus details: Gohain Gaon, Akhoiphutia, Dhaiali Road, Sivasagar – 785697, Assam ·
+03772-295231 · coordinator-aei@rgipt.ac.in · Established 2016 (historically the Assam
+Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish Hirani
 
 ---
 
-## A note on the data
+## Security
 
-**No dummy data.** Nothing on the site is fabricated to look busy:
-- **No sample registrations are seeded.** The `registrations` table starts empty, so
-  every registration count, seat figure and "N registered" number reflects real
-  students only. (Earlier builds shipped invented test registrations — those are gone.)
-- **Only real, documented events are seeded** — Urjotsav (the annual technical &
-  entrepreneurial festival), Krida Oorja (the annual sports fest), TechWave, the GDG
-  on Campus TechSprint hackathon, Cloud Study Jams, the SIH Internal Hackathon and
-  SCHEMCON. Invented one-off events that were not documented campus activity have
-  been removed.
-- **Announcements** are four starter notices based on documented campus activity.
-
-**Dates are the recurring slots, not confirmed dates.** The campus's actual dates for
-this session should be confirmed and set through the admin panel before you publish.
-Everything is editable there — events, dates, announcements, capacity, fees.
-
-**Faculty.** The Faculty page is compiled from the institute's official faculty
-listings (rgipt.ac.in) — names, designations and research areas are as published
-there. Institutional email addresses are shown; **personal mobile numbers that appear
-on the institute site are deliberately not reproduced here**, since republishing them
-on a new public site raises a privacy concern. Add them yourself if your campus is
-happy to. The listing also changes over time — re-check against the official page
-before publishing.
-
-Campus details used:
-- **Address:** Gohain Gaon, Akhoiphutia, Dhaiali Road, Sivasagar – 785697, Assam
-- **Phone:** 03772-295231 · **Email:** coordinator-aei@rgipt.ac.in
-- **Established:** 2016 (as a centre of RGIPT; historically the Assam Energy
-  Institute, AEI) · **In-Charge:** Dr Chinmoy Jit Sarma · **Director, RGIPT:** Prof.
-  Harish Hirani
+- Only accounts you create in Firebase Authentication can sign in to the admin panel.
+- Firestore rules let the public **read** published events and **create** a
+  registration, but **only a signed-in admin can read the registration list or change
+  anything**. The rules are in [SETUP.md](SETUP.md) — do not skip them.
+- The Firebase web API key in `firebase-config.js` is public by design; it is not a
+  secret and is safe to commit. Your data is protected by the rules, not the key.
 
 ---
 
 ## Testing
 
-Three verification suites ship with the project:
-
 ```bash
-python test_all.py       # 58 functional checks — every route, form and feature
-python test_bootstrap.py # boots from an empty DB and signs into the admin panel
-python audit.py          # 71 browser checks — console errors, overflow, interactions
-python verify_static.py  # 46 checks on the GitHub Pages build — links, assets, filters
+python verify_static.py   # 82 checks on the GitHub Pages build (headless Chrome)
+python test_all.py        # 58 functional checks on the optional Flask app
+python test_bootstrap.py  # Flask app boots from an empty database
+python audit.py           # 93 browser checks on the Flask app, incl. admin CRUD
 ```
 
-`audit.py` and `verify_static.py` need `websocket-client` and a local Chrome/Chromium.
-
----
-
-## Customising
-
-- **Colours / branding** — edit the CSS variables at the top of
-  `static/css/style.css` (`--navy`, `--green`, `--orange`, `--font-display`, …).
-- **Departments / categories** — edit the lists in `app.py`.
-- **Faculty** — edit the `FACULTY` list in `app.py`.
-- **Campus info** — edit the `CAMPUS` dict in `app.py`.
-- **Logo** — replace `static/img/logo.png` with a square image (it is displayed in a
-  circle, so use a 1:1 image to avoid distortion), then rerun `python build_static.py`.
-- **After any change**, regenerate the static site: `python build_static.py`.
+`verify_static.py` needs `websocket-client` and a local Chrome/Chromium. The three
+Flask suites additionally need `Flask` and `Flask-SQLAlchemy`.
 
 ---
 
