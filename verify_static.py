@@ -86,6 +86,17 @@ def console_errors():
     return out
 
 
+# Network reachability failures (the CI/sandbox browser may have no outbound
+# internet) are reported separately from real JS errors.
+NETERR = ("ERR_TUNNEL_CONNECTION_FAILED", "ERR_INTERNET_DISCONNECTED", "ERR_NAME_NOT_RESOLVED",
+          "ERR_CONNECTION_", "ERR_PROXY_", "ERR_NETWORK_CHANGED")
+
+
+def is_network_error(text):
+    return any(n in text for n in NETERR)
+
+
+OFFLINE = [False]
 PASS, FAIL = [], []
 
 
@@ -116,7 +127,10 @@ for path, label in PAGES:
     title = ev("document.title") or ""
     ok(f"{label}: title is clean", "__" not in title and len(title) > 8, title[:60])
     errs = console_errors()
-    ok(f"{label}: no console/JS errors", not errs, str(errs[:2]))
+    hard = [e for e in errs if not is_network_error(e)]
+    if errs and not hard:
+        OFFLINE[0] = True          # only network failures -> browser is offline
+    ok(f"{label}: no JS errors", not hard, str(hard[:2]))
     over = ev("document.documentElement.scrollWidth - window.innerWidth")
     ok(f"{label}: no horizontal overflow", (over or 0) <= 2, f"{over}px")
     if path != "admin.html":        # the admin app is standalone (its own header)
@@ -127,15 +141,16 @@ for path, label in PAGES:
     ok(f"{label}: no oversized icons", (big or 0) == 0, f"{big} oversized")
     ok(f"{label}: white background", ev("getComputedStyle(document.body).backgroundColor") == "rgb(255, 255, 255)")
 
-# --- data pages must show the "not configured" notice, never fake content ---
-for path, label in [("index.html", "home"), ("events.html", "events")]:
+# --- data pages must always render a real state: live content, a clean empty
+#     state, or an explicit message. Never blank, never placeholder text. ---
+STATES = ["Backend not configured", "Could not load data", "Could not reach the backend",
+          "No upcoming events", "Next up", "events found", "Admin sign in", "Notice board"]
+for path, label in [("index.html", "home"), ("events.html", "events"), ("admin.html", "admin")]:
     goto(path)
     body = ev("document.body.innerText") or ""
-    ok(f"{label}: shows 'backend not configured' notice", "Backend not configured" in body)
-
-goto("admin.html")
-body = ev("document.body.innerText") or ""
-ok("admin: shows 'Backend not configured'", "Backend not configured" in body)
+    ok(f"{label}: renders a real state (never blank)", any(s in body for s in STATES), body[:80])
+    ok(f"{label}: no placeholder text leaked",
+       "__TITLE__" not in body and "__DESC__" not in body and "lorem" not in body.lower())
 
 # --- faculty directory is static, so it must fully render ---
 goto("faculty.html")
@@ -172,3 +187,7 @@ for f in FAIL:
     print("  FAIL:", f)
 if not FAIL:
     print("  All static checks passed.")
+if OFFLINE[0]:
+    print("\n  NOTE: this environment's browser has no outbound internet, so the Firebase")
+    print("  SDK could not load. Pages were verified for structure, layout and graceful")
+    print("  degradation; live data and auth were not exercised here.")

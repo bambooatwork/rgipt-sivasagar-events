@@ -120,15 +120,20 @@ async function dashboard() {
 /* --------------------------------------------------------------- events */
 function eventsView() {
   const rows = cache.events;
+  const counts = {};
+  cache.regs.forEach((r) => {
+    if (r.status !== "cancelled") counts[r.eventId] = (counts[r.eventId] || 0) + 1;
+  });
   document.getElementById("main").innerHTML = `
     <div class="admin-head"><div><h1>Events</h1><p class="muted mb-0">${rows.length} event(s).</p></div>
       <a class="btn btn-primary" href="#/event-form">New event</a></div>
     ${rows.length ? `<div class="table-wrap"><table>
-      <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+      <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Registered</th><th>Status</th><th>Actions</th></tr></thead><tbody>
       ${rows.map((e) => `<tr>
         <td><span class="row-title">${escapeHtml(e.title)}</span>${e.isFeatured ? '<br><span class="badge pinned">Featured</span>' : ""}</td>
         <td>${formatDate(e.eventDate)}<br><span class="hint">${escapeHtml(e.startTime)}</span></td>
         <td><span class="chip">${escapeHtml(e.category)}</span></td>
+        <td>${counts[e.id] || 0} / ${e.capacity}</td>
         <td>${e.isPublished ? '<span class="badge live">Published</span>' : '<span class="badge draft">Hidden</span>'}
             ${isPast(e) ? '<br><span class="badge past">Past</span>' : ""}</td>
         <td><div class="actions">
@@ -360,7 +365,11 @@ async function route() {
   shellView(section);
 
   if (view === "dashboard") await dashboard();
-  else if (view === "events") { cache.events = await store.listEvents({ publishedOnly: false }); eventsView(); }
+  else if (view === "events") {
+    cache.events = await store.listEvents({ publishedOnly: false });
+    cache.regs = await store.listRegistrations();
+    eventsView();
+  }
   else if (view === "event-form") await eventFormView(id);
   else if (view === "announcements") { cache.anns = await store.listAnnouncements({ publishedOnly: false }); announcementsView(); }
   else if (view === "announcement-form") await announcementFormView(id);

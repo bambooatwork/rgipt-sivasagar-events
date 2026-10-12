@@ -114,8 +114,14 @@ export async function listEvents({ publishedOnly = true } = {}) {
 
 export async function getEvent(id) {
   await ready();
-  const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.events, id));
-  return s.exists() ? normaliseEvent(s.id, s.data()) : null;
+  try {
+    const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.events, id));
+    return s.exists() ? normaliseEvent(s.id, s.data()) : null;
+  } catch (e) {
+    // a hidden/unpublished document is denied by the security rules -> treat as absent
+    if (String(e && e.code).indexOf("permission-denied") !== -1) return null;
+    throw e;
+  }
 }
 
 export async function saveEvent(id, data) {
@@ -144,8 +150,13 @@ export async function listAnnouncements({ publishedOnly = true } = {}) {
 
 export async function getAnnouncement(id) {
   await ready();
-  const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.announcements, id));
-  return s.exists() ? normaliseAnnouncement(s.id, s.data()) : null;
+  try {
+    const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.announcements, id));
+    return s.exists() ? normaliseAnnouncement(s.id, s.data()) : null;
+  } catch (e) {
+    if (String(e && e.code).indexOf("permission-denied") !== -1) return null;
+    throw e;
+  }
 }
 
 export async function saveAnnouncement(id, data) {
@@ -195,12 +206,9 @@ export async function deleteRegistration(id) {
   await sdk.fsMod.deleteDoc(sdk.fsMod.doc(db, COLLECTIONS.registrations, id));
 }
 
-export async function countRegistrationsFor(eventId) {
-  await ready();
-  const snap = await sdk.fsMod.getDocs(
-    sdk.fsMod.query(col(COLLECTIONS.registrations), sdk.fsMod.where("eventId", "==", eventId)));
-  return snap.size;
-}
+/* NOTE: the registration list is admin-only (see the security rules), so the
+   public site deliberately does not attempt to read it or count seats. Seat
+   counts are visible to signed-in admins in the admin panel. */
 
 /* ------------------------------------------------------------ messages */
 export async function createMessage(data) {

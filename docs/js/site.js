@@ -89,9 +89,8 @@ function errorNotice(e) {
 }
 
 /* ------------------------------------------------------------- renderers */
-function eventRow(e, seatsTaken) {
+function eventRow(e) {
   const past = isPast(e);
-  const left = Math.max((e.capacity || 0) - (seatsTaken || 0), 0);
   const d = e.eventDate ? new Date(e.eventDate + "T00:00:00") : null;
   const day = d ? String(d.getDate()).padStart(2, "0") : "";
   const mon = d ? d.toLocaleDateString("en-GB", { month: "short" }) : "";
@@ -101,7 +100,6 @@ function eventRow(e, seatsTaken) {
     <div class="row-meta">
       <span class="cat"><span class="dot ${past ? "past" : ""}"></span>${escapeHtml(e.category)}</span>
       <span>${escapeHtml((e.venue || "").split(",")[0])}</span>
-      ${past ? "" : `<span class="seats-mini">${left} of ${e.capacity} seats left</span>`}
     </div>
     <div class="row-end"><span class="price ${e.fee === 0 ? "free" : ""}">${inr(e.fee)}</span>
       <span class="ar">&#8594;</span></div>
@@ -233,8 +231,6 @@ async function eventPage(app) {
     const e = await store.getEvent(id);
     if (!e) { app.innerHTML = notice("That event could not be found.", "orange"); return; }
     const past = isPast(e);
-    const taken = await store.countRegistrationsFor(e.id);
-    const left = Math.max(e.capacity - taken, 0);
     app.innerHTML = `
       <p class="muted" style="font-size:.85rem"><a href="events.html">Events</a> / ${escapeHtml(e.category)}</p>
       <div class="detail-grid">
@@ -244,7 +240,6 @@ async function eventPage(app) {
               <span class="chip">${escapeHtml(e.category)}</span>
               ${e.isFeatured ? '<span class="badge pinned">Featured</span>' : ""}
               ${past ? '<span class="badge past">Completed</span>'
-                : left <= 0 ? '<span class="badge full">Registration full</span>'
                 : '<span class="badge live">Registration open</span>'}
             </div>
             <h1>${escapeHtml(e.title)}</h1>
@@ -272,7 +267,6 @@ async function eventPage(app) {
             <dt>Organiser</dt><dd>${escapeHtml(e.organizer)}</dd>
             <dt>Venue</dt><dd>${escapeHtml(e.venue)}</dd>
             <dt>Capacity</dt><dd>${e.capacity} seats</dd>
-            <dt>Registered</dt><dd>${taken}</dd>
             ${e.contactEmail ? `<dt>Contact</dt><dd style="word-break:break-all">${escapeHtml(e.contactEmail)}</dd>` : ""}
           </dl>
           <div class="divider"></div>
@@ -333,8 +327,6 @@ async function registerPage(app) {
     const e = await store.getEvent(id);
     if (!e) { app.innerHTML = notice("That event could not be found.", "orange"); return; }
     if (isPast(e)) { app.innerHTML = notice("Registration for this event has closed.", "orange"); return; }
-    const taken = await store.countRegistrationsFor(e.id);
-    const left = Math.max(e.capacity - taken, 0);
 
     app.innerHTML = `
       <p class="muted" style="font-size:.9rem"><a href="events.html">Events</a> / <a href="event.html?id=${encodeURIComponent(e.id)}">${escapeHtml(e.title)}</a> / Register</p>
@@ -367,7 +359,7 @@ async function registerPage(app) {
             <div class="row">${escapeHtml(e.venue)}</div>
           </div>
           <div class="divider"></div>
-          <div class="seats"><span>${taken} registered</span><span>${left} seats left</span></div>
+          <div class="seats"><span>Capacity</span><span>${e.capacity} seats</span></div>
         </div></aside>
       </div>`;
 
@@ -450,7 +442,8 @@ function startCountdowns() {
 
 /* --------------------------------------------------------------- boot */
 const page = document.body.dataset.page;
-shell(NAV.find(([h]) => h === (page === "home" ? "index.html" : page + ".html"))?.[0] || "");
+const ACTIVE = { home: "index.html", event: "events.html", announcement: "announcements.html" };
+shell(ACTIVE[page] || (page + ".html"));
 
 const appEl = document.getElementById("app");
 if (appEl) {
