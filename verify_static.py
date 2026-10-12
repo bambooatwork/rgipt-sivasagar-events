@@ -113,6 +113,8 @@ PAGES = [
 
 for path, label in PAGES:
     goto(path)
+    title = ev("document.title") or ""
+    ok(f"{label}: title is clean", "__" not in title and len(title) > 8, title[:60])
     errs = console_errors()
     ok(f"{label}: no console/JS errors", not errs, str(errs[:2]))
     over = ev("document.documentElement.scrollWidth - window.innerWidth")
