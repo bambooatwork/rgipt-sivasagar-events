@@ -1,23 +1,22 @@
 /* =====================================================================
-   Firebase configuration  —  PASTE YOUR OWN VALUES HERE.
+   Firebase configuration for RGIPT Sivasagar Campus.
 
-   See SETUP.md at the root of the repository for a 5-minute walk-through.
-   Until this file holds a real config the site shows a "backend not set up"
-   notice instead of content — nothing fake is ever displayed.
+   Project: rgipt-event-management
 
-   Note: these values are PUBLIC by design. A Firebase web API key is not a
-   secret; your data is protected by the Firestore security rules in
-   SETUP.md, not by hiding this key.
+   These values are PUBLIC by design — a Firebase web API key is not a
+   secret. Your data is protected by the Firestore security rules (see
+   SETUP.md), not by hiding this key. It is safe to keep this in a public
+   repository.
    ===================================================================== */
 
 export const firebaseConfig = {
-  apiKey: "",
-  authDomain: "",
-  projectId: "",
-  storageBucket: "",
-  messagingSenderId: "",
-  appId: ""
+  apiKey: "AIzaSyAu-LX0Jt_DL944j8DPJYyTwT7hje4K4XM",
+  authDomain: "rgipt-event-management.firebaseapp.com",
+  projectId: "rgipt-event-management",
+  storageBucket: "rgipt-event-management.firebasestorage.app",
+  messagingSenderId: "177329957050",
+  appId: "1:177329957050:web:d240932e5cad0488e7ba83"
 };
 
-/* The admin account is created by you in the Firebase console
+/* The admin account is created in the Firebase console
    (Authentication → Users → Add user). Nothing is hard-coded here. */
