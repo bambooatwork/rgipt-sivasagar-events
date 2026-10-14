@@ -30,6 +30,10 @@ You need a Google account. The free "Spark" plan is more than enough.
 3. Go to the **Users** tab → **Add user**. Enter the email and password you want to
    use as the admin login. **This is your admin account** — remember it.
    (You can add more admin accounts the same way later.)
+4. Still in Authentication, open **Settings → Authorized domains** and click
+   **Add domain**. Add **`bambooatwork.github.io`**. Without this the admin sign-in on
+   the live site fails with `auth/unauthorized-domain`. (`localhost` is already on the
+   list, which is why it works when you run the site on your own machine.)
 
 ## 4. Paste your config into the site
 
@@ -57,53 +61,29 @@ export const firebaseConfig = {
 Commit and push. The site will stop showing "backend not configured" and start
 reading from your database (it will be empty until step 6).
 
-## 5. Add the security rules (important)
+## 5. Publish the security rules (important)
 
-Without this, anyone could read or wipe your data. In Firebase go to
-**Firestore Database → Rules**, replace everything with the following, and click
-**Publish**:
+Without this, anyone could read or wipe your data. The rules are kept in
+**[`firestore.rules`](firestore.rules)** at the root of this repository, so they are
+version-controlled next to the code instead of living only in this document.
 
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+**Option A — Firebase CLI (recommended):**
 
-    // Anyone can read PUBLISHED events and announcements.
-    // Only a signed-in admin can create, edit or delete them.
-    match /events/{doc} {
-      allow read:  if resource.data.isPublished == true || request.auth != null;
-      allow write: if request.auth != null;
-    }
-    match /announcements/{doc} {
-      allow read:  if resource.data.isPublished == true || request.auth != null;
-      allow write: if request.auth != null;
-    }
-
-    // Anyone can register for an event (create only), with basic checks.
-    // Only a signed-in admin can read, change or delete registrations.
-    match /registrations/{doc} {
-      allow create: if request.resource.data.name is string
-                    && request.resource.data.name.size() > 0
-                    && request.resource.data.name.size() < 120
-                    && request.resource.data.email is string
-                    && request.resource.data.email.matches('.*@.*')
-                    && request.resource.data.eventId is string;
-      allow read, update, delete: if request.auth != null;
-    }
-
-    // Contact form: anyone can send, only admins can read.
-    match /messages/{doc} {
-      allow create: if request.resource.data.name is string
-                    && request.resource.data.message is string
-                    && request.resource.data.message.size() < 4000;
-      allow read, update, delete: if request.auth != null;
-    }
-  }
-}
+```bash
+npm install -g firebase-tools
+firebase login
+firebase deploy --only firestore:rules
 ```
 
-In plain terms: the public can **read** events and **create** registrations, but only
-you (signed in) can read the registration list or change anything.
+`firebase.json` and `.firebaserc` are already configured, so this deploys straight to
+the `rgipt-event-management` project.
+
+**Option B — the Firebase console:** open **Firestore Database → Rules**, replace
+everything with the contents of `firestore.rules`, and click **Publish**.
+
+In plain terms: the public can **read** published events and announcements and
+**create** registrations and contact messages — but only you (signed in) can read the
+registration list, read the inbox, or change anything.
 
 ## 6. Load the starter content
 
@@ -154,6 +134,8 @@ and only for local/offline use.
   are marked **Published**.
 - **Can't sign in** — the user must be created under Authentication → Users (step 3),
   and Email/Password must be enabled.
+- **`auth/unauthorized-domain` on the live site** — `bambooatwork.github.io` is not in
+  Authentication → Settings → Authorized domains. See step 3.4.
 - **Quota** — the free Spark plan is generous (50k reads/day). For a campus event
   site this is plenty.
 

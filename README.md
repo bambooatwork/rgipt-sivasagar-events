@@ -85,11 +85,14 @@ form writes to the messages inbox in the admin panel.
 rgipt-events/
 ├── README.md
 ├── SETUP.md              ← reference guide for connecting Firebase (already done here)
+├── firestore.rules       ← the live security rules (deploy with `firebase deploy`)
+├── firebase.json         ← Firebase CLI config (rules + docs/ as hosting)
+├── .firebaserc           ← pins the rgipt-event-management project
 ├── docs/                 ← THE WEBSITE (GitHub Pages serves this folder)
 │   ├── index.html, events.html, event.html, announcements.html,
 │   │   announcement.html, register.html, faculty.html, about.html,
 │   │   contact.html, admin.html, 404.html
-│   ├── starter-data.json  the 7 real events + 4 notices, imported from the admin
+│   ├── starter-data.json  13 real events + 6 notices, imported from the admin
 │   ├── css/style.css      the full design system
 │   ├── img/logo.png       RGIPT emblem (circular)
 │   └── js/
@@ -147,6 +150,9 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 - Firestore rules let the public **read** published events and **create** a
   registration, but **only a signed-in admin can read the registration list or change
   anything**.
+- The Firestore security rules live in `firestore.rules` and are deployed with
+  `firebase deploy --only firestore:rules` (or pasted into the console). They are
+  version-controlled so a change to access control shows up in the git history.
 - The Firebase web API key in `firebase-config.js` is public by design — it is not a
   secret and is safe to commit. Your data is protected by the rules, not the key.
 
