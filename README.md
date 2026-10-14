@@ -105,17 +105,28 @@ that talks to a SQLite file instead of Firebase. You do not need it for the host
 
 ---
 
-## No dummy data
+## About the starter content
 
+**Load starter data** (admin dashboard) imports **13 events and 6 announcements** —
+real, publicly documented RGIPT Sivasagar Campus activity, sourced from rgipt.ac.in,
+GDG on Campus and the campus's announcements:
+
+- **Upcoming** — Urja Shakti 2026, Krida Oorja '26, Urjotsav 2026, Google Cloud
+  Study Jams, SCHEMCON 2026, TechSprint 2026-27
+- **Past** — Internal Hackathon for SIH 2026, Build with AI: Antigravity, Solution
+  Challenge 2026, and the short-term courses on Hydrogen Energy, Petroleum Refinery,
+  CFD and TechSprint 2025-26
+
+Two honest caveats:
+
+- **Upcoming dates follow the campus's recurring pattern, not an official
+  announcement.** Confirm the exact dates in the admin panel before publishing.
 - **No sample registrations are ever created.** Every registration count comes from
   real students.
-- **Only real, documented events are seeded** — Urjotsav, Krida Oorja, TechWave, the
-  GDG TechSprint hackathon, Cloud Study Jams, the SIH Internal Hackathon and SCHEMCON.
-- **Faculty** is compiled from the institute's official listings (rgipt.ac.in).
-  Institutional emails are shown; personal mobile numbers published on the institute
-  site are deliberately not reproduced.
-- **Event dates are the campus's recurring slots, not confirmed dates** — set the real
-  ones in the admin panel.
+
+**Faculty** is compiled from the institute's official listings (rgipt.ac.in).
+Institutional emails are shown; personal mobile numbers published on the institute
+site are deliberately not reproduced.
 
 Campus details: Gohain Gaon, Akhoiphutia, Dhaiali Road, Sivasagar – 785697, Assam ·
 03772-295231 · coordinator-aei@rgipt.ac.in · Established 2016 (historically the Assam
@@ -137,7 +148,7 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 ## Testing
 
 ```bash
-python test_admin_ui.py   # 23 checks on the admin panel UI (mocked backend, no network)
+python test_admin_ui.py   # 34 checks on the admin panel UI (stateful mock, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)
 python test_all.py        # 58 functional checks on the optional Flask app
 python test_bootstrap.py  # Flask app boots from an empty database

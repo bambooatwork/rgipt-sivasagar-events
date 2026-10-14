@@ -26,24 +26,81 @@ ADMINS = [
     # username, password, full name, role
     ("admin", ADMIN_PASSWORD, "Campus Events Administrator", "admin"),
 ]
-
 # --------------------------------------------------------------------------- #
-#  Events — the campus's real, documented events and programmes.
-#  (No invented one-off events; dates are the recurring slots for the session.)
+#  Events - the campus's real, documented events and programmes.
+#  Sourced from RGIPT Sivasagar Campus announcements (rgipt.ac.in, GDG on
+#  Campus, the campus LinkedIn page). Upcoming dates follow the campus's
+#  recurring pattern - confirm the exact dates in the admin panel before
+#  publishing. No invented one-off events.
 # --------------------------------------------------------------------------- #
 EVENTS = [
     dict(
+        title="Urja Shakti 2026",
+        category="Technical",
+        short_description="RGIPT's national-level competition for women in energy - write-up submissions close 21 October 2026.",
+        description=(
+            "Urja Shakti is RGIPT's national initiative celebrating women's presence and "
+            "contribution in the energy sector. Now in its fourth year, the 2026 edition "
+            "invites women students nationwide to develop and pitch original ideas across "
+            "six energy themes - technology, markets and policy. Open across three academic "
+            "categories, with a compulsory faculty mentor for every entry. Write-up "
+            "submissions close on 21 October 2026; presentation and result dates are "
+            "announced closer to the evaluation window."
+        ),
+        organizer="Rajiv Gandhi Institute of Petroleum Technology",
+        venue="Online (national)",
+        event_date=date(2026, 10, 21),
+        end_date=date(2026, 10, 21),
+        start_time="11:59 PM",
+        end_time="11:59 PM",
+        registration_deadline=date(2026, 10, 21),
+        capacity=1000,
+        fee=0,
+        team_size="Individual (with faculty mentor)",
+        contact_email="coordinator-aei@rgipt.ac.in",
+        accent="rose",
+        is_featured=True,
+        is_published=True,
+    ),
+    dict(
+        title="Krida Oorja '26",
+        category="Sports",
+        short_description="The annual sports festival of RGIPT Sivasagar Campus - weeks of cricket, football, volleyball, badminton and athletics.",
+        description=(
+            "Krida Oorja is the annual sports festival of RGIPT Sivasagar Campus, "
+            "celebrating teamwork, sportsmanship and healthy competition. The programme "
+            "opens with the traditional torch-lighting ceremony and March Past, and spans "
+            "cricket, football, volleyball, badminton and athletics across three weeks, "
+            "closing with a prize ceremony. Department squads are selected through trials; "
+            "captains should submit squad lists to the Sports Council."
+        ),
+        organizer="Sports Council, RGIPT Sivasagar Campus",
+        venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
+        event_date=date(2026, 10, 26),
+        end_date=date(2026, 11, 13),
+        start_time="07:00 AM",
+        end_time="06:00 PM",
+        registration_deadline=date(2026, 10, 22),
+        capacity=600,
+        fee=0,
+        team_size="Team (department squads)",
+        contact_email="coordinator-aei@rgipt.ac.in",
+        accent="emerald",
+        is_featured=True,
+        is_published=True,
+    ),
+    dict(
         title="Urjotsav 2026",
         category="Technical",
-        short_description="The annual national-level inter-collegiate technical & entrepreneurial festival of RGIPT, organised by the Science & Technology Council.",
+        short_description="The annual national-level inter-collegiate technical & entrepreneurial festival, organised by the Science & Technology Council.",
         description=(
             "Urjotsav is RGIPT's flagship annual technical and entrepreneurial festival, "
-            "orchestrated by the Science & Technology Council. Over two days it brings "
-            "together students from across the country to compete, collaborate and "
-            "innovate \u2014 technical paper presentations, poster sessions, model making, "
-            "guest lectures, workshops and panel discussions, plus an entrepreneurship "
-            "pitch arena. It is the campus's platform for tomorrow's industry leaders to "
-            "unveil their talent."
+            "orchestrated by the Science & Technology Council. It brings together students "
+            "from across the country to compete, collaborate and innovate - technical paper "
+            "presentations, poster sessions, model making, guest lectures, workshops and "
+            "panel discussions, plus an entrepreneurship pitch arena. Past editions have "
+            "featured events such as Hack Infinity, Code Climb, RCPC, UI Express and Code "
+            "Decipher. It is the campus's platform for tomorrow's industry leaders."
         ),
         organizer="Science & Technology Council, RGIPT Sivasagar Campus",
         venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
@@ -55,197 +112,335 @@ EVENTS = [
         capacity=500,
         fee=0,
         team_size="Individual or Team (up to 4)",
+        contact_email="coordinator-aei@rgipt.ac.in",
         accent="amber",
         is_featured=True,
         is_published=True,
     ),
     dict(
-        title="Krida Oorja '26",
-        category="Sports",
-        short_description="The annual sports festival of RGIPT Sivasagar Campus \u2014 weeks of cricket, football, volleyball, badminton, athletics and team spirit.",
-        description=(
-            "Krida Oorja is the annual sports festival of RGIPT Sivasagar Campus, "
-            "celebrating teamwork, sportsmanship and healthy competition. The programme "
-            "opens with the traditional torch-lighting ceremony and March Past, and spans "
-            "cricket, football, volleyball, badminton and athletics, closing with a "
-            "ceremony attended by invited dignitaries. Departments compete for the overall "
-            "championship."
-        ),
-        organizer="Sports Council, RGIPT Sivasagar Campus",
-        venue="Campus Sports Ground, RGIPT Sivasagar Campus",
-        event_date=date(2026, 12, 1),
-        end_date=date(2026, 12, 19),
-        start_time="07:00 AM",
-        end_time="06:00 PM",
-        registration_deadline=date(2026, 11, 25),
-        capacity=400,
-        fee=0,
-        team_size="Team",
-        accent="emerald",
-        is_featured=True,
-        is_published=True,
-    ),
-    dict(
-        title="TechSprint 2026 \u2013 Campus Edition",
-        category="Hackathon",
-        short_description="The GDG on Campus open-innovation hackathon \u2014 build practical solutions with Google technologies. Solve. Create. Impact.",
-        description=(
-            "TechSprint is the flagship open-innovation hackathon hosted by Google "
-            "Developer Group on Campus, RGIPT Sivasagar Campus. Student developers identify "
-            "real challenges in their campus or local communities and build practical "
-            "solutions using Google technologies \u2014 Android, Flutter, Firebase and Google "
-            "Cloud. Beginners and experienced builders are both welcome. Teams progress "
-            "through evaluation rounds with mentorship and codelabs, ending in a demo day "
-            "before judges."
-        ),
-        organizer="GDG on Campus, RGIPT Sivasagar Campus",
-        venue="Online + Computer Lab, RGIPT Sivasagar Campus",
-        event_date=date(2026, 12, 4),
-        end_date=date(2027, 1, 22),
-        start_time="07:00 PM",
-        end_time="11:59 PM",
-        registration_deadline=date(2027, 1, 22),
-        capacity=300,
-        fee=0,
-        team_size="Team (2\u20134)",
-        contact_email="gdgocrgiptsc@rgipt.ac.in",
-        accent="indigo",
-        is_featured=True,
-        is_published=True,
-    ),
-    dict(
-        title="Google Cloud Study Jams",
+        title="Google Cloud Study Jams 2026",
         category="Workshop",
-        short_description="A hands-on cloud computing workshop series with guided labs, badges and certifications via Google Cloud Skills Boost.",
+        short_description="Hands-on cloud learning with Google Cloud Skills Boost - earn badges and certifications, hosted by GDG on Campus.",
         description=(
-            "An intensive, hands-on workshop series to kickstart your cloud computing "
-            "journey with Google Cloud Study Jams. Participants work through guided labs on "
-            "compute, storage, networking and AI on the Google Cloud Skills Boost platform, "
-            "earning badges and certifications along the way. Bring a laptop."
+            "Google Cloud Study Jams, hosted by GDG on Campus at RGIPT Sivasagar Campus, "
+            "is a guided, hands-on programme that takes students from cloud fundamentals to "
+            "practical deployments on Google Cloud. Participants work through codelabs and "
+            "quests on the Google Cloud Skills Boost platform, earning badges and "
+            "certifications along the way. No prior cloud experience is required."
         ),
         organizer="GDG on Campus, RGIPT Sivasagar Campus",
         venue="Computer Lab, RGIPT Sivasagar Campus",
-        event_date=date(2026, 10, 20),
+        event_date=date(2026, 11, 7),
+        end_date=date(2026, 11, 8),
         start_time="10:00 AM",
         end_time="04:00 PM",
-        registration_deadline=date(2026, 10, 18),
-        capacity=80,
+        registration_deadline=date(2026, 11, 5),
+        capacity=120,
         fee=0,
         team_size="Individual",
-        accent="teal",
+        contact_email="gdgocrgiptsc@rgipt.ac.in",
+        accent="indigo",
+        is_featured=False,
         is_published=True,
     ),
-    # ------------------------------ Past ------------------------------- #
     dict(
-        title="TechWave 2026 \u2013 Ideas in Motion",
-        category="Technical",
-        short_description="The campus Engineers' Day celebration \u2014 model making and poster presentation, organised by the Science & Technology Council.",
+        title="SCHEMCON 2026",
+        category="Seminar",
+        short_description="Students' Chemical Engineering Congress - technical paper presentations and industry sessions for chemical engineering students.",
         description=(
-            "TechWave 2026, themed \u201cIdeas in Motion\u201d, was organised by the Science & "
-            "Technology Council on the occasion of Engineers' Day. It gave students a "
-            "platform to showcase creativity, technical knowledge and problem-solving "
-            "through Model Making and Poster Presentation, and celebrated collaboration and "
-            "transforming concepts into meaningful outcomes."
+            "SCHEMCON, the Students' Chemical Engineering Congress, is a national platform "
+            "for chemical engineering students to present technical papers, attend industry "
+            "sessions and interact with academicians and practising engineers. The campus "
+            "chapter hosts paper presentations, poster sessions and expert talks covering "
+            "process engineering, energy transition, sustainability and process safety."
         ),
-        organizer="Science & Technology Council, RGIPT Sivasagar Campus",
-        venue="RGIPT Sivasagar Campus, Gohain Gaon",
-        event_date=date(2026, 9, 15),
-        start_time="10:00 AM",
+        organizer="IIChE Student Chapter, RGIPT Sivasagar Campus",
+        venue="Seminar Hall, RGIPT Sivasagar Campus",
+        event_date=date(2026, 12, 18),
+        end_date=date(2026, 12, 19),
+        start_time="09:30 AM",
         end_time="05:00 PM",
+        registration_deadline=date(2026, 12, 10),
         capacity=250,
         fee=0,
-        team_size="Team (1\u20133)",
+        team_size="Individual or Team (up to 3)",
+        contact_email="coordinator-aei@rgipt.ac.in",
         accent="teal",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="TechSprint 2026-27",
+        category="Hackathon",
+        short_description="The GDG on Campus open-innovation hackathon - identify real campus and community problems and build solutions with Google technologies.",
+        description=(
+            "TechSprint, hosted by GDG on Campus at RGIPT Sivasagar Campus and powered by "
+            "Hack2skill, is an open-innovation hackathon where student developers identify "
+            "real challenges in their campus or local communities and build practical "
+            "solutions using Google technologies - Android, Flutter, Firebase and Cloud. "
+            "Beginners and experienced developers are both welcome. Teams of 1 to 4 "
+            "members; shortlisting, mentoring and a final demo day across the cycle."
+        ),
+        organizer="GDG on Campus, RGIPT Sivasagar Campus",
+        venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
+        event_date=date(2026, 12, 5),
+        end_date=date(2027, 1, 22),
+        start_time="10:00 AM",
+        end_time="05:00 PM",
+        registration_deadline=date(2026, 12, 28),
+        capacity=200,
+        fee=0,
+        team_size="Team (1-4 members)",
+        contact_email="gdgocrgiptsc@rgipt.ac.in",
+        accent="violet",
+        is_featured=False,
         is_published=True,
     ),
     dict(
         title="Internal Hackathon for SIH 2026",
         category="Hackathon",
-        short_description="The campus-level Smart India Hackathon \u2014 selection of RGIPT's best teams for nomination to SIH 2026.",
+        short_description="Campus-level hackathon to select RGIPT's teams for the Smart India Hackathon 2026.",
         description=(
-            "RGIPT organised an Internal Hackathon to select the best teams from the "
-            "institute for nomination to Smart India Hackathon 2026 (SIH 2026), hosted by "
-            "the Ministry of Education's Innovation Cell, Government of India. Teams worked "
-            "on real problem statements, with shortlisted teams advancing to the national "
-            "stage."
+            "RGIPT Sivasagar Campus organised an Internal Hackathon to select the best "
+            "teams from the institute for nomination to the Smart India Hackathon 2026 "
+            "(SIH 2026), hosted by the Ministry of Education's Innovation Cell. Teams "
+            "pitched solutions against SIH problem statements, and the shortlisted squads "
+            "went forward to complete their SIH portal formalities. The event ran across "
+            "three days with mentoring and evaluation rounds."
         ),
-        organizer="Innovation Cell, RGIPT",
-        venue="Computer Lab, RGIPT Sivasagar Campus",
+        organizer="Innovation Cell, RGIPT Sivasagar Campus",
+        venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
         event_date=date(2026, 9, 18),
         end_date=date(2026, 9, 20),
         start_time="09:00 AM",
-        end_time="09:00 PM",
-        capacity=200,
+        end_time="06:00 PM",
+        registration_deadline=date(2026, 9, 12),
+        capacity=300,
         fee=0,
-        team_size="Team (6)",
+        team_size="Team (up to 6 members)",
+        contact_email="coordinator-aei@rgipt.ac.in",
         accent="indigo",
+        is_featured=False,
         is_published=True,
     ),
     dict(
-        title="SCHEMCON 2026 \u2013 Students' Chemical Engineering Congress",
-        category="Seminar",
-        short_description="The national Students' Chemical Engineering Congress \u2014 technical papers, poster sessions, workshops and panel discussions.",
+        title="Build with AI: Build with Antigravity",
+        category="Workshop",
+        short_description="An AI innovation challenge - build anything with AI tools, platforms and APIs, and submit a working prototype.",
         description=(
-            "SCHEMCON (Students' Chemical Engineering Congress) is an annual national-level "
-            "congress organised by the Indian Institute of Chemical Engineers (IIChE) "
-            "through its student chapters. Editions feature technical paper presentations, "
-            "poster sessions, guest lectures, workshops and panel discussions around a "
-            "contemporary theme in chemical engineering."
+            "Organised by Google Developer Groups on Campus at RGIPT Sivasagar Campus, "
+            "Build with AI: Build with Antigravity challenged students to build anything "
+            "using AI tools, platforms, APIs and Antigravity technologies - an AI-powered "
+            "website, chatbot, automation tool, mobile app or smart system. Participants "
+            "explored AI technologies, built real-world projects and submitted working "
+            "prototypes for evaluation, with results announced at the close of the window."
         ),
-        organizer="IIChE Student Chapter, RGIPT Sivasagar Campus",
-        venue="Seminar Hall, RGIPT Sivasagar Campus",
-        event_date=date(2026, 8, 8),
-        end_date=date(2026, 8, 9),
-        start_time="09:00 AM",
+        organizer="GDG on Campus, RGIPT Sivasagar Campus",
+        venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
+        event_date=date(2026, 5, 26),
+        end_date=date(2026, 5, 28),
+        start_time="10:00 AM",
         end_time="06:00 PM",
-        capacity=300,
+        registration_deadline=date(2026, 5, 25),
+        capacity=200,
         fee=0,
         team_size="Individual or Team",
+        contact_email="gdgocrgiptsc@rgipt.ac.in",
+        accent="violet",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="Solution Challenge 2026 - Build with AI",
+        category="Hackathon",
+        short_description="GDG's global challenge - solve real-world problems with AI, Flutter, Firebase and Google Cloud.",
+        description=(
+            "GDG on Campus at RGIPT Sivasagar Campus presented Solution Challenge 2026 - "
+            "Build with AI, part of Google's global student developer challenge. Students "
+            "competed with peers from across India to build impactful solutions using AI, "
+            "Flutter, Firebase and Google Cloud, with mentorship from experts and a "
+            "significant prize pool. The cycle ran from registration and prototype "
+            "submission through to the top-100 shortlist and a virtual grand finale."
+        ),
+        organizer="GDG on Campus, RGIPT Sivasagar Campus",
+        venue="Online (national)",
+        event_date=date(2026, 3, 6),
+        end_date=date(2026, 4, 28),
+        start_time="12:00 AM",
+        end_time="11:59 PM",
+        registration_deadline=date(2026, 4, 15),
+        capacity=500,
+        fee=0,
+        team_size="Team (1-4 members)",
+        contact_email="gdgocrgiptsc@rgipt.ac.in",
+        accent="indigo",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="Hydrogen Energy: Fundamentals and Emerging Trends",
+        category="Seminar",
+        short_description="A two-day short-term course on hydrogen energy - production, storage, fuel cells, safety and emerging innovations.",
+        description=(
+            "The Department of Chemical Engineering at RGIPT Sivasagar Campus organised a "
+            "two-day short-term course on Hydrogen Energy: Fundamentals and Emerging "
+            "Trends. Across twelve sessions, participants explored hydrogen production and "
+            "storage, fuel cells, safety considerations and the innovations shaping the "
+            "global energy transition, with active participation from students and external "
+            "attendees."
+        ),
+        organizer="Department of Chemical Engineering, RGIPT Sivasagar Campus",
+        venue="Seminar Hall, RGIPT Sivasagar Campus",
+        event_date=date(2026, 3, 28),
+        end_date=date(2026, 3, 29),
+        start_time="09:30 AM",
+        end_time="05:00 PM",
+        registration_deadline=date(2026, 3, 25),
+        capacity=120,
+        fee=0,
+        team_size="Individual",
+        contact_email="coordinator-aei@rgipt.ac.in",
         accent="emerald",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="Petroleum Refinery: Fundamentals and Practices",
+        category="Seminar",
+        short_description="A two-day short-term course on petroleum refining, attended by 80 participants from colleges across Assam.",
+        description=(
+            "The Department of Chemical Engineering at RGIPT Sivasagar Campus organised a "
+            "two-day short-term course on Petroleum Refinery: Fundamentals and Practices, "
+            "attended by 80 participants from colleges across Assam. The course covered "
+            "crude oil characterisation, refinery process units, distillation, conversion "
+            "processes and product specifications, with expert sessions, real-world case "
+            "discussions and hands-on laboratory exposure."
+        ),
+        organizer="Department of Chemical Engineering, RGIPT Sivasagar Campus",
+        venue="Seminar Hall, RGIPT Sivasagar Campus",
+        event_date=date(2026, 2, 7),
+        end_date=date(2026, 2, 8),
+        start_time="09:30 AM",
+        end_time="05:00 PM",
+        registration_deadline=date(2026, 2, 4),
+        capacity=100,
+        fee=0,
+        team_size="Individual",
+        contact_email="coordinator-aei@rgipt.ac.in",
+        accent="amber",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="Hands-on CFD Workshop",
+        category="Workshop",
+        short_description="A two-day hands-on Computational Fluid Dynamics workshop using ANSYS Fluent, for petroleum and chemical engineering students.",
+        description=(
+            "The Departments of Petroleum Engineering and Chemical Engineering at RGIPT "
+            "Sivasagar Campus organised a two-day hands-on workshop on Computational Fluid "
+            "Dynamics. The workshop covered CFD fundamentals through to advanced "
+            "applications, including ANSYS Fluent-based simulations, multiphase and porous "
+            "media flow modelling, and interpretation of results - with applications "
+            "relevant to the petroleum and chemical engineering industries."
+        ),
+        organizer="Departments of Petroleum & Chemical Engineering, RGIPT Sivasagar Campus",
+        venue="Computer Lab, RGIPT Sivasagar Campus",
+        event_date=date(2026, 1, 24),
+        end_date=date(2026, 1, 25),
+        start_time="09:30 AM",
+        end_time="05:00 PM",
+        registration_deadline=date(2026, 1, 21),
+        capacity=60,
+        fee=0,
+        team_size="Individual",
+        contact_email="coordinator-aei@rgipt.ac.in",
+        accent="teal",
+        is_featured=False,
+        is_published=True,
+    ),
+    dict(
+        title="TechSprint 2025-26 (Sivasagar Edition)",
+        category="Hackathon",
+        short_description="The first Sivasagar Campus edition of TechSprint - an open-innovation hackathon with Hack2skill.",
+        description=(
+            "TechSprint - RGIPT Sivasagar Campus Edition was hosted by GDG on Campus and "
+            "powered by Hack2skill. Student developers identified real challenges in their "
+            "campus and local communities and built practical solutions using Google "
+            "technologies. The cycle ran from registration through to a top-10 shortlist "
+            "and a final top-3 announcement. Beginners and experienced developers were both "
+            "welcome."
+        ),
+        organizer="GDG on Campus, RGIPT Sivasagar Campus",
+        venue="RGIPT Sivasagar Campus, Gohain Gaon, Akhoiphutia",
+        event_date=date(2026, 1, 21),
+        end_date=date(2026, 1, 29),
+        start_time="10:00 AM",
+        end_time="05:00 PM",
+        registration_deadline=date(2026, 1, 22),
+        capacity=200,
+        fee=0,
+        team_size="Team (1-4 members)",
+        contact_email="gdgocrgiptsc@rgipt.ac.in",
+        accent="rose",
+        is_featured=False,
         is_published=True,
     ),
 ]
 
 # --------------------------------------------------------------------------- #
-#  Announcements — starter notices based on documented campus activity.
+#  Announcements - starter notices based on documented campus activity.
 #  Edit or replace these from the admin panel before publishing.
 # --------------------------------------------------------------------------- #
 ANNOUNCEMENTS = [
     dict(
-        title="Registrations open for Urjotsav 2026",
+        title="Urja Shakti 2026 - submissions close 21 October",
         body=(
-            "Registration for Urjotsav 2026, the annual national-level technical and "
-            "entrepreneurial festival, is now open. Students from RGIPT and other institutes "
-            "can register for individual and team events. Visit the Events page to register."
+            "Write-up submissions for Urja Shakti 2026, RGIPT's national competition for "
+            "women in energy, close on 21 October 2026. Open to women students across three "
+            "academic categories nationwide; every entry requires a faculty mentor. See the "
+            "Events page for details."
         ),
         category="Events",
         is_pinned=True,
         is_published=True,
     ),
     dict(
-        title="TechSprint 2026 \u2013 registration open",
+        title="Krida Oorja '26 - department trials begin",
         body=(
-            "Teams of 2 to 4 members may register for TechSprint 2026, the GDG on Campus "
-            "open-innovation hackathon, via the Events page. For queries, write to "
-            "gdgocrgiptsc@rgipt.ac.in."
-        ),
-        category="Hackathon",
-        is_pinned=False,
-        is_published=True,
-    ),
-    dict(
-        title="Krida Oorja '26 \u2013 department trials",
-        body=(
-            "Trials for Krida Oorja '26 begin soon. Captains of each department should "
-            "submit their squad lists to the Sports Council. Cricket, football, volleyball, "
-            "badminton and athletics events are planned across the coming weeks."
+            "Trials for Krida Oorja '26, the annual sports festival, begin on 22 October. "
+            "Captains of each department should submit their squad lists to the Sports "
+            "Council. Cricket, football, volleyball, badminton and athletics events are "
+            "planned across the following three weeks."
         ),
         category="Sports",
+        is_pinned=True,
+        is_published=True,
+    ),
+    dict(
+        title="Urjotsav 2026 - registrations open",
+        body=(
+            "Registration for Urjotsav 2026, the annual national-level technical and "
+            "entrepreneurial festival, is now open. Students from RGIPT and other institutes "
+            "can register for individual and team events. Visit the Events page to register; "
+            "the last date is 8 November 2026."
+        ),
+        category="Events",
         is_pinned=False,
         is_published=True,
     ),
     dict(
-        title="Internal Hackathon for SIH 2026 \u2013 results",
+        title="Google Cloud Study Jams - enrol now",
+        body=(
+            "GDG on Campus invites students to enrol for Google Cloud Study Jams on 7-8 "
+            "November. Work through hands-on codelabs and quests on Google Cloud Skills "
+            "Boost and earn badges and certifications. No prior cloud experience needed."
+        ),
+        category="Academic",
+        is_pinned=False,
+        is_published=True,
+    ),
+    dict(
+        title="Internal Hackathon for SIH 2026 - results",
         body=(
             "Congratulations to the teams shortlisted from the Internal Hackathon for "
             "nomination to Smart India Hackathon 2026. Shortlisted teams should complete "
@@ -255,7 +450,21 @@ ANNOUNCEMENTS = [
         is_pinned=False,
         is_published=True,
     ),
+    dict(
+        title="Training & Placement - campus recruitment programme 2026-27",
+        body=(
+            "The Training & Placement Cell invites organisations to participate in the "
+            "2026-27 campus recruitment programme for final-year diploma students. The cell "
+            "supports pre-placement talks, group discussions, online and offline tests, and "
+            "personal interviews. Write to coordinator-aei@rgipt.ac.in to schedule a visit."
+        ),
+        category="Notice",
+        is_pinned=False,
+        is_published=True,
+    ),
 ]
+
+
 
 
 def seed(reset=False):

@@ -1,14 +1,16 @@
-"""Admin panel UI test — runs the real docs/js/admin.js against a mocked data
-layer, so the whole admin interface can be verified without a network or a
-Firebase project.
+"""Admin panel UI test — runs the real docs/js/admin.js against a *stateful*
+mock data layer, so every button can be clicked and its effect verified without
+a network or a Firebase project.
 
-It builds a throwaway copy of the admin page with `store.js` swapped for a mock,
+Builds a throwaway copy of the admin page with `store.js` swapped for the mock,
 serves it over HTTP, and drives it in headless Chrome:
 
-  * signed out  -> the sign-in card renders (and carries no setup hint text)
-  * signed in   -> the dashboard, sidebar, KPIs and every view render
-  * no uncaught exceptions at any point (an uncaught error used to leave the
-    page blank, which is the bug this test guards against)
+  * signed out   -> the sign-in card renders (logo shown, no setup hint)
+  * signed in    -> dashboard, sidebar, KPIs and every view render
+  * branding     -> the campus logo appears; there is no "View site" link
+  * every button -> publish/hide, delete, status change, mark-read, CSV export
+  * robustness   -> no uncaught exceptions at any point (an uncaught error used
+                    to leave the page blank, which is what this guards against)
 
     python test_admin_ui.py
 """
@@ -30,7 +32,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
 
 MOCK_STORE = r"""
-/* MOCK data layer — lets the admin UI run with no network.
+/* MOCK data layer — stateful, so clicking a button really changes the data.
    NOTE: watchAuth deliberately returns nothing (not a promise), which is the
    case that previously threw "Cannot read properties of undefined (reading
    'catch')" and blanked the page. */
@@ -38,49 +40,59 @@ export function isConfigured(){ return true; }
 export async function init(){ return true; }
 export function watchAuth(cb){ setTimeout(()=>cb(window.__TEST_USER__), 60); }
 export async function login(){ return {}; }
-export async function logout(){}
-const EV=[{id:"1",title:"Urjotsav 2026",category:"Technical",eventDate:"2026-11-14",endDate:"2026-11-15",
+export async function logout(){ window.__LOGGED_OUT__ = true; }
+
+let EV=[{id:"1",title:"Urjotsav 2026",category:"Technical",eventDate:"2026-11-14",endDate:"2026-11-15",
   startTime:"09:00 AM",endTime:"06:00 PM",capacity:500,fee:0,isPublished:true,isFeatured:true,
   shortDescription:"The annual festival",description:"Long text",organizer:"Science & Technology Council",
   venue:"RGIPT Sivasagar Campus",teamSize:"Individual or Team",contactEmail:"",accent:"amber",
   registrationDeadline:"2026-11-08"}];
-const AN=[{id:"a1",title:"Registrations open",body:"Body text",category:"Events",isPinned:true,
+let AN=[{id:"a1",title:"Registrations open",body:"Body text",category:"Events",isPinned:true,
   isPublished:true,publishedAt:"2026-10-07T00:00:00.000Z"}];
-const RG=[{id:"r1",name:"Ananya Baruah",email:"a@b.com",phone:"999",eventId:"1",eventTitle:"Urjotsav 2026",
+let RG=[{id:"r1",name:"Ananya Baruah",email:"a@b.com",phone:"999",eventId:"1",eventTitle:"Urjotsav 2026",
   status:"confirmed",ticketCode:"RGIABC1",createdAt:"2026-10-12T00:00:00.000Z"}];
-const MS=[{id:"m1",name:"A",email:"a@b.com",subject:"Hi",message:"Hello",isRead:false,
+let MS=[{id:"m1",name:"A",email:"a@b.com",subject:"Hi",message:"Hello",isRead:false,
   createdAt:"2026-10-12T00:00:00.000Z"}];
+
 export async function listEvents(){ return EV; }
 export async function getEvent(id){ return EV.find(e=>e.id===id)||null; }
 export async function listAnnouncements(){ return AN; }
 export async function getAnnouncement(id){ return AN.find(a=>a.id===id)||null; }
 export async function listRegistrations(){ return RG; }
 export async function listMessages(){ return MS; }
-export async function saveEvent(){ return "1"; }
-export async function deleteEvent(){}
-export async function saveAnnouncement(){ return "a1"; }
-export async function deleteAnnouncement(){}
-export async function updateRegistration(){}
-export async function deleteRegistration(){}
-export async function updateMessage(){}
-export async function deleteMessage(){}
-export async function changePassword(){}
-export async function loadStarterData(){ return 11; }
+
+export async function saveEvent(id,data){
+  if(id){ const i=EV.findIndex(e=>e.id===id); if(i>-1) EV[i]={...EV[i],...data}; }
+  else { EV.push({id:String(Date.now()),...data}); }
+  return id||"new";
+}
+export async function deleteEvent(id){ EV=EV.filter(e=>e.id!==id); }
+export async function saveAnnouncement(id,data){
+  if(id){ const i=AN.findIndex(a=>a.id===id); if(i>-1) AN[i]={...AN[i],...data}; }
+  else { AN.push({id:String(Date.now()),...data}); }
+  return id||"new";
+}
+export async function deleteAnnouncement(id){ AN=AN.filter(a=>a.id!==id); }
+export async function updateRegistration(id,patch){ const i=RG.findIndex(r=>r.id===id); if(i>-1) RG[i]={...RG[i],...patch}; }
+export async function deleteRegistration(id){ RG=RG.filter(r=>r.id!==id); }
+export async function updateMessage(id,patch){ const i=MS.findIndex(m=>m.id===id); if(i>-1) MS[i]={...MS[i],...patch}; }
+export async function deleteMessage(id){ MS=MS.filter(m=>m.id!==id); }
+export async function changePassword(){ return true; }
+export async function loadStarterData(){ return 19; }
 export function formatDate(i,o){ if(!i) return ""; const d=new Date(i+"T00:00:00");
   return isNaN(d)?i:d.toLocaleDateString("en-GB",o||{day:"2-digit",month:"short",year:"numeric"}); }
 export function inr(n){ const v=Number(n||0); return v===0?"Free":"\u20b9"+v; }
 export function escapeHtml(s){ return String(s==null?"":s).replace(/[&<>"']/g,
   c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 export function isPast(e){ return false; }
-export function today(){ return "2026-10-13"; }
+export function today(){ return "2026-10-14"; }
 """
 
 
 def build_harness():
     d = tempfile.mkdtemp(prefix="adminui-")
-    os.makedirs(os.path.join(d, "js"))
-    os.makedirs(os.path.join(d, "css"))
-    os.makedirs(os.path.join(d, "img"))
+    for sub in ("js", "css", "img"):
+        os.makedirs(os.path.join(d, sub))
     shutil.copy(os.path.join(DOCS, "admin.html"), d)
     shutil.copy(os.path.join(DOCS, "css", "style.css"), os.path.join(d, "css"))
     shutil.copy(os.path.join(DOCS, "img", "logo.png"), os.path.join(d, "img"))
@@ -92,7 +104,7 @@ def build_harness():
 
 def main():
     docs = build_harness()
-    PORT, DBG = 5130, 9477
+    PORT, DBG = 5131, 9478
 
     handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=docs)
 
@@ -117,14 +129,25 @@ def main():
 
     _id = [0]
     _events = []
+    _dialog_ids = set()
 
     def cmd(m, p=None):
         _id[0] += 1
-        ws.send(json.dumps({"id": _id[0], "method": m, "params": p or {}}))
+        mine = _id[0]
+        ws.send(json.dumps({"id": mine, "method": m, "params": p or {}}))
         while True:
             r = json.loads(ws.recv())
-            if r.get("id") == _id[0]:
+            if r.get("id") in _dialog_ids:
+                _dialog_ids.discard(r.get("id"))
+                continue
+            if r.get("id") == mine:
                 return r
+            if r.get("method") == "Page.javascriptDialogOpening":
+                _id[0] += 1
+                _dialog_ids.add(_id[0])
+                ws.send(json.dumps({"id": _id[0], "method": "Page.handleJavaScriptDialog",
+                                    "params": {"accept": True}}))
+                continue
             _events.append(r)
 
     def ev(expr):
@@ -161,62 +184,95 @@ def main():
         time.sleep(1.2)
         cmd("Page.removeScriptToEvaluateOnNewDocument", {"identifier": sid})
 
-    def goto_hash(h, wait=1.2):
+    def goto_hash(h, wait=1.0):
         ev("location.hash=%s" % json.dumps(h))
         time.sleep(wait)
 
+    def click(sel, wait=0.9):
+        r = ev("(()=>{const el=document.querySelector(%s); if(!el) return 'missing'; el.click(); return 'ok';})()"
+               % json.dumps(sel))
+        time.sleep(wait)
+        return r
+
     def body():
-        return ev("document.body.innerText") or ""
+        # textContent, not innerText: .badge applies text-transform:uppercase, so
+        # innerText would return "PUBLISHED" and break the mixed-case checks.
+        return ev("document.body.textContent") or ""
 
     cmd("Page.enable")
     cmd("Runtime.enable")
     cmd("Log.enable")
 
-    # ---- signed out ----
+    # ---------------- signed out ----------------
     load(None)
     b, e = body(), errors()
     ok("signed out: sign-in card renders", "Admin sign in" in b, b[:90])
-    ok("signed out: email field present", ev("!!document.querySelector('input[name=email]')"))
-    ok("signed out: password field present", ev("!!document.querySelector('input[name=password]')"))
-    ok("signed out: no setup hint on the login card", "SETUP.md" not in b)
+    ok("signed out: logo on the sign-in card", ev("!!document.querySelector('.auth-card img')"))
+    ok("signed out: no setup hint text", "SETUP.md" not in b)
+    ok("signed out: no 'View site' link", not ev("!!document.querySelector('a[href=\"index.html\"]')"))
     ok("signed out: no uncaught errors", not e, str(e[:2]))
 
-    # ---- signed in ----
+    # ---------------- signed in ----------------
     load({"email": "admin@rgipt.ac.in"})
     b, e = body(), errors()
-    ok("signed in: dashboard renders", "Dashboard" in b, b[:90])
-    ok("signed in: sidebar renders", ev("document.querySelectorAll('.admin-side a').length") >= 6)
+    ok("signed in: dashboard renders", "Welcome back" in b, b[:90])
+    ok("signed in: header logo present", ev("!!document.querySelector('.admin-brand .logo')"))
+    ok("signed in: hero logo present", ev("!!document.querySelector('.admin-hero-logo img')"))
+    ok("signed in: no 'View site' link", not ev("!!document.querySelector('a[href=\"index.html\"]')"))
+    ok("signed in: sidebar has 6 items", ev("document.querySelectorAll('.admin-side a').length") == 6,
+       str(ev("document.querySelectorAll('.admin-side a').length")))
+    ok("signed in: sidebar items have icons", ev("document.querySelectorAll('.admin-side a .ai').length") == 6)
     ok("signed in: four KPI cards", ev("document.querySelectorAll('.kpi').length") == 4)
-    ok("signed in: load-starter button present", ev("!!document.getElementById('loadStarter')"))
+    ok("signed in: KPI icons shown", ev("document.querySelectorAll('.kpi .ico svg').length") == 4)
     ok("signed in: no uncaught errors", not e, str(e[:2]))
 
-    # ---- every view ----
+    # ---------------- events: toggle + delete ----------------
     goto_hash("#/events")
     b = body()
-    ok("events view: table renders", "Urjotsav 2026" in b, b[:90])
-    ok("events view: registered/capacity shown", "1 / 500" in b, b[:150])
-    ok("events view: row actions present",
-       ev("!!document.querySelector('[data-toggle]') && !!document.querySelector('[data-del]')"))
+    ok("events: table renders", "Urjotsav 2026" in b, b[:90])
+    ok("events: registered/capacity shown", "1 / 500" in b, b[:150])
+    ok("events: starts Published", "Published" in b)
+    click("[data-toggle]")
+    ok("events: Hide button flips the status", "Hidden" in body(), body()[:150])
+    click("[data-toggle]")
+    ok("events: Publish button flips it back", "Published" in body())
+    click("[data-del]")
+    ok("events: Delete removes the row", "Urjotsav 2026" not in body(), body()[:150])
 
+    # ---------------- announcements: publish toggle ----------------
+    goto_hash("#/announcements")
+    ok("announcements: rows render", "Registrations open" in body())
+    click("[data-toggle]")
+    ok("announcements: Unpublish flips to Draft", "Draft" in body(), body()[:150])
+
+    # ---------------- registrations: status + CSV ----------------
     goto_hash("#/registrations")
     b = body()
-    ok("registrations view: rows render", "Ananya Baruah" in b, b[:90])
-    ok("registrations view: CSV export button", ev("!!document.getElementById('csv')"))
-    ok("registrations view: status control", ev("!!document.querySelector('[data-status]')"))
+    ok("registrations: rows render", "Ananya Baruah" in b, b[:90])
+    ok("registrations: CSV button present", ev("!!document.getElementById('csv')"))
+    ev("(()=>{const s=document.querySelector('[data-status]'); s.value='waitlist';"
+       "s.dispatchEvent(new Event('change'));})()")
+    time.sleep(0.9)
+    ok("registrations: status change applies", "waitlist" in body(), body()[:150])
+    csv = click("#csv")
+    ok("registrations: CSV export runs without error", csv == "ok")
 
-    goto_hash("#/announcements")
-    ok("announcements view: rows render", "Registrations open" in body())
-
+    # ---------------- messages: mark read ----------------
     goto_hash("#/messages")
-    ok("messages view: rows render", "Hello" in body())
+    ok("messages: rows render", "Hello" in body())
+    click("[data-read]")
+    ok("messages: Mark read applies", "Mark unread" in body(), body()[:150])
 
+    # ---------------- settings ----------------
     goto_hash("#/settings")
-    ok("settings view: renders", "Change password" in body())
+    ok("settings: renders", "Change password" in body())
+    ok("settings: no 'View the public site' button",
+       not ev("!!document.querySelector('a[href=\"index.html\"]')"))
 
+    # ---------------- forms ----------------
     goto_hash("#/event-form")
     ok("event form: title field", ev("!!document.querySelector('#eventForm input[name=title]')"))
     ok("event form: date field", ev("!!document.querySelector('#eventForm input[name=eventDate]')"))
-
     goto_hash("#/announcement-form")
     ok("announcement form: body field", ev("!!document.querySelector('#annForm textarea[name=body]')"))
 

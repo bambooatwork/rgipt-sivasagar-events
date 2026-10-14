@@ -14,16 +14,42 @@ let cache = { events: [], anns: [], regs: [], msgs: [] };
 let user = null;
 
 /* --------------------------------------------------------------- header */
+/* ------------------------------------------------------------- icons */
+const ICONS = {
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/>',
+  bell: '<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>',
+  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 6-10 7L2 6"/>',
+  sliders: '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>'
+};
+
+function ico(name) {
+  return `<svg class="ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
+}
+
+/* -------------------------------------------------------------- header */
 function header(email) {
-  return `<div class="topbar"><div class="container">
-      <div class="tb-left"><span>RGIPT Sivasagar Campus</span><span class="sep">&middot;</span><span>Admin</span></div>
-      <div class="tb-right"><a href="index.html">View site</a><span class="sep">&middot;</span>
-        <span>${escapeHtml(email || "")}</span></div>
-    </div></div>`;
+  return `<header class="admin-top"><div class="container admin-top-in">
+      <span class="admin-brand">
+        <img class="logo" src="img/logo.png" alt="RGIPT logo">
+        <span class="admin-brand-text"><b>RGIPT Sivasagar Campus</b><span>Admin console</span></span>
+      </span>
+      <span class="admin-top-right">
+        ${email ? `<span class="admin-who">${escapeHtml(email)}</span>
+        <button class="btn btn-sm btn-invert" id="topSignOut" type="button">Sign out</button>` : ""}
+      </span>
+    </div></header>`;
+}
+
+function wireHeader() {
+  const b = document.getElementById("topSignOut");
+  if (b) b.addEventListener("click", () => store.logout());
 }
 
 function loginView() {
-  app.innerHTML = `${header("Admin")}
+  app.innerHTML = `${header("")}
     <div class="auth-wrap"><div class="auth-card">
       <div class="center" style="margin-bottom:18px">
         <img class="round" src="img/logo.png" alt="RGIPT logo" style="width:72px;margin:0 auto 12px">
@@ -53,19 +79,19 @@ function loginView() {
 /* ---------------------------------------------------------------- shell */
 function shellView(view) {
   const nav = [
-    ["dashboard", "Dashboard"], ["events", "Events"], ["registrations", "Registrations"],
-    ["announcements", "Announcements"], ["messages", "Messages"], ["settings", "Settings"]
+    ["dashboard", "Dashboard", "grid"], ["events", "Events", "calendar"],
+    ["registrations", "Registrations", "users"], ["announcements", "Announcements", "bell"],
+    ["messages", "Messages", "mail"], ["settings", "Settings", "sliders"]
   ];
   app.innerHTML = `${header(user.email)}
     <div class="admin-shell">
       <aside class="admin-side">
-        ${nav.map(([k, t]) => `<a href="#/${k}" class="${view === k ? "active" : ""}">${t}</a>`).join("")}
-        <a href="index.html">View site</a>
-        <a href="#" id="signOut">Sign out</a>
+        <p class="side-title">Manage</p>
+        ${nav.map(([k, t, ic]) => `<a href="#/${k}" class="${view === k ? "active" : ""}">${ico(ic)}${t}</a>`).join("")}
       </aside>
       <div class="admin-main" id="main"></div>
     </div>`;
-  app.querySelector("#signOut").addEventListener("click", (e) => { e.preventDefault(); store.logout(); });
+  wireHeader();
 }
 
 /* ------------------------------------------------------------ dashboard */
@@ -82,16 +108,24 @@ async function dashboard() {
   const unread = msgs.filter((m) => !m.isRead).length;
 
   document.getElementById("main").innerHTML = `
-    <div class="admin-head"><div><h1>Dashboard</h1>
-      <p class="muted mb-0">Signed in as ${escapeHtml(user.email)}.</p></div>
+    <section class="admin-hero">
+      <div>
+        <p class="kicker">RGIPT Sivasagar Campus</p>
+        <h1>Welcome back</h1>
+        <p>Manage the campus's events, registrations, announcements and messages from here.</p>
+      </div>
+      <div class="admin-hero-logo"><img src="img/logo.png" alt="RGIPT logo"></div>
+    </section>
+    <div class="admin-head"><div><h2 style="font-size:1.2rem;margin:0">Overview</h2>
+      <p class="muted mb-0" style="font-size:.86rem">Signed in as ${escapeHtml(user.email)}</p></div>
       <div class="flex gap wrap">
         <button class="btn btn-sm" id="loadStarter">Load starter data</button>
         <a class="btn btn-sm btn-primary" href="#/event-form">New event</a></div></div>
     <div class="kpi-grid">
-      <div class="kpi"><span class="label">Events</span><b>${events.length}</b><span class="hint">${upcoming} upcoming</span></div>
-      <div class="kpi"><span class="label">Registrations</span><b>${regs.length}</b><span class="hint">all time</span></div>
-      <div class="kpi"><span class="label">Announcements</span><b>${anns.length}</b><span class="hint">${anns.filter((a) => !a.isPublished).length} drafts</span></div>
-      <div class="kpi"><span class="label">Messages</span><b>${unread}</b><span class="hint">unread</span></div>
+      <div class="kpi"><span class="ico">${ico("calendar")}</span><span class="label">Events</span><b>${events.length}</b><span class="hint">${upcoming} upcoming</span></div>
+      <div class="kpi"><span class="ico">${ico("users")}</span><span class="label">Registrations</span><b>${regs.length}</b><span class="hint">all time</span></div>
+      <div class="kpi"><span class="ico">${ico("bell")}</span><span class="label">Announcements</span><b>${anns.length}</b><span class="hint">${anns.filter((a) => !a.isPublished).length} drafts</span></div>
+      <div class="kpi"><span class="ico">${ico("mail")}</span><span class="label">Messages</span><b>${unread}</b><span class="hint">unread</span></div>
     </div>
     ${events.length === 0 ? `<div class="panel" style="border-left:4px solid var(--green)">
       <h3 style="margin-top:0">Your database is empty</h3>
@@ -347,7 +381,8 @@ function settingsView() {
         (Firestore) and the admin login is Firebase Authentication. Only signed-in accounts can write &mdash;
         see the security rules in <strong>SETUP.md</strong>.</p>
         <div class="divider"></div>
-        <a class="btn btn-block" href="index.html">View the public site</a></div>
+        <p class="muted mb-0" style="font-size:.86rem">Questions about the setup? See
+        <strong>SETUP.md</strong> in the repository.</p></div>
     </div>`;
   document.getElementById("pwForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -370,7 +405,7 @@ function fatal(err) {
       and the Firestore rules (see SETUP.md).</p></div>`;
   const main = document.getElementById("main");
   if (main) main.innerHTML = panel;
-  else app.innerHTML = `${header(user ? user.email : "Admin")}<div class="container section">${panel}</div>`;
+  else { app.innerHTML = `${header(user ? user.email : "")}<div class="container section">${panel}</div>`; wireHeader(); }
 }
 
 /* ---------------------------------------------------------------- router */
@@ -409,7 +444,7 @@ window.addEventListener("click", (e) => {
 window.addEventListener("unhandledrejection", (e) => fatal(e.reason));
 
 if (!store.isConfigured()) {
-  app.innerHTML = `${header("Admin")}<div class="container section">
+  app.innerHTML = `${header("")}<div class="container section">
     <div class="panel" style="border-left:4px solid var(--orange)">
       <h3 style="margin-top:0">Backend not configured</h3>
       <p class="mb-0">Open <code>docs/js/firebase-config.js</code>, paste your Firebase
