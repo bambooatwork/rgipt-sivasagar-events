@@ -36,7 +36,6 @@ function loginView() {
         <div class="field"><label>Password</label><input type="password" name="password" required autocomplete="current-password"></div>
         <button class="btn btn-primary btn-block" type="submit">Sign in</button>
       </form>
-      <p class="hint center mt-2">Accounts are created in your Firebase console (see SETUP.md).</p>
     </div></div>`;
   app.querySelector("#loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -94,6 +93,10 @@ async function dashboard() {
       <div class="kpi"><span class="label">Announcements</span><b>${anns.length}</b><span class="hint">${anns.filter((a) => !a.isPublished).length} drafts</span></div>
       <div class="kpi"><span class="label">Messages</span><b>${unread}</b><span class="hint">unread</span></div>
     </div>
+    ${events.length === 0 ? `<div class="panel" style="border-left:4px solid var(--green)">
+      <h3 style="margin-top:0">Your database is empty</h3>
+      <p class="mb-0">Click <strong>Load starter data</strong> (top right) to add the campus's
+      7 real events and 4 announcements. Every one of them is editable afterwards.</p></div>` : ""}
     <div class="grid grid-2">
       <div class="panel"><div class="panel-head"><h3>Registrations by category</h3></div>
         <div class="bar-chart">${Object.keys(byCat).length ? Object.entries(byCat).map(([c, n]) =>
@@ -355,53 +358,67 @@ function settingsView() {
   });
 }
 
+/* -------------------------------------------------------------- errors */
+/* Nothing should ever leave the admin panel blank: any failure is rendered
+   as a visible message instead of an empty page. */
+function fatal(err) {
+  const msg = (err && err.message) ? err.message : String(err);
+  const panel = `<div class="panel" style="border-left:4px solid var(--orange)">
+      <h3 style="margin-top:0">Something went wrong</h3>
+      <p class="mb-0">${escapeHtml(msg)}</p>
+      <p class="hint mt-2 mb-0">If this keeps happening, check your Firebase config
+      and the Firestore rules (see SETUP.md).</p></div>`;
+  const main = document.getElementById("main");
+  if (main) main.innerHTML = panel;
+  else app.innerHTML = `${header(user ? user.email : "Admin")}<div class="container section">${panel}</div>`;
+}
+
 /* ---------------------------------------------------------------- router */
 async function route() {
-  if (!user) { loginView(); return; }
-  const hash = location.hash.replace(/^#\/?/, "") || "dashboard";
-  const [view, qs] = hash.split("?");
-  const id = new URLSearchParams(qs || "").get("id");
-  const section = view.replace("-form", "s");
-  shellView(section);
+  try {
+    if (!user) { loginView(); return; }
+    const hash = location.hash.replace(/^#\/?/, "") || "dashboard";
+    const [view, qs] = hash.split("?");
+    const id = new URLSearchParams(qs || "").get("id");
+    const section = view.replace("-form", "s");
+    shellView(section);
 
-  if (view === "dashboard") await dashboard();
-  else if (view === "events") {
-    cache.events = await store.listEvents({ publishedOnly: false });
-    cache.regs = await store.listRegistrations();
-    eventsView();
+    if (view === "dashboard") await dashboard();
+    else if (view === "events") {
+      cache.events = await store.listEvents({ publishedOnly: false });
+      cache.regs = await store.listRegistrations();
+      eventsView();
+    }
+    else if (view === "event-form") await eventFormView(id);
+    else if (view === "announcements") { cache.anns = await store.listAnnouncements({ publishedOnly: false }); announcementsView(); }
+    else if (view === "announcement-form") await announcementFormView(id);
+    else if (view === "registrations") { cache.regs = await store.listRegistrations(); registrationsView(); }
+    else if (view === "messages") { cache.msgs = await store.listMessages(); messagesView(); }
+    else if (view === "settings") settingsView();
+    else await dashboard();
+  } catch (err) {
+    fatal(err);
   }
-  else if (view === "event-form") await eventFormView(id);
-  else if (view === "announcements") { cache.anns = await store.listAnnouncements({ publishedOnly: false }); announcementsView(); }
-  else if (view === "announcement-form") await announcementFormView(id);
-  else if (view === "registrations") { cache.regs = await store.listRegistrations(); registrationsView(); }
-  else if (view === "messages") { cache.msgs = await store.listMessages(); messagesView(); }
-  else if (view === "settings") settingsView();
-  else await dashboard();
 }
 
 window.addEventListener("hashchange", route);
 window.addEventListener("click", (e) => {
-  const a = e.target.closest('a[href^="#/"]');
+  const a = (e.target && e.target.closest) ? e.target.closest('a[href^="#/"]') : null;
   if (a) { e.preventDefault(); location.hash = a.getAttribute("href"); route(); }
 });
+window.addEventListener("unhandledrejection", (e) => fatal(e.reason));
 
 if (!store.isConfigured()) {
   app.innerHTML = `${header("Admin")}<div class="container section">
     <div class="panel" style="border-left:4px solid var(--orange)">
-      <h3>Backend not configured</h3>
-      <p class="mb-0">Open <code>docs/js/firebase-config.js</code>, paste your Firebase project values
-      (see <strong>SETUP.md</strong>), and reload. Then create an admin account in
-      Firebase Authentication &rarr; Users.</p></div></div>`;
+      <h3 style="margin-top:0">Backend not configured</h3>
+      <p class="mb-0">Open <code>docs/js/firebase-config.js</code>, paste your Firebase
+      project values, and reload.</p></div></div>`;
 } else {
-  store.watchAuth((u) => {
+  // watchAuth may or may not return a promise — never assume it does.
+  Promise.resolve(store.watchAuth((u) => {
     user = u;
     if (!location.hash) location.hash = "#/dashboard";
     route();
-  }).catch((err) => {
-    app.innerHTML = `${header("Admin")}<div class="container section">
-      <div class="panel" style="border-left:4px solid var(--orange)">
-        <h3>Could not reach the backend</h3>
-        <p class="mb-0">${escapeHtml(err.message)} &mdash; check your internet connection
-        and that your Firebase config is correct (see <strong>SETUP.md</strong>).</p></div></div>`;
-  });
+  })).catch(fatal);
 }

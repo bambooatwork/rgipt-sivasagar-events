@@ -137,14 +137,17 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 ## Testing
 
 ```bash
+python test_admin_ui.py   # 23 checks on the admin panel UI (mocked backend, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)
 python test_all.py        # 58 functional checks on the optional Flask app
 python test_bootstrap.py  # Flask app boots from an empty database
 python audit.py           # 93 browser checks on the Flask app, incl. admin CRUD
 ```
 
-`verify_static.py` needs `websocket-client` and a local Chrome/Chromium. The three
-Flask suites additionally need `Flask` and `Flask-SQLAlchemy`.
+`test_admin_ui.py` and `verify_static.py` need `websocket-client` and a local
+Chrome/Chromium. `test_admin_ui.py` runs the real `docs/js/admin.js` against a mocked
+data layer, so the whole admin interface is verified without a network or a Firebase
+project. The three Flask suites additionally need `Flask` and `Flask-SQLAlchemy`.
 
 ---
 

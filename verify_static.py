@@ -144,7 +144,8 @@ for path, label in PAGES:
 # --- data pages must always render a real state: live content, a clean empty
 #     state, or an explicit message. Never blank, never placeholder text. ---
 STATES = ["Backend not configured", "Could not load data", "Could not reach the backend",
-          "No upcoming events", "Next up", "events found", "Admin sign in", "Notice board"]
+          "Something went wrong", "No upcoming events", "Next up", "events found",
+          "Admin sign in", "Notice board"]
 for path, label in [("index.html", "home"), ("events.html", "events"), ("admin.html", "admin")]:
     goto(path)
     body = ev("document.body.innerText") or ""
