@@ -134,7 +134,7 @@ Your site appears at `https://<username>.github.io/<repo>/`.
 |---|---|
 | Public site (events, announcements, faculty, about, contact) | GitHub Pages |
 | Registration (writes to Firestore) | GitHub Pages |
-| Admin panel (login, CRUD, CSV export) | GitHub Pages — at `/admin.html` |
+| Admin panel (login, CRUD) | GitHub Pages — at `/admin.html` |
 | Database | Firebase Firestore |
 | Admin accounts | Firebase Authentication |
 

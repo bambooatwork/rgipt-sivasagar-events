@@ -249,13 +249,12 @@ def main():
     goto_hash("#/registrations")
     b = body()
     ok("registrations: rows render", "Ananya Baruah" in b, b[:90])
-    ok("registrations: CSV button present", ev("!!document.getElementById('csv')"))
+    ok("registrations: no Export CSV button", not ev("!!document.getElementById('csv')"))
+    ok("registrations: no 'Export' text anywhere", "Export" not in body())
     ev("(()=>{const s=document.querySelector('[data-status]'); s.value='waitlist';"
        "s.dispatchEvent(new Event('change'));})()")
     time.sleep(0.9)
     ok("registrations: status change applies", "waitlist" in body(), body()[:150])
-    csv = click("#csv")
-    ok("registrations: CSV export runs without error", csv == "ok")
 
     # ---------------- messages: mark read ----------------
     goto_hash("#/messages")

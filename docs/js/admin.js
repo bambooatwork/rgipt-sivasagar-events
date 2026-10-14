@@ -301,8 +301,7 @@ async function announcementFormView(id) {
 function registrationsView() {
   const rows = cache.regs;
   document.getElementById("main").innerHTML = `
-    <div class="admin-head"><div><h1>Registrations</h1><p class="muted mb-0">${rows.length} record(s).</p></div>
-      <button class="btn btn-primary" id="csv">Export CSV</button></div>
+    <div class="admin-head"><div><h1>Registrations</h1><p class="muted mb-0">${rows.length} record(s).</p></div></div>
     ${rows.length ? `<div class="table-wrap"><table>
       <thead><tr><th>Ticket</th><th>Participant</th><th>Event</th><th>Status</th><th>Actions</th></tr></thead><tbody>
       ${rows.map((r) => `<tr>
@@ -325,17 +324,6 @@ function registrationsView() {
     if (!confirm("Delete this registration?")) return;
     await store.deleteRegistration(b.dataset.del); cache.regs = []; route();
   }));
-  document.getElementById("csv").addEventListener("click", () => {
-    const head = ["Ticket", "Event", "Name", "Email", "Phone", "College", "Department", "Year", "Team", "Status", "Registered"];
-    const q = (v) => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
-    const csv = [head.join(",")].concat(rows.map((r) => [
-      r.ticketCode, r.eventTitle, r.name, r.email, r.phone, r.college, r.department, r.year, r.teamName, r.status, r.createdAt
-    ].map(q).join(","))).join("\n");
-    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-    const a = document.createElement("a");
-    a.href = url; a.download = "registrations_" + new Date().toISOString().slice(0, 10) + ".csv";
-    a.click(); URL.revokeObjectURL(url);
-  });
 }
 
 /* -------------------------------------------------------------- messages */

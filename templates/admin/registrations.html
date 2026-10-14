@@ -5,7 +5,6 @@
 {% block admin %}
 <div class="admin-head">
   <div><h1>Registrations</h1><p class="muted mb-0">{{ regs|length }} record{{ 's' if regs|length != 1 }}.</p></div>
-  <a class="btn btn-primary" href="{{ url_for('admin_registrations_export', event_id=eid, status=status, q=q) }}">{{ icon('download') }} Export CSV</a>
 </div>
 
 <form class="filter-bar" method="get" action="{{ url_for('admin_registrations') }}" style="grid-template-columns:2fr 1.4fr 1fr auto">

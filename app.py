@@ -1,5 +1,3 @@
-import csv
-import io
 import os
 import re
 import secrets
@@ -8,7 +6,7 @@ from functools import wraps
 
 from flask import (
     Flask, render_template, request, redirect, url_for, session, flash,
-    abort, Response, jsonify,
+    abort, jsonify,
 )
 from sqlalchemy import or_, func
 
@@ -636,46 +634,6 @@ def create_app():
         return render_template(
             "admin/registrations.html",
             regs=regs, all_events=all_events, eid=eid, status=status, q=q,
-        )
-
-    @app.route("/admin/registrations/export.csv")
-    @login_required
-    def admin_registrations_export():
-        eid = request.args.get("event_id", type=int)
-        status = request.args.get("status", "").strip()
-        q = request.args.get("q", "").strip()
-
-        query = Registration.query.join(Event)
-        if eid:
-            query = query.filter(Registration.event_id == eid)
-        if status:
-            query = query.filter(Registration.status == status)
-        if q:
-            like = f"%{q}%"
-            query = query.filter(or_(
-                Registration.name.ilike(like), Registration.email.ilike(like),
-                Registration.college.ilike(like), Registration.ticket_code.ilike(like),
-            ))
-        regs = query.order_by(Registration.registered_at.desc()).all()
-
-        buf = io.StringIO()
-        writer = csv.writer(buf)
-        writer.writerow([
-            "Ticket", "Event", "Event Date", "Name", "Email", "Phone",
-            "College", "Department", "Year", "Team", "Status", "Registered At",
-        ])
-        for r in regs:
-            writer.writerow([
-                r.ticket_code, r.event.title, r.event.event_date.strftime("%Y-%m-%d"),
-                r.name, r.email, r.phone or "", r.college or "", r.department or "",
-                r.year or "", r.team_name or "", r.status,
-                r.registered_at.strftime("%Y-%m-%d %H:%M"),
-            ])
-        fname = f"registrations_{datetime.utcnow().strftime('%Y%m%d_%H%M')}.csv"
-        return Response(
-            buf.getvalue(),
-            mimetype="text/csv",
-            headers={"Content-Disposition": f"attachment; filename={fname}"},
         )
 
     @app.route("/admin/registrations/<int:rid>/status", methods=["POST"])

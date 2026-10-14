@@ -146,12 +146,6 @@ def run():
         r = c.get(path)
         check(f"GET {label} [{path}]", r.status_code == 200, f"-> {r.status_code}")
 
-    # CSV export
-    r = c.get("/admin/registrations/export.csv")
-    check("CSV export 200", r.status_code == 200)
-    check("CSV content-type", "text/csv" in r.headers.get("Content-Type", ""))
-    check("CSV has header", b"Ticket,Event" in r.data)
-
     # create event
     set_csrf(c)
     r = c.post("/admin/events/new", data={

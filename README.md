@@ -67,7 +67,7 @@ form writes to the messages inbox in the admin panel.
   registrations-by-category chart.
 - **Events** — create, edit, publish/hide, delete, and see registered/capacity per event.
 - **Registrations** — view everyone who signed up, change status
-  (confirmed / waitlist / cancelled), delete, and **export to CSV**.
+  (confirmed / waitlist / cancelled), and delete.
 - **Announcements** — create, edit, pin, publish/unpublish, delete.
 - **Messages** — read/unread inbox from the contact form.
 - **Settings** — change your password.
@@ -150,7 +150,7 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 ```bash
 python test_admin_ui.py   # 34 checks on the admin panel UI (stateful mock, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)
-python test_all.py        # 58 functional checks on the optional Flask app
+python test_all.py        # 55 functional checks on the optional Flask app
 python test_bootstrap.py  # Flask app boots from an empty database
 python audit.py           # 93 browser checks on the Flask app, incl. admin CRUD
 ```
