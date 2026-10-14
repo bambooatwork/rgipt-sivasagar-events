@@ -156,7 +156,7 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 
 ```bash
 python test_site_ui.py    # 48 checks on the public site (real JS, stubbed SDK, empty DB)
-python test_admin_ui.py   # 34 checks on the admin panel UI (stateful mock, no network)
+python test_admin_ui.py   # 36 checks on the admin panel UI (stateful mock, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)
 python test_all.py        # 55 functional checks on the optional Flask app
 python test_bootstrap.py  # Flask app boots from an empty database

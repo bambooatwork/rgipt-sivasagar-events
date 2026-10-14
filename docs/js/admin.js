@@ -62,6 +62,8 @@ function loginView() {
         <div class="field"><label>Password</label><input type="password" name="password" required autocomplete="current-password"></div>
         <button class="btn btn-primary btn-block" type="submit">Sign in</button>
       </form>
+      <div class="divider"></div>
+      <a class="btn btn-block" href="index.html">&larr; Return to website</a>
     </div></div>`;
   app.querySelector("#loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();

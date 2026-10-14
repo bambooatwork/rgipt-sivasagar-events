@@ -209,7 +209,11 @@ def main():
     ok("signed out: sign-in card renders", "Admin sign in" in b, b[:90])
     ok("signed out: logo on the sign-in card", ev("!!document.querySelector('.auth-card img')"))
     ok("signed out: no setup hint text", "SETUP.md" not in b)
-    ok("signed out: no 'View site' link", not ev("!!document.querySelector('a[href=\"index.html\"]')"))
+    ok("signed out: has a 'Return to website' link",
+       ev("!!document.querySelector('.auth-card a[href=\"index.html\"]')"))
+    ok("signed out: that link reads 'Return to website'",
+       "Return to website" in (ev("document.querySelector('.auth-card a[href=\"index.html\"]').textContent") or ""))
+    ok("signed out: no 'View site' label", "View site" not in b)
     ok("signed out: no uncaught errors", not e, str(e[:2]))
 
     # ---------------- signed in ----------------
