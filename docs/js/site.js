@@ -86,14 +86,6 @@ function shell(active) {
   const nav = document.getElementById("nav");
   if (nav) {
     nav.innerHTML = `
-      <div class="topbar"><div class="container">
-        <div class="tb-left"><span>Rajiv Gandhi Institute of Petroleum Technology</span>
-          <span class="sep">&middot;</span><span>Sivasagar Campus, Assam</span></div>
-        <div class="tb-right">
-          <a href="tel:03772295231">03772-295231</a><span class="sep">&middot;</span>
-          <a href="mailto:coordinator-aei@rgipt.ac.in">coordinator-aei@rgipt.ac.in</a>
-        </div>
-      </div></div>
       <nav class="nav"><div class="container">
         <a class="brand" href="index.html">
           <img class="logo" src="img/logo.png" alt="RGIPT logo">

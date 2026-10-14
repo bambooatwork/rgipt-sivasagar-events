@@ -166,6 +166,7 @@ def main():
     ok("home: stat band shows a real count", ev("!!document.querySelector('.band .stat b')"))
     ok("home: notice board has rows", ev("document.querySelectorAll('.ann-row').length") > 0)
     ok("home: sample-data note shown", "sample schedule" in b)
+    ok("layout: the old contact strip is gone", not ev("!!document.querySelector('.topbar')"))
     ok("home: no uncaught errors", not errors(), str(errors()[:2]))
 
     # ------------------------------------------------------------- motion
@@ -226,6 +227,37 @@ def main():
     ok("announcement detail: body renders", "faculty mentor" in b)
     ok("announcement detail: related list", ev("!!document.querySelector('.info-card .ann-row')"))
     ok("announcement detail: no uncaught errors", not errors(), str(errors()[:2]))
+
+    # -------------------------------------------------------------- mobile
+    # 390px phone: nothing may overflow, and content must be inset from the
+    # screen edge (.container and .section are used on the same element, so a
+    # shorthand `padding` on one silently wiped the other's horizontal padding).
+    cmd("Emulation.setDeviceMetricsOverride",
+        {"width": 390, "height": 844, "deviceScaleFactor": 2, "mobile": True})
+    go("events.html")
+    ok("mobile: no horizontal overflow",
+       ev("document.documentElement.scrollWidth - window.innerWidth") == 0,
+       str(ev("document.documentElement.scrollWidth - window.innerWidth")))
+    ok("mobile: section header is inset, not full-bleed",
+       (ev("document.querySelector('.sec-head').getBoundingClientRect().left") or 0) > 10,
+       str(ev("document.querySelector('.sec-head').getBoundingClientRect().left")))
+    ok("mobile: filter bar is inset too",
+       (ev("document.querySelector('.filter-bar').getBoundingClientRect().left") or 0) > 10,
+       str(ev("document.querySelector('.filter-bar').getBoundingClientRect().left")))
+    ok("mobile: nothing overflows the viewport",
+       ev("[...document.querySelectorAll('.row,.filter-bar,.sec-head,.container,.ann-row')]"
+          ".every(el => el.getBoundingClientRect().right <= window.innerWidth + 1)"))
+    ok("mobile: filter bar is two columns (not four stacked rows)",
+       ev("getComputedStyle(document.querySelector('.filter-bar')).gridTemplateColumns"
+          ".trim().split(/\\s+/).length") == 2,
+       str(ev("getComputedStyle(document.querySelector('.filter-bar')).gridTemplateColumns")))
+    ok("mobile: rows still render", ev("document.querySelectorAll('.listing .row').length") >= 5)
+    go("index.html")
+    ok("mobile: header actions are right-aligned",
+       (ev("window.innerWidth - document.querySelector('.nav-actions').getBoundingClientRect().right") or 99) < 30,
+       str(ev("window.innerWidth - document.querySelector('.nav-actions').getBoundingClientRect().right")))
+    ok("mobile: no uncaught errors", not errors(), str(errors()[:2]))
+    cmd("Emulation.clearDeviceMetricsOverride")
 
     # ----------------------------------------------------- static pages
     for url, needle in [("faculty.html", "Faculty"), ("about.html", "RGIPT"),

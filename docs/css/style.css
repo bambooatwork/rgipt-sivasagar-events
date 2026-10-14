@@ -62,8 +62,11 @@ h3 { font-size: 1.2rem; }
 p { margin: 0 0 1rem; color: var(--text-dim); }
 
 .container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 28px; }
-.section { padding: 60px 0; }
-.section-tight { padding: 40px 0; }
+/* Longhand on purpose: these classes are used *together* with .container
+   ("container section"), and a shorthand `padding: 60px 0` would wipe the
+   container's horizontal padding and run the content to the screen edge. */
+.section { padding-top: 60px; padding-bottom: 60px; }
+.section-tight { padding-top: 40px; padding-bottom: 40px; }
 .center { text-align: center; }
 .muted { color: var(--text-dim); }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: .92em; }
@@ -485,4 +488,102 @@ html.js .poster::after { animation: drift 15s ease-in-out infinite; }
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
   html.js .reveal { opacity: 1 !important; transform: none !important; }
   .ticker .track { animation: none; }
+}
+
+/* =====================================================================
+   Mobile refinement (<= 680px)
+   The desktop type scale and four-across filter bar are far too large on a
+   phone: this tightens the type, fixes the header alignment, compresses the
+   filter bar to two columns and shrinks the hero. Loaded last so it wins.
+   ===================================================================== */
+@media (max-width: 680px) {
+  .container { padding: 0 18px; }
+
+  /* --- header: compact, and actually right-aligned --- */
+  .nav .container { gap: 10px; }
+  .nav-actions { margin-left: auto; gap: 6px; }   /* .nav-links is fixed here, so it no longer pushes us right */
+  .brand { gap: 9px; }
+  .brand .logo { width: 34px; height: 34px; }
+  .brand .brand-text b { font-size: .92rem; }
+  .brand .brand-text span { display: none; }      /* the "Campus Events" kicker is noise on a phone */
+  .nav-actions .btn { padding: 6px 11px; font-size: .78rem; }
+  .icon-btn { width: 32px; height: 32px; }
+  .nav-links { padding: 6px 18px 14px; }
+  .nav-links a { padding: 13px 0; font-size: .95rem; }
+
+  /* --- type scale --- */
+  h1 { font-size: clamp(1.75rem, 7.5vw, 2.1rem); }
+  h2 { font-size: clamp(1.3rem, 5.4vw, 1.6rem); }
+  h3 { font-size: 1.08rem; }
+  .hero h1 { margin: 10px 0 16px; }
+  .hero .lead { font-size: .98rem; margin-bottom: 20px; }
+  .detail-head h1 { font-size: clamp(1.65rem, 7.2vw, 2.1rem); margin: 10px 0 10px; }
+  .detail-lede { font-size: .98rem; }
+  .prose { font-size: .96rem; line-height: 1.72; }
+  .kicker { font-size: .66rem; }
+
+  /* --- vertical rhythm --- */
+  .section { padding-top: 40px; padding-bottom: 40px; }
+  .section-tight { padding-top: 26px; padding-bottom: 26px; }
+  .hero { padding: 28px 0 0; }
+  .band { padding: 24px 0; margin-top: 32px; }
+  .band .stat { padding: 4px 14px 4px 0; }
+  .band .stat b { font-size: 1.8rem; }
+  .band .stat span { font-size: .62rem; }
+  .sec-head { gap: 10px; padding-top: 12px; }
+  .divider { margin: 16px 0; }
+
+  /* --- hero backdrop: softer so the copy stays crisp --- */
+  .hero::before, .hero::after { filter: blur(58px); }
+  .hero::before { width: 300px; height: 300px; left: -110px; top: -130px; opacity: .38; }
+  .hero::after { width: 280px; height: 280px; right: -95px; top: 10px; opacity: .3; }
+
+  /* --- ticker --- */
+  .ticker .item { font-size: .68rem; padding: 8px 0; letter-spacing: .06em; }
+  .ticker .item::after { margin: 0 15px; }
+
+  /* --- poster --- */
+  .poster { padding: 22px; gap: 16px; }
+  .poster .p-date { font-size: 2.4rem; }
+  .poster h3 { font-size: 1.22rem; }
+  .countdown .cd { padding: 11px 4px; }
+  .countdown .cd b { font-size: 1.3rem; }
+  .countdown .cd span { font-size: .55rem; }
+
+  /* --- filter bar: two columns, and drop the redundant submit ---
+         search/category/when all filter live on input+change, so the
+         "Filter" button was a full extra row for nothing. */
+  .filter-bar { grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px 0; }
+  .filter-bar .field:nth-child(1) { grid-column: 1 / -1; }
+  .filter-bar .field:nth-child(4) { display: none; }
+  .filter-bar .field { gap: 4px; }
+  .filter-bar .field label { font-size: .62rem; }
+  .filter-bar input, .filter-bar select { padding: 10px 12px; font-size: .9rem; }
+
+  /* --- listing rows --- */
+  .row { padding: 15px 0; gap: 14px; }
+  .row-date b { font-size: 1.45rem; }
+  .row-date span { font-size: .6rem; }
+  .row-main h3 { font-size: 1.02rem; }
+  .row-main p { font-size: .85rem; -webkit-line-clamp: 2; }
+  .ann-row { padding: 15px 0; }
+  .ann-row h3 { font-size: .99rem; }
+  .ann-row p { font-size: .85rem; }
+  .ann-row .when { font-size: .72rem; }
+  .dir-row { padding: 15px 0; }
+  .preview-note { font-size: .78rem; padding-left: 10px; }
+
+  /* --- detail --- */
+  .detail-grid { gap: 24px; }
+  .detail-head { padding-top: 12px; margin-bottom: 20px; }
+  .info-card { padding: 18px; }
+  .info-card .price-tag { font-size: 1.4rem; }
+  .timeline .item .txt { padding-bottom: 15px; }
+  .panel { padding: 18px; }
+  .form-grid { gap: 12px; }
+  .field { margin-bottom: 13px; }
+
+  /* --- footer --- */
+  .footer-grid { gap: 22px; }
+  .footer .copy { margin-top: 24px; }
 }
