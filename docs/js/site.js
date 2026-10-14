@@ -5,6 +5,77 @@
 import * as store from "./store.js";
 import { escapeHtml, formatDate, inr, isPast } from "./store.js";
 
+/* ------------------------------------------------------------- motion
+   Reveal-on-scroll, count-up stats, a scroll progress bar and a header that
+   shrinks as you scroll. All of it is decorative: if IntersectionObserver is
+   missing, or the visitor prefers reduced motion, everything is simply shown.
+   Nothing here is allowed to break a page. */
+const REDUCED = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+document.documentElement.classList.add("js");
+
+let revealObserver = null;
+const REVEAL_SEL = ".sec-head, .row, .ann-row, .dir-row, .info-card, .panel, .detail-head, .stat, .tile, .filter-bar, .poster";
+
+function observeReveals(scope) {
+  const els = scope.querySelectorAll(".reveal:not(.in)");
+  if (!els.length) return;
+  if (REDUCED || !("IntersectionObserver" in window)) {
+    els.forEach((el) => el.classList.add("in"));
+    return;
+  }
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting) { en.target.classList.add("in"); revealObserver.unobserve(en.target); }
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.04 });
+  }
+  els.forEach((el) => revealObserver.observe(el));
+}
+
+function countUp(scope) {
+  if (REDUCED) return;
+  scope.querySelectorAll(".band .stat b").forEach((el) => {
+    const target = parseInt(String(el.textContent).replace(/[^0-9]/g, ""), 10);
+    if (!target || isNaN(target)) return;
+    const dur = 900, t0 = performance.now();
+    const tick = (now) => {
+      const p = Math.min((now - t0) / dur, 1);
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) requestAnimationFrame(tick); else el.textContent = String(target);
+    };
+    el.textContent = "0";
+    requestAnimationFrame(tick);
+  });
+}
+
+function decorateMotion(scope) {
+  try {
+    const root = scope || document;
+    [...root.querySelectorAll(REVEAL_SEL)]
+      .filter((el) => !el.classList.contains("reveal"))
+      .forEach((el, i) => { el.classList.add("reveal"); el.style.transitionDelay = (i % 8) * 45 + "ms"; });
+    observeReveals(root);
+    countUp(root);
+  } catch (e) { /* decorative only */ }
+}
+
+function wireScrollUI() {
+  let bar = document.getElementById("progress");
+  if (!bar) { bar = document.createElement("div"); bar.id = "progress"; document.body.appendChild(bar); }
+  const onScroll = () => {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? Math.min(window.scrollY / h, 1) * 100 : 0) + "%";
+    const nav = document.querySelector(".nav");
+    if (nav) nav.classList.toggle("scrolled", window.scrollY > 10);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+}
+
+const PREVIEW_NOTE = `<p class="listing-note preview-note">Showing the sample schedule while the campus admin publishes the confirmed events &mdash; dates may change.</p>`;
+
 /* ------------------------------------------------------------- shell */
 const NAV = [
   ["index.html", "Home"], ["events.html", "Events"], ["announcements.html", "Announcements"],
@@ -157,6 +228,7 @@ async function home(app) {
       </div></div></div>
       <section class="section-tight"><div class="container">
         ${secHead("01", "Next up", "events.html?status=upcoming", "All upcoming")}
+        ${events.some((e) => e.isPreview) ? PREVIEW_NOTE : ""}
         <div class="listing">${upcoming.length ? upcoming.slice(0, 6).map((e) => eventRow(e)).join("")
           : '<p class="listing-note">No upcoming events scheduled right now.</p>'}</div>
       </div></section>
@@ -178,11 +250,13 @@ async function eventsPage(app) {
   try {
     const params = new URLSearchParams(location.search);
     const events = await store.listEvents();
+    const isPreview = events.some((e) => e.isPreview);
     app.innerHTML = `
       <header class="sec-head">
         <div class="sec-title"><span class="sec-num">/</span><h1 style="font-size:clamp(1.9rem,4vw,2.8rem);margin:0">Events</h1></div>
         <p class="muted mb-0" id="count" style="font-size:.88rem"></p>
       </header>
+      ${isPreview ? PREVIEW_NOTE : ""}
       <form class="filter-bar" id="filter">
         <div class="field"><label>Search</label><input type="text" name="q" placeholder="Title, organiser or venue"></div>
         <div class="field"><label>Category</label><select name="category">
@@ -287,6 +361,7 @@ async function announcementsPage(app) {
         <div class="sec-title"><span class="sec-num">/</span><h1 style="font-size:clamp(1.9rem,4vw,2.8rem);margin:0">Announcements</h1></div>
         <p class="muted mb-0" style="font-size:.88rem">Official updates from RGIPT Sivasagar Campus.</p>
       </header>
+      ${anns.some((a) => a.isPreview) ? PREVIEW_NOTE : ""}
       <div class="listing">${anns.length ? anns.map(annRow).join("")
         : '<p class="listing-note">No announcements published yet.</p>'}</div>`;
   } catch (e) { app.innerHTML = errorNotice(e); }
@@ -446,16 +521,18 @@ const ACTIVE = { home: "index.html", event: "events.html", announcement: "announ
 shell(ACTIVE[page] || (page + ".html"));
 
 const appEl = document.getElementById("app");
+wireScrollUI();
 if (appEl) {
   if (page === "home") {
-    home(appEl);                       // home manages its own full-width bands
+    // home manages its own full-width bands
+    Promise.resolve(home(appEl)).then(() => decorateMotion(appEl)).catch(() => {});
   } else {
     const inner = document.createElement("div");
     inner.className = "container section";
     appEl.appendChild(inner);
     const render = { events: eventsPage, event: eventPage, announcements: announcementsPage,
       announcement: announcementPage, register: registerPage }[page];
-    if (render) render(inner);
+    if (render) Promise.resolve(render(inner)).then(() => decorateMotion(inner)).catch(() => {});
   }
 }
 if (page === "contact") wireContact();

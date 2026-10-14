@@ -98,6 +98,43 @@ function normaliseAnnouncement(id, d) {
 export const today = () => new Date().toISOString().slice(0, 10);
 export function isPast(e) { return (e.endDate || e.eventDate || "") < today(); }
 
+/* --------------------------------------------------------- preview data
+   Until the admin publishes anything, the database is empty — and an empty
+   site looks broken. So when a *public* read comes back with nothing, the
+   bundled sample schedule is shown instead. This is display-only: nothing is
+   ever written from here, the admin panel always sees the real (empty) data,
+   and the moment a real event is published the database takes over on its
+   own. Rows carry isPreview so the UI can say so. */
+let previewPromise = null;
+
+export function isPreviewId(id) { return String(id || "").indexOf("preview-") === 0; }
+
+/** Cached as a *promise*: the home page loads events and announcements at the
+    same time, and a plain object cache would hand the second caller a
+    half-built result. One fetch, shared by everyone. */
+function loadPreview() {
+  if (!previewPromise) previewPromise = buildPreview();
+  return previewPromise;
+}
+
+async function buildPreview() {
+  const out = { events: [], announcements: [] };
+  try {
+    const res = await fetch("starter-data.json", { cache: "no-store" });
+    const data = await res.json();
+    out.events = (data.events || []).map((e, i) => ({
+      ...normaliseEvent("preview-e" + i, e), isPreview: true
+    }));
+    out.announcements = (data.announcements || []).map((a, i) => ({
+      ...normaliseAnnouncement("preview-a" + i, a), isPreview: true
+    }));
+  } catch (e) {
+    // no sample file / offline — stay empty rather than pretend
+  }
+  out.events.sort((a, b) => (a.eventDate || "").localeCompare(b.eventDate || ""));
+  return out;
+}
+
 /* ------------------------------------------------------------- events */
 export async function listEvents({ publishedOnly = true } = {}) {
   await ready();
@@ -109,10 +146,12 @@ export async function listEvents({ publishedOnly = true } = {}) {
   const snap = await sdk.fsMod.getDocs(ref);
   const rows = snap.docs.map((d) => normaliseEvent(d.id, d.data()));
   rows.sort((a, b) => (a.eventDate || "").localeCompare(b.eventDate || ""));
-  return rows;
+  if (rows.length || !publishedOnly) return rows;
+  return (await loadPreview()).events.filter((e) => e.isPublished);
 }
 
 export async function getEvent(id) {
+  if (isPreviewId(id)) return (await loadPreview()).events.find((e) => e.id === id) || null;
   await ready();
   try {
     const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.events, id));
@@ -145,10 +184,12 @@ export async function listAnnouncements({ publishedOnly = true } = {}) {
   const snap = await sdk.fsMod.getDocs(ref);
   const rows = snap.docs.map((d) => normaliseAnnouncement(d.id, d.data()));
   rows.sort((a, b) => (b.publishedAt || "").localeCompare(a.publishedAt || ""));
-  return rows;
+  if (rows.length || !publishedOnly) return rows;
+  return (await loadPreview()).announcements.filter((a) => a.isPublished);
 }
 
 export async function getAnnouncement(id) {
+  if (isPreviewId(id)) return (await loadPreview()).announcements.find((a) => a.id === id) || null;
   await ready();
   try {
     const s = await sdk.fsMod.getDoc(sdk.fsMod.doc(db, COLLECTIONS.announcements, id));
@@ -270,7 +311,9 @@ export async function loadStarterData() {
 /* -------------------------------------------------------------- utils */
 export function formatDate(iso, opts) {
   if (!iso) return "";
-  const d = new Date(iso + "T00:00:00");
+  // Accept both 'YYYY-MM-DD' and a full ISO timestamp (announcements store one).
+  let d = new Date(String(iso).length <= 10 ? iso + "T00:00:00" : iso);
+  if (isNaN(d)) d = new Date(iso + "T00:00:00");
   if (isNaN(d)) return iso;
   return d.toLocaleDateString("en-GB", opts || { day: "2-digit", month: "short", year: "numeric" });
 }

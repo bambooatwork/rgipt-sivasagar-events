@@ -347,9 +347,62 @@ td .actions { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; }
 .footer a:hover { color: var(--green); }
 .footer .copy { margin-top: 32px; padding-top: 18px; border-top: 1px solid var(--rule); display: flex; justify-content: space-between; gap: 14px; flex-wrap: wrap; font-size: .8rem; color: var(--text-mute); }
 
-/* ------------------------------------------------------------ Reveal */
-html.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity .55s ease, transform .55s ease; }
+/* ------------------------------------------------------------- Motion
+   Reveal-on-scroll, a scroll progress bar, a header that shrinks on scroll,
+   a drifting hero backdrop and a sheen on primary buttons. Every effect is
+   additive — with reduced motion or no JS the page is simply static. */
+html.js .reveal { opacity: 0; transform: translateY(20px);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
 html.js .reveal.in { opacity: 1; transform: none; }
+
+/* scroll progress */
+#progress { position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 200;
+  background: linear-gradient(90deg, var(--green), var(--orange)); transition: width .12s linear; }
+
+/* page entrance */
+#app { animation: pageIn .55s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* header: lift + condense once scrolled */
+.nav { transition: box-shadow .3s ease, background .3s ease, border-color .3s ease; }
+.nav.scrolled { background: rgba(255,255,255,.86); backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px); box-shadow: 0 12px 34px rgba(12,14,18,.08); }
+.brand .logo { transition: width .3s ease, height .3s ease; }
+.nav.scrolled .brand .logo { width: 32px; height: 32px; }
+
+/* hero: staggered entrance + drifting backdrop */
+.hero { position: relative; overflow: hidden; }
+.hero > .container { position: relative; z-index: 1; }
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%;
+  filter: blur(72px); z-index: 0; pointer-events: none; }
+.hero::before { width: 460px; height: 460px; left: -130px; top: -170px; opacity: .55;
+  background: radial-gradient(circle, rgba(14,159,110,.42), transparent 70%); animation: drift 18s ease-in-out infinite; }
+.hero::after { width: 430px; height: 430px; right: -110px; top: 30px; opacity: .45;
+  background: radial-gradient(circle, rgba(232,121,42,.34), transparent 70%); animation: drift 23s ease-in-out infinite reverse; }
+@keyframes drift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(42px, 30px) scale(1.14); } }
+
+html.js .hero-copy > * { animation: rise .85s cubic-bezier(.2,.7,.2,1) both; }
+html.js .hero-copy > *:nth-child(1) { animation-delay: .04s; }
+html.js .hero-copy > *:nth-child(2) { animation-delay: .12s; }
+html.js .hero-copy > *:nth-child(3) { animation-delay: .20s; }
+html.js .hero-copy > *:nth-child(4) { animation-delay: .28s; }
+@keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+
+/* poster: slow drifting glow */
+html.js .poster::after { animation: drift 15s ease-in-out infinite; }
+
+/* primary buttons: a light sweeps across on hover */
+.btn { position: relative; overflow: hidden; }
+.btn::after { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  transform: skewX(-18deg); transition: left .55s ease; pointer-events: none; }
+.btn-primary:hover::after, .btn-warm:hover::after, .btn-danger:hover::after,
+.btn-poster:hover::after { left: 118%; }
+
+/* the honest "this is sample content" line */
+.preview-note { display: flex; align-items: center; gap: 9px; font-size: .82rem;
+  color: var(--text-mute); border-left: 2px solid var(--orange);
+  padding: 5px 0 5px 12px; margin: 14px 0 6px; }
 
 /* ------------------------------------------------------- Event detail */
 .detail-grid { display: grid; grid-template-columns: 1.75fr 1fr; gap: 40px; align-items: start; }

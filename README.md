@@ -124,6 +124,13 @@ Two honest caveats:
 - **No sample registrations are ever created.** Every registration count comes from
   real students.
 
+**Until the admin publishes anything, the site shows this sample schedule by itself.**
+A brand-new database is empty, and an empty site looks broken — so when a *public*
+read comes back with nothing, the bundled sample data is displayed instead, with a
+small note on the page saying so. It is display-only: nothing is written, the admin
+panel always sees the real (empty) data, and the first event you publish switches the
+public site over to the database automatically.
+
 **Faculty** is compiled from the institute's official listings (rgipt.ac.in).
 Institutional emails are shown; personal mobile numbers published on the institute
 site are deliberately not reproduced.
@@ -148,6 +155,7 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 ## Testing
 
 ```bash
+python test_site_ui.py    # 39 checks on the public site (real JS, stubbed SDK, empty DB)
 python test_admin_ui.py   # 34 checks on the admin panel UI (stateful mock, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)
 python test_all.py        # 55 functional checks on the optional Flask app
