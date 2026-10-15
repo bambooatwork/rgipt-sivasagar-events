@@ -52,12 +52,23 @@ async function ready() {
 
 const col = (name) => sdk.fsMod.collection(db, name);
 
+// Only ever a real 'YYYY-MM-DD' — a raw string from the database is never
+// passed through, because these values are interpolated into HTML attributes
+// (e.g. data-countdown="..."). Anything else becomes null.
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const toDate = (v) => {
   if (!v) return null;
-  if (typeof v === "string") return v;                    // 'YYYY-MM-DD'
-  if (v.toDate) return v.toDate().toISOString().slice(0, 10);
-  return String(v);
+  if (typeof v === "string") return DATE_RE.test(v) ? v : null;
+  if (v.toDate) {
+    const d = v.toDate();
+    return isNaN(d) ? null : d.toISOString().slice(0, 10);
+  }
+  return null;
 };
+
+// A non-numeric value from the database would otherwise render as "NaN"
+// (capacity, fee) — coerce to a finite number, else the fallback.
+const num = (v, dflt = 0) => { const n = Number(v); return Number.isFinite(n) ? n : dflt; };
 
 function normaliseEvent(id, d) {
   return {
@@ -73,8 +84,8 @@ function normaliseEvent(id, d) {
     startTime: d.startTime || "",
     endTime: d.endTime || "",
     registrationDeadline: toDate(d.registrationDeadline),
-    capacity: Number(d.capacity || 0),
-    fee: Number(d.fee || 0),
+    capacity: num(d.capacity),
+    fee: num(d.fee),
     teamSize: d.teamSize || "Individual",
     contactEmail: d.contactEmail || "",
     accent: d.accent || "teal",
@@ -312,9 +323,11 @@ export async function loadStarterData() {
 export function formatDate(iso, opts) {
   if (!iso) return "";
   // Accept both 'YYYY-MM-DD' and a full ISO timestamp (announcements store one).
-  let d = new Date(String(iso).length <= 10 ? iso + "T00:00:00" : iso);
-  if (isNaN(d)) d = new Date(iso + "T00:00:00");
-  if (isNaN(d)) return iso;
+  const s = String(iso);
+  const d = new Date(s.length <= 10 ? s + "T00:00:00" : s);
+  // Never echo an unparseable value back into the page — that would be a
+  // stored-XSS sink for anyone able to write to the database.
+  if (isNaN(d)) return "";
   return d.toLocaleDateString("en-GB", opts || { day: "2-digit", month: "short", year: "numeric" });
 }
 

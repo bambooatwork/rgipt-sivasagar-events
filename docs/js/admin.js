@@ -29,6 +29,12 @@ function ico(name) {
     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
 }
 
+/* A registration's status comes from the database, so it is treated as
+   untrusted: only known values are allowed into the markup (it lands inside
+   a class attribute, so an arbitrary value would be an injection sink). */
+const REG_STATUSES = ["confirmed", "waitlist", "cancelled"];
+const safeStatus = (s) => (REG_STATUSES.indexOf(s) === -1 ? "confirmed" : s);
+
 /* -------------------------------------------------------------- header */
 function header(email) {
   return `<header class="admin-top"><div class="container admin-top-in">
@@ -143,7 +149,7 @@ async function dashboard() {
         <div class="table-wrap" style="border:none;background:transparent"><table style="min-width:0"><tbody>
           ${regs.slice(0, 6).map((r) => `<tr><td><span class="row-title">${escapeHtml(r.name)}</span><br>
             <span class="hint">${escapeHtml(r.eventTitle || "")}</span></td>
-            <td><span class="badge ${r.status}">${r.status}</span></td>
+            <td><span class="badge ${safeStatus(r.status)}">${safeStatus(r.status)}</span></td>
             <td class="hint">${formatDate((r.createdAt || "").slice(0, 10), { day: "2-digit", month: "short" })}</td></tr>`).join("")
           || '<tr><td class="muted">No registrations yet.</td></tr>'}
         </tbody></table></div></div>
@@ -310,7 +316,7 @@ function registrationsView() {
         <td class="mono">${escapeHtml(r.ticketCode || "")}</td>
         <td><span class="row-title">${escapeHtml(r.name)}</span><br><span class="hint">${escapeHtml(r.email)}${r.phone ? " &middot; " + escapeHtml(r.phone) : ""}</span></td>
         <td>${escapeHtml(r.eventTitle || "")}</td>
-        <td><span class="badge ${r.status}">${r.status}</span></td>
+        <td><span class="badge ${safeStatus(r.status)}">${safeStatus(r.status)}</span></td>
         <td><div class="actions">
           <select data-status="${encodeURIComponent(r.id)}" style="padding:6px 8px;font-size:.82rem">
             ${["confirmed", "waitlist", "cancelled"].map((s) => `<option ${r.status === s ? "selected" : ""}>${s}</option>`).join("")}

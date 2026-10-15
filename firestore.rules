@@ -3,56 +3,101 @@ rules_version = '2';
 // =====================================================================
 //  Firestore security rules — RGIPT Sivasagar Campus Event Portal
 //
-//  These are the rules the LIVE site depends on. Deploy them with:
+//  Deploy with:   firebase deploy --only firestore:rules
+//  or paste into  Firebase console -> Firestore Database -> Rules -> Publish
 //
-//      firebase deploy --only firestore:rules
+//  ---------------------------------------------------------------------
+//  IMPORTANT — why "signed in" is NOT the same as "admin"
+//  ---------------------------------------------------------------------
+//  Email/Password sign-in is enabled and the web API key is public, so
+//  ANYONE can mint a Firebase account by calling the Identity Toolkit
+//  REST API (accounts:signUp). A rule of the form `request.auth != null`
+//  therefore does NOT mean "an administrator" — it means "any human on
+//  the internet", who could then read every registration and rewrite
+//  every event.
 //
-//  or paste the contents into
-//  Firebase console -> Firestore Database -> Rules -> Publish.
+//  So an account must ALSO be listed in the `admins` collection to be
+//  trusted. Membership is checked server-side by exists(), and the
+//  `admins` collection itself is sealed shut below, so nobody can add
+//  themselves to it.
 //
-//  The site is public and read-only for visitors:
-//    * visitors may READ published events and announcements;
-//    * visitors may CREATE a registration and a contact message;
-//    * everything else — reading registrations, reading messages, and all
-//      writes to events/announcements — requires a signed-in admin.
+//  Bootstrap (do this BEFORE publishing these rules, or you will lock
+//  yourself out):
+//    1. Firebase console -> Authentication -> Users -> copy your UID.
+//    2. Firestore Database -> Start collection `admins` -> document ID =
+//       that UID -> add a field, e.g.  role = "admin".
+//    3. Publish these rules.
 // =====================================================================
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // The only definition of "admin" that matters.
+    function isAdmin() {
+      return request.auth != null
+          && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // The admin roster is invisible and untouchable from the client.
+    // (exists() above is evaluated by the backend and is unaffected.)
+    match /admins/{doc} {
+      allow read, write: if false;
+    }
+
     // Anyone can read PUBLISHED events and announcements.
-    // Only a signed-in admin can create, edit or delete them.
+    // Only a listed admin can create, edit or delete them.
     //
     // NOTE: the public site always queries with `where isPublished == true`,
     // because Firestore evaluates `allow read` against the QUERY, not just
     // the document. A query that could return an unpublished doc is denied.
     match /events/{doc} {
-      allow read:  if resource.data.isPublished == true || request.auth != null;
-      allow write: if request.auth != null;
+      allow read:  if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
     }
 
     match /announcements/{doc} {
-      allow read:  if resource.data.isPublished == true || request.auth != null;
-      allow write: if request.auth != null;
+      allow read:  if resource.data.isPublished == true || isAdmin();
+      allow write: if isAdmin();
     }
 
-    // Anyone can register for an event (create only), with basic checks.
-    // Only a signed-in admin can read, change or delete registrations.
+    // Anyone can register for an event (create only), with shape and size
+    // checks so the form cannot be used as free storage. Only a listed
+    // admin can read, change or delete registrations.
     match /registrations/{doc} {
-      allow create: if request.resource.data.name is string
+      allow create: if request.resource.data.keys().hasOnly([
+                        'name', 'email', 'phone', 'college', 'department',
+                        'year', 'teamName', 'notes', 'eventId', 'eventTitle',
+                        'status', 'ticketCode', 'createdAt'
+                      ])
+                    && request.resource.data.name is string
                     && request.resource.data.name.size() > 0
                     && request.resource.data.name.size() < 120
                     && request.resource.data.email is string
+                    && request.resource.data.email.size() < 200
                     && request.resource.data.email.matches('.*@.*')
-                    && request.resource.data.eventId is string;
-      allow read, update, delete: if request.auth != null;
+                    && request.resource.data.eventId is string
+                    && request.resource.data.eventId.size() < 120
+                    && request.resource.data.status == 'confirmed'
+                    && (request.resource.data.notes == null
+                        || (request.resource.data.notes is string
+                            && request.resource.data.notes.size() < 2000));
+      allow read, update, delete: if isAdmin();
     }
 
     // Contact form: anyone can send, only admins can read.
     match /messages/{doc} {
-      allow create: if request.resource.data.name is string
+      allow create: if request.resource.data.keys().hasOnly([
+                        'name', 'email', 'subject', 'message', 'isRead', 'createdAt'
+                      ])
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() > 0
+                    && request.resource.data.name.size() < 120
                     && request.resource.data.message is string
-                    && request.resource.data.message.size() < 4000;
-      allow read, update, delete: if request.auth != null;
+                    && request.resource.data.message.size() > 0
+                    && request.resource.data.message.size() < 4000
+                    && (request.resource.data.subject == null
+                        || (request.resource.data.subject is string
+                            && request.resource.data.subject.size() < 200));
+      allow read, update, delete: if isAdmin();
     }
   }
 }

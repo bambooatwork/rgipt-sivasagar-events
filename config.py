@@ -22,6 +22,11 @@ class Config:
     # Session / cookie hardening
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
+    # Send the session cookie only over HTTPS. Off by default so the local
+    # demo works on http://127.0.0.1; set SESSION_COOKIE_SECURE=1 in production.
+    SESSION_COOKIE_SECURE = os.environ.get(
+        "SESSION_COOKIE_SECURE", ""
+    ).strip().lower() in ("1", "true", "yes", "on")
     PERMANENT_SESSION_LIFETIME = 60 * 60 * 8  # 8 hours
 
     # Upload / misc

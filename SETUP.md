@@ -61,11 +61,30 @@ export const firebaseConfig = {
 Commit and push. The site will stop showing "backend not configured" and start
 reading from your database (it will be empty until step 6).
 
-## 5. Publish the security rules (important)
+## 5. Register yourself as an admin, then publish the rules (important)
 
-Without this, anyone could read or wipe your data. The rules are kept in
-**[`firestore.rules`](firestore.rules)** at the root of this repository, so they are
-version-controlled next to the code instead of living only in this document.
+### 5a. Register your account as an admin — do this FIRST
+
+The rules deliberately do **not** treat "signed in" as "admin". Email/Password sign-in
+is enabled and the web API key is public, so **anyone on the internet can create a
+Firebase account** by calling Google's REST API directly. If the rules trusted any
+signed-in user, a stranger could read every student registration and rewrite your
+events. (This was tested and confirmed — see the Security section of the README.)
+
+So an admin is an account that is **listed in the `admins` collection**:
+
+1. **Authentication → Users** → copy your account's **UID**.
+2. **Firestore Database → Start collection** → collection ID **`admins`**.
+3. Set the **Document ID** to the **UID** you copied, add a field
+   `role` (string) with the value `admin`, and save.
+
+Do this **before** 5b, or you will lock yourself out of your own admin panel.
+
+### 5b. Publish the rules
+
+The rules are kept in **[`firestore.rules`](firestore.rules)** at the root of this
+repository, so they are version-controlled next to the code instead of living only in
+this document.
 
 **Option A — Firebase CLI (recommended):**
 
@@ -82,8 +101,8 @@ the `rgipt-event-management` project.
 everything with the contents of `firestore.rules`, and click **Publish**.
 
 In plain terms: the public can **read** published events and announcements and
-**create** registrations and contact messages — but only you (signed in) can read the
-registration list, read the inbox, or change anything.
+**create** registrations and contact messages — but only an account listed in `admins`
+can read the registration list, read the inbox, or change anything.
 
 ## 6. Load the starter content
 
@@ -132,6 +151,8 @@ and only for local/offline use.
 - **Nothing shows on the site but the admin works** — you're signed in as admin on a
   public page; the public read rule allows published documents, so make sure events
   are marked **Published**.
+- **Signed in, but every action says "Missing or insufficient permissions"** — your
+  account is not listed in the `admins` collection. See step 5a.
 - **Can't sign in** — the user must be created under Authentication → Users (step 3),
   and Email/Password must be enabled.
 - **`auth/unauthorized-domain` on the live site** — `bambooatwork.github.io` is not in
@@ -141,6 +162,15 @@ and only for local/offline use.
 
 ## Adding more admins
 
-Firebase console → Authentication → Users → **Add user**. Any account you create
-there can sign in at `/admin.html`. There is no separate "roles" system — every
-account is an admin, so keep the list short and use strong passwords.
+Adding an admin is **two** steps, and that is deliberate: a Firebase Auth account on
+its own is *not* an admin, because anyone can create one with the public API key.
+
+1. **Authentication → Users → Add user** — create the account.
+2. Copy that account's **UID**, then add a document with that ID to the **`admins`**
+   collection: Firestore → `admins` → **Add document** → Document ID = the UID,
+   field `role` (string) = `admin`.
+
+To **revoke** access, delete the document from `admins`; to remove the account
+entirely, delete the user in Authentication as well.
+
+Keep the list short and use strong passwords.

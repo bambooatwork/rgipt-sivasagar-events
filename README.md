@@ -146,21 +146,52 @@ Energy Institute) · In-Charge: Dr Chinmoy Jit Sarma · Director: Prof. Harish H
 
 ## Security
 
-- Only accounts you create in Firebase Authentication can sign in to the admin panel.
-- Firestore rules let the public **read** published events and **create** a
-  registration, but **only a signed-in admin can read the registration list or change
-  anything**.
-- The Firestore security rules live in `firestore.rules` and are deployed with
-  `firebase deploy --only firestore:rules` (or pasted into the console). They are
-  version-controlled so a change to access control shows up in the git history.
+Audited end to end; the two findings that mattered and their fixes:
+
+**1. "Signed in" is not "admin".** Email/Password sign-in is enabled and the web API
+key is public, so anyone can mint a Firebase account by calling Google's REST API
+directly. This was **tested and confirmed**: a self-created account could read the
+`registrations` and `messages` collections and write to `events`. The rules now require
+the account to be listed in the `admins` collection, which is sealed to clients —
+membership is checked server-side and nobody can add themselves.
+
+> **Action required:** register your UID in the `admins` collection *before* publishing
+the new rules, or you will lock yourself out. See SETUP.md step 5a.
+
+**2. Untrusted data is escaped on the way out.** Everything read from the database is
+treated as hostile input: dates are validated as `YYYY-MM-DD` before being interpolated
+into HTML attributes, `formatDate()` never echoes an unparseable value back into the
+page, and registration statuses are restricted to a known set. `test_security.py` drives
+the real render path with records full of `<img onerror=…>` payloads and asserts that
+nothing executes and no element is injected.
+
+Otherwise:
+
+- Firestore rules: the public can **read** published events/announcements and **create**
+  a registration or message (with field and size limits); only a listed admin can read
+  registrations, read the inbox, or change anything.
+- Rules live in `firestore.rules` and are deployed with
+  `firebase deploy --only firestore:rules` — version-controlled, so access-control
+  changes show up in the git history.
 - The Firebase web API key in `firebase-config.js` is public by design — it is not a
   secret and is safe to commit. Your data is protected by the rules, not the key.
+- No private keys, service-account files, tokens or `.env` files are committed.
+- The optional Flask app hashes passwords (werkzeug), uses CSRF tokens with a
+  constant-time compare, clears the session on login (no fixation), disables debug,
+  guards the `?next` redirect, and supports secure cookies via `SESSION_COOKIE_SECURE`.
+  Its default password (`rgipt@2026`) is for local use only, and the UI warns while it
+  is still in use.
+
+**Accepted residual risks** (not fixed): the Flask app has no login rate limiting, and
+the contact and registration forms have no CAPTCHA, so they could be spammed. Neither
+affects the live Firebase site.
 
 ---
 
 ## Testing
 
 ```bash
+python test_security.py   # 48 security checks (live XSS payloads + rules/config)
 python test_site_ui.py    # 48 checks on the public site (real JS, stubbed SDK, empty DB)
 python test_admin_ui.py   # 36 checks on the admin panel UI (stateful mock, no network)
 python verify_static.py   # 96 checks on the GitHub Pages build (headless Chrome)

@@ -203,7 +203,7 @@ async function home(app) {
           <p class="lead">Discover, register and never miss a moment at RGIPT Sivasagar Campus &mdash; from the national-level Urjotsav tech fest and Krida Oorja sports meet to hackathons, workshops and cultural evenings.</p>
           <div class="hero-actions"><a class="btn btn-primary" href="events.html">Browse events</a></div>
         </div>
-        ${next ? `<aside class="poster" data-countdown="${next.eventDate}">
+        ${next ? `<aside class="poster" data-countdown="${escapeHtml(next.eventDate)}">
           <div><p class="p-kicker">Next up</p>
             <div class="p-date">${formatDate(next.eventDate, { day: "2-digit", month: "short" })}</div>
             <h3>${escapeHtml(next.title)}</h3>
@@ -311,7 +311,7 @@ async function eventPage(app) {
             <h1>${escapeHtml(e.title)}</h1>
             <p class="detail-lede">${escapeHtml(e.shortDescription)}</p>
           </div>
-          ${past ? "" : `<div data-countdown="${e.eventDate}" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:space-between;margin-bottom:26px">
+          ${past ? "" : `<div data-countdown="${escapeHtml(e.eventDate)}" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;justify-content:space-between;margin-bottom:26px">
             <div><strong style="font-family:var(--font-display);font-size:1.05rem">Starts in</strong>
               <p class="muted mb-0" style="font-size:.84rem">${formatDate(e.eventDate, { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}</p></div>
             <div class="countdown" style="min-width:280px"></div></div>`}
