@@ -468,28 +468,6 @@ async function registerPage(app) {
   } catch (e) { app.innerHTML = errorNotice(e); }
 }
 
-/* ------------------------------------------------------ contact form */
-function wireContact() {
-  const form = document.getElementById("contactForm");
-  if (!form) return;
-  form.addEventListener("submit", async (ev) => {
-    ev.preventDefault();
-    const msg = document.getElementById("contactMsg");
-    const btn = form.querySelector("button");
-    btn.disabled = true; btn.textContent = "Sending\u2026";
-    const d = Object.fromEntries(new FormData(form).entries());
-    try {
-      if (!store.isConfigured()) throw new Error("The backend is not configured yet (see SETUP.md).");
-      await store.createMessage(d);
-      msg.innerHTML = `<div class="flash success" style="position:static;margin-bottom:14px"><p>Thanks! Your message has been sent to the campus team.</p></div>`;
-      form.reset();
-    } catch (err) {
-      msg.innerHTML = notice("Could not send: " + escapeHtml(err.message), "orange");
-    }
-    btn.disabled = false; btn.textContent = "Send message";
-  });
-}
-
 /* ---------------------------------------------------------- countdown */
 function startCountdowns() {
   document.querySelectorAll("[data-countdown]").forEach((el) => {
@@ -527,4 +505,3 @@ if (appEl) {
     if (render) Promise.resolve(render(inner)).then(() => decorateMotion(inner)).catch(() => {});
   }
 }
-if (page === "contact") wireContact();

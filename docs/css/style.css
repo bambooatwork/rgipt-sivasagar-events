@@ -490,6 +490,26 @@ html.js .poster::after { animation: drift 15s ease-in-out infinite; }
   .ticker .track { animation: none; }
 }
 
+/* ------------------------------------------------- Contact cards */
+.contact-cards { display: grid; gap: 14px; margin-top: 26px; }
+.contact-card { display: flex; align-items: center; gap: 16px; padding: 20px 22px;
+  border: 1px solid var(--rule-strong); border-left: 3px solid var(--green);
+  border-radius: var(--radius); background: var(--surface); color: var(--text);
+  transition: background .2s ease, color .2s ease, transform .2s ease, padding .2s ease; }
+.contact-card:hover { background: var(--text); color: #fff; padding-left: 28px; }
+.contact-card .cc-ico { width: 44px; height: 44px; flex: none; display: grid; place-items: center;
+  border-radius: 50%; background: var(--surface-2); color: var(--green); transition: .2s ease; }
+.contact-card:hover .cc-ico { background: rgba(255,255,255,.14); color: #fff; }
+.contact-card .cc-ico svg { width: 20px; height: 20px; }
+.contact-card .cc-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.contact-card .cc-label { font-family: var(--font-mono); font-size: .64rem; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--text-mute); transition: color .2s ease; }
+.contact-card:hover .cc-label { color: rgba(255,255,255,.72); }
+.contact-card .cc-value { font-family: var(--font-display); font-size: 1.14rem; font-weight: 600;
+  letter-spacing: -.02em; word-break: break-word; }
+.contact-card .cc-ar { margin-left: auto; flex: none; color: var(--text-mute); transition: transform .2s ease, color .2s ease; }
+.contact-card:hover .cc-ar { transform: translateX(6px); color: #fff; }
+
 /* =====================================================================
    Mobile refinement (<= 680px)
    The desktop type scale and four-across filter bar are far too large on a
@@ -582,6 +602,13 @@ html.js .poster::after { animation: drift 15s ease-in-out infinite; }
   .panel { padding: 18px; }
   .form-grid { gap: 12px; }
   .field { margin-bottom: 13px; }
+
+  /* --- contact cards --- */
+  .contact-cards { margin-top: 20px; gap: 11px; }
+  .contact-card { padding: 15px 16px; gap: 13px; }
+  .contact-card:hover { padding-left: 20px; }
+  .contact-card .cc-ico { width: 38px; height: 38px; }
+  .contact-card .cc-value { font-size: 1rem; }
 
   /* --- footer --- */
   .footer-grid { gap: 22px; }
