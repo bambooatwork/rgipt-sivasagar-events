@@ -313,9 +313,25 @@ export async function changePassword(newPassword) {
 export async function loadStarterData() {
   const res = await fetch("starter-data.json", { cache: "no-store" });
   const data = await res.json();
+
+  // Upsert by title, so running this again REFRESHES the schedule instead of
+  // adding a second copy of every event and announcement.
+  const key = (s) => String(s || "").trim().toLowerCase();
+
+  const haveEvents = await listEvents({ publishedOnly: false });
+  const eventId = new Map(haveEvents.map((e) => [key(e.title), e.id]));
   let n = 0;
-  for (const e of data.events) { await saveEvent(null, e); n++; }
-  for (const a of data.announcements) { await saveAnnouncement(null, a); n++; }
+  for (const e of data.events) {
+    await saveEvent(eventId.get(key(e.title)) || null, e);
+    n++;
+  }
+
+  const haveAnns = await listAnnouncements({ publishedOnly: false });
+  const annId = new Map(haveAnns.map((a) => [key(a.title), a.id]));
+  for (const a of data.announcements) {
+    await saveAnnouncement(annId.get(key(a.title)) || null, a);
+    n++;
+  }
   return n;
 }
 
