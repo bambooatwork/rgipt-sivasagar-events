@@ -100,7 +100,9 @@ rgipt-events/
 │       ├── store.js            data layer (Firestore + Auth)
 │       ├── site.js             public pages
 │       └── admin.js            admin panel
+├── tools/sync_seed.py    ← regenerates seed.py from starter-data.json
 └── (optional) app.py, models.py, seed.py, run.py — a Flask version for local use
+                            (seed.py is generated — edit the JSON, then run the tool)
 ```
 
 The Flask app in the root is **optional** — an offline/local copy of the same site
